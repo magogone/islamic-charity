@@ -7,6 +7,8 @@ import Link from "next/link"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useState } from "react"
+import { useAuth } from "@/store/use-auth"
+import { useAuthContext } from "@/store/auth-context"
 
 export interface InvitationCardProps {
   data?: {
@@ -41,6 +43,8 @@ export interface InvitationCardProps {
 export function InvitationCard({ data, className = "" }: InvitationCardProps) {
   const [basicInfoOpen, setBasicInfoOpen] = useState(false)
   const [referralInfoOpen, setReferralInfoOpen] = useState(false)
+  const { isAuthenticated } = useAuth()
+  const { openLoginModal } = useAuthContext()
 
   // Default data to prevent undefined errors
   const defaultData = {
@@ -272,12 +276,22 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
         </div>
       </CardContent>
       <CardFooter className="pt-3 pb-4">
-        <Link href="/promotion/share" className="w-full">
-          <Button className="w-full bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c] flex items-center justify-center">
+        {isAuthenticated ? (
+          <Link href="/promotion/share" className="w-full">
+            <Button className="w-full bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c] flex items-center justify-center">
+              Invite Now
+              <Share2 className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        ) : (
+          <Button
+            className="w-full bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c] flex items-center justify-center"
+            onClick={() => openLoginModal("/promotion/share")}
+          >
             Invite Now
             <Share2 className="ml-2 h-4 w-4" />
           </Button>
-        </Link>
+        )}
       </CardFooter>
 
       {/* Basic Reward Details Dialog */}

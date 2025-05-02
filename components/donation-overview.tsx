@@ -22,6 +22,8 @@ import { ReferralInfoDialog } from "./referral-info-dialog"
 import { RewardSummaryChart } from "./reward-summary-chart"
 import { TooltipProvider, TooltipTrigger, TooltipContent, Tooltip as UITooltip } from "@/components/ui/tooltip"
 import { useVipInfo } from "@/store/use-vip-info"
+import { useAuth } from "@/store/use-auth"
+import { useAuthContext } from "@/store/auth-context"
 
 export interface DonationOverviewProps {
   data?: {
@@ -82,6 +84,8 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
   const [referralInfoOpen, setReferralInfoOpen] = useState(false)
   const [withdrawOpen, setWithdrawOpen] = useState(false)
   const { getVipLevelDonationAmount } = useVipInfo()
+  const { isAuthenticated } = useAuth()
+  const { openLoginModal } = useAuthContext()
 
   // Merge provided data with default data to ensure all properties exist
   const safeData = {
@@ -107,9 +111,14 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
 
   // Handle withdrawal
   const handleWithdraw = () => {
-    // Add withdrawal logic here
-    setWithdrawOpen(true)
-    console.log("Withdraw earnings", summaryData.withdrawableAmount)
+    if (isAuthenticated) {
+      // 如果用户已登录，打开提款对话框
+      setWithdrawOpen(true)
+      console.log("Withdraw earnings", summaryData.withdrawableAmount)
+    } else {
+      // 如果用户未登录，打开登录对话框
+      openLoginModal("/profile/withdraw")
+    }
   }
 
   return (
@@ -245,7 +254,13 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
           <CardFooter className="pt-3 pb-4 flex gap-2">
             <Button
               className="w-full bg-[#d4b96e] hover:bg-[#d4b96e]/90 text-[#1a0d2c]"
-              onClick={() => setPaymentOpen(true)}
+              onClick={() => {
+                if (isAuthenticated) {
+                  setPaymentOpen(true)
+                } else {
+                  openLoginModal("/donation")
+                }
+              }}
             >
               <div className="flex items-center">
                 <Heart className="mr-1 h-4 w-4" />

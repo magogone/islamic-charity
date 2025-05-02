@@ -5,6 +5,8 @@ import { Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FallbackImage } from "./fallback-image"
 import { PaymentDialog } from "./payment-dialog"
+import { useAuth } from "@/store/use-auth"
+import { useAuthContext } from "@/store/auth-context"
 
 interface HeroSectionProps {
   title?: string
@@ -21,14 +23,22 @@ export function HeroSection({
 }: HeroSectionProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [paymentOpen, setPaymentOpen] = useState(false)
+  const { isAuthenticated } = useAuth()
+  const { openLoginModal } = useAuthContext()
 
   const primaryImage = "/grand-mosque.png" // Change back to mosque image
   const fallbackImage =
     "https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=1200" // Mosque backup image
 
   const handleDonateClick = () => {
-    setPaymentOpen(true)
-    if (onButtonClick) onButtonClick()
+    if (isAuthenticated) {
+      // 如果用户已登录，打开支付对话框
+      setPaymentOpen(true)
+      if (onButtonClick) onButtonClick()
+    } else {
+      // 如果用户未登录，打开登录对话框，并传递目标路径
+      openLoginModal("/donation")
+    }
   }
 
   return (
