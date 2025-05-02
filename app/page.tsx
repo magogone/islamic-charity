@@ -12,7 +12,7 @@ const NEWS_ITEMS = [
     id: "news1",
     title: "Barkat Foundation Launches New Poverty Relief Project",
     content:
-      "Barkat Foundation announces the launch of a new poverty relief project aimed at helping more Muslim families in impoverished areas. The project will provide education, medical care, and essential living supplies.",
+      "Barkat Foundation announces the launch of a new poverty relief project aimed at helping more Muslim families in impoverished areas. The project will provide education, medical care, and essential living supplies. This initiative is expected to reach over 5,000 families in its first phase and will expand to more regions in the coming months.",
     imageUrl: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=600&auto=format&fit=crop",
     date: "2023-04-15",
     isNew: true,
@@ -22,7 +22,7 @@ const NEWS_ITEMS = [
     id: "news2",
     title: "Foundation Partners with International Charity Organizations",
     content:
-      "Barkat Foundation has established strategic partnerships with multiple international charity organizations to jointly advance poverty alleviation work in global Muslim communities and expand charitable impact.",
+      "Barkat Foundation has established strategic partnerships with multiple international charity organizations to jointly advance poverty alleviation work in global Muslim communities and expand charitable impact. These partnerships will enable the foundation to reach more beneficiaries and implement more effective programs.",
     imageUrl: "https://images.unsplash.com/photo-1560252829-804f1aedf1be?q=80&w=600&auto=format&fit=crop",
     date: "2023-04-10",
     type: "news",
@@ -31,7 +31,7 @@ const NEWS_ITEMS = [
     id: "news3",
     title: "Annual Charity Report Released",
     content:
-      "Barkat Foundation releases its 2023 annual charity report, detailing charitable achievements, fund usage, and future plans over the past year.",
+      "Barkat Foundation releases its 2023 annual charity report, detailing charitable achievements, fund usage, and future plans over the past year. The report highlights the foundation's commitment to transparency and accountability in its operations. Key achievements include providing clean water to over 10,000 people and supporting the education of 500 children.",
     imageUrl: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=600&auto=format&fit=crop",
     date: "2023-04-05",
     type: "news",
@@ -40,7 +40,7 @@ const NEWS_ITEMS = [
     id: "news4",
     title: "New Feature: Direct Charity Project Donations",
     content:
-      "We've added a direct charity project donation feature. Users can now choose specific charity projects for targeted donations to better fulfill their charitable intentions.",
+      "We've added a direct charity project donation feature. Users can now choose specific charity projects for targeted donations to better fulfill their charitable intentions. This feature allows donors to see exactly where their money is going and the impact it is making.",
     imageUrl: "https://images.unsplash.com/photo-1607000975631-e05b9830fbea?q=80&w=600&auto=format&fit=crop",
     date: "2023-04-12",
     isNew: true,

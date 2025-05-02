@@ -28,43 +28,35 @@ export function NewsAnnouncementItem({
   return (
     <Card
       className={cn(
-        "overflow-hidden border-none shadow-md bg-islamic-dark/80 hover:bg-islamic-dark/90 transition-all",
+        "overflow-hidden border-none shadow-md bg-islamic-dark/80 hover:bg-islamic-dark/90 transition-all w-full",
         className,
       )}
     >
-      <div className="flex flex-col h-full">
-        <div className="relative h-40 w-full">
-          <Image
-            src={imageUrl || "/placeholder.svg"}
-            alt={title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 33vw"
-          />
-          <div className="absolute top-2 right-2 flex gap-2">
-            {isNew && (
-              <Badge variant="secondary" className="bg-islamic-gold text-islamic-dark">
-                New
-              </Badge>
-            )}
-            {isImportant && (
-              <Badge variant="destructive" className="bg-red-500">
-                Important
-              </Badge>
-            )}
-            <Badge className={cn(type === "news" ? "bg-islamic-teal/80" : "bg-islamic-gold/80", "text-white")}>
-              {type === "news" ? "News" : "Announcement"}
+      <div className="relative w-full h-48">
+        <Image src={imageUrl || "/placeholder.svg"} alt={title} fill className="object-cover" sizes="100vw" />
+        <div className="absolute top-2 right-2 flex gap-2">
+          {isNew && (
+            <Badge variant="secondary" className="bg-islamic-gold text-islamic-dark">
+              New
             </Badge>
-          </div>
+          )}
+          {isImportant && (
+            <Badge variant="destructive" className="bg-red-500">
+              Important
+            </Badge>
+          )}
+          <Badge className={cn(type === "news" ? "bg-islamic-teal/80" : "bg-islamic-gold/80", "text-white")}>
+            {type === "news" ? "News" : "Announcement"}
+          </Badge>
         </div>
-        <CardContent className="flex flex-col flex-grow p-4">
-          <h3 className="text-lg font-bold text-islamic-cream mb-2 line-clamp-2">{title}</h3>
-          <p className="text-sm text-islamic-cream/80 flex-grow line-clamp-3">{content}</p>
-          <div className="flex justify-between items-center mt-3">
-            <span className="text-xs text-islamic-cream/60">{date}</span>
-          </div>
-        </CardContent>
       </div>
+      <CardContent className="p-4">
+        <h3 className="text-lg font-bold text-islamic-cream mb-2">{title}</h3>
+        <p className="text-sm text-islamic-cream/80 mb-3">{content}</p>
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-islamic-cream/60">{date}</span>
+        </div>
+      </CardContent>
     </Card>
   )
 }
