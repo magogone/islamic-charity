@@ -38,7 +38,7 @@ export function HeroSection({
   }
 
   return (
-    <div className="relative w-full h-[50vh] overflow-hidden -mt-4">
+    <div className="relative w-screen h-[50vh] overflow-hidden -mt-6 left-[50%] right-[50%] -ml-[50vw] -mr-[50vw] mx-auto">
       {/* Loading indicator */}
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-islamic-dark/50">
@@ -63,7 +63,7 @@ export function HeroSection({
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 pt-6 text-center">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 pt-6 text-center max-w-lg mx-auto w-full">
         <h1 className="mb-4 text-4xl font-serif font-light tracking-wide text-white">{title}</h1>
 
         <p className="max-w-md mb-6 text-base text-islamic-cream/90">{description}</p>
