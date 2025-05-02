@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowRight } from "lucide-react"
+import { Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FallbackImage } from "./fallback-image"
+import { PaymentDialog } from "./payment-dialog"
 
 interface HeroSectionProps {
   title?: string
@@ -21,6 +22,7 @@ export function HeroSection({
   onButtonClick,
 }: HeroSectionProps) {
   const [isLoading, setIsLoading] = useState(true)
+  const [paymentOpen, setPaymentOpen] = useState(false)
 
   // Change image in HeroSection component
   // Replace mosque image with one more suitable for a charity organization
@@ -29,6 +31,11 @@ export function HeroSection({
   const primaryImage = "/grand-mosque.png" // Change back to mosque image
   const fallbackImage =
     "https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=1200" // Mosque backup image
+
+  const handleDonateClick = () => {
+    setPaymentOpen(true)
+    if (onButtonClick) onButtonClick()
+  }
 
   return (
     <div className="relative w-full h-[50vh] overflow-hidden">
@@ -67,12 +74,14 @@ export function HeroSection({
 
         <Button
           className="px-6 py-5 text-base bg-islamic-gold hover:bg-islamic-gold/90 text-islamic-dark"
-          onClick={onButtonClick}
+          onClick={handleDonateClick}
         >
           {buttonText}
-          <ArrowRight className="w-4 h-4 ml-2" />
+          <Heart className="w-4 h-4 ml-2" />
         </Button>
       </div>
+
+      <PaymentDialog open={paymentOpen} onOpenChange={setPaymentOpen} nextLevelAmount={200} />
     </div>
   )
 }

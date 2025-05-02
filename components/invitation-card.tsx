@@ -1,6 +1,6 @@
 "use client"
 
-import { Share2, InfoIcon, User, UserPlus, Percent, Users, UsersIcon } from "lucide-react"
+import { Share2, InfoIcon, User, UserPlus, Percent, Users, UsersIcon, Award } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
@@ -54,6 +54,9 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
     }
     return "border-islamic-medium/50 bg-islamic-medium/30 text-islamic-cream/90"
   }
+
+  // Calculate progress percentage for the reward rate
+  const rewardProgress = (data.rewardRate.total / data.maxReferralReward.total) * 100
 
   return (
     <Card
@@ -127,39 +130,42 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
 
           {/* Referral Reward Card */}
           <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3">
-            <div className="flex items-center mb-2">
+            <div className="flex items-center mb-3">
               <UserPlus className="h-4 w-4 text-islamic-gold mr-2" />
               <span className="text-sm text-islamic-gold">Referral Rewards</span>
             </div>
 
-            <div className="grid grid-cols-5 gap-1 mb-2">
-              <div className="text-center">
-                <div className="text-xs text-islamic-cream/70">1st Gen</div>
-                <div className="text-sm font-medium text-islamic-gold">{data.rewardRate.level1}%</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xs text-islamic-cream/70">2nd Gen</div>
-                <div className="text-sm font-medium text-islamic-gold">{data.rewardRate.level2}%</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xs text-islamic-cream/70">3rd Gen</div>
-                <div className="text-sm font-medium text-islamic-gold">{data.rewardRate.level3}%</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xs text-islamic-cream/70">4th Gen</div>
-                <div className="text-sm font-medium text-islamic-gold">{data.rewardRate.level4}%</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xs text-islamic-cream/70">5th Gen</div>
-                <div className="text-sm font-medium text-islamic-gold">{data.rewardRate.level5}%</div>
+            {/* Visual representation of reward range - simplified */}
+            <div className="mb-3">
+              {/* Progress bar with markers - aligned with percentage icon */}
+              <div className="relative pt-1 pb-3">
+                <div className="flex mb-1 items-center justify-between">
+                  <div className="text-xs text-islamic-cream/70">20%</div>
+                  <div className="text-xs text-islamic-cream/70">30%</div>
+                </div>
+                <div className="overflow-hidden h-2 mb-1 text-xs flex rounded bg-islamic-dark/50">
+                  <div
+                    className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gradient-to-r from-islamic-gold to-[#8dc63f]"
+                    style={{ width: "100%" }}
+                  ></div>
+                </div>
+                {/* Current position marker */}
+                <div
+                  className="absolute bottom-0 w-2 h-2 bg-white rounded-full transform -translate-x-1/2"
+                  style={{ left: `${rewardProgress}%` }}
+                ></div>
               </div>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-xs text-islamic-cream/70">Total</span>
+              <div className="flex items-center">
+                <Award className="h-4 w-4 text-islamic-gold mr-2" />
+                <span className="text-xs text-islamic-cream">Current Rewards</span>
+              </div>
               <div className="flex items-center">
                 <span className="text-sm font-medium text-islamic-gold">{data.rewardRate.total}%</span>
-                <span className="text-xs text-islamic-cream/60 ml-1">/ {data.maxReferralReward.total}%</span>
+                <span className="text-xs text-islamic-cream/60 mx-1">of</span>
+                <span className="text-xs text-islamic-cream/80">{data.maxReferralReward.total}%</span>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>

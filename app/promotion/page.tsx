@@ -2,12 +2,12 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { Home, User, Share2, UserPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { InvitationCard } from "@/components/invitation-card"
 import { HeartPlusIcon } from "@/components/heart-plus-icon"
+import { BarkatLogo } from "@/components/barkat-logo"
 
 export default function PromotionPage() {
   const [activeTab, setActiveTab] = useState("invite")
@@ -46,9 +46,7 @@ export default function PromotionPage() {
       <header className="px-6 py-4 border-b border-islamic-medium/50 bg-islamic-dark/70 backdrop-blur-sm relative z-10">
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <div className="flex items-center">
-            <div className="w-8 h-8 mr-2">
-              <Image src="/islamic-logo.png" width={32} height={32} alt="Logo" className="object-contain" />
-            </div>
+            <BarkatLogo size={32} className="mr-2" />
             <h1 className="text-xl font-bold text-islamic-gold">Invite Friends</h1>
           </div>
           <Button variant="ghost" size="icon" className="rounded-full bg-islamic-medium/70">

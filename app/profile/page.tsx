@@ -1,23 +1,25 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
-import { Home, Gift, Share2, User, Settings, ArrowRight } from "lucide-react"
+import { Home, Gift, Share2, User, Settings, ArrowRight, Wallet } from "lucide-react"
+import { useState } from "react"
 
 import { BackgroundWrapper } from "@/components/background-wrapper"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { BarkatLogo } from "@/components/barkat-logo"
+import { WithdrawDialog } from "@/components/withdraw-dialog"
 
 export default function ProfilePage() {
+  const [withdrawOpen, setWithdrawOpen] = useState(false)
+
   return (
     <BackgroundWrapper>
       {/* Header */}
       <header className="px-6 py-4 border-b border-[#d4b96e]/30 bg-[#f8f6f0]/80 dark:bg-[#0c1118]/80 backdrop-blur-sm relative z-10">
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <div className="flex items-center">
-            <div className="w-8 h-8 mr-2">
-              <Image src="/islamic-logo.png" width={32} height={32} alt="Logo" className="object-contain" />
-            </div>
+            <BarkatLogo size={32} className="mr-2" />
             <h1 className="text-xl font-bold text-[#0a3d2b] dark:text-[#d4b96e]">Profile</h1>
           </div>
           <Button variant="ghost" size="icon" className="rounded-full bg-[#f0ece0] dark:bg-[#1a1f2c]">
@@ -118,7 +120,18 @@ export default function ProfilePage() {
 
             <Card className="border-[#d4b96e]/20 bg-white/80 dark:bg-[#131b29]/80 backdrop-blur-sm overflow-hidden">
               <CardContent className="p-4">
-                <h3 className="text-base font-medium text-[#0a3d2b] dark:text-[#d4b96e] mb-3">My Earnings</h3>
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="text-base font-medium text-[#0a3d2b] dark:text-[#d4b96e]">My Earnings</h3>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-[#8dc63f] text-[#8dc63f] hover:bg-[#8dc63f]/10"
+                    onClick={() => setWithdrawOpen(true)}
+                  >
+                    <Wallet className="h-4 w-4 mr-2" />
+                    Withdraw
+                  </Button>
+                </div>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-sm">Today's Relief Funds</span>
@@ -131,6 +144,10 @@ export default function ProfilePage() {
                   <div className="flex justify-between items-center">
                     <span className="text-sm">Team Rewards</span>
                     <span className="text-sm font-medium text-[#8dc63f]">25 U</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Available to Withdraw</span>
+                    <span className="text-sm font-medium text-[#8dc63f]">30 U</span>
                   </div>
                 </div>
               </CardContent>
@@ -160,6 +177,7 @@ export default function ProfilePage() {
           </Link>
         </nav>
       </div>
+      <WithdrawDialog open={withdrawOpen} onOpenChange={setWithdrawOpen} availableAmount={30} />
     </BackgroundWrapper>
   )
 }

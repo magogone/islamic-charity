@@ -1,13 +1,11 @@
 "use client"
 import Link from "next/link"
 import { Home, Gift, Share2, User } from "lucide-react"
-
-import { HorizontalScrollSection } from "@/components/horizontal-scroll-section"
-import { EventCard } from "@/components/event-card"
 import { HeroSection } from "@/components/hero-section"
 import { DonationOverview } from "@/components/donation-overview"
 import { InvitationCard } from "@/components/invitation-card"
 import { NewsAnnouncementsSection } from "@/components/news-announcements-section"
+import { BarkatLogo } from "@/components/barkat-logo"
 
 // Define static image paths
 const IMAGES = {
@@ -127,7 +125,10 @@ export default function HomePage() {
     rewardRate: {
       level1: 10,
       level2: 4,
-      level3to5: 2,
+      level3: 2,
+      level4: 2,
+      level5: 2,
+      total: 20,
     },
     basicReward: {
       current: 1.5,
@@ -136,12 +137,25 @@ export default function HomePage() {
     maxReferralReward: {
       level1: 15,
       level2: 6,
-      level3to5: 3,
+      level3: 3,
+      level4: 3,
+      level5: 3,
+      total: 30,
     },
   }
 
   return (
     <div className="flex flex-col min-h-screen bg-islamic-dark/90 text-white">
+      {/* Header with logo */}
+      <header className="px-6 py-4 border-b border-islamic-medium/50 bg-islamic-dark/70 backdrop-blur-sm relative z-10">
+        <div className="flex items-center justify-between max-w-lg mx-auto">
+          <div className="flex items-center">
+            <BarkatLogo size={32} className="mr-2" />
+            <h1 className="text-xl font-bold text-islamic-gold">Barkat Alliance</h1>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section with Large Mosque */}
       <HeroSection
         buttonText="Donate Now"
@@ -152,7 +166,6 @@ export default function HomePage() {
       {/* Main Content */}
       <main className="flex-1 px-4 pb-20 mt-6">
         <div className="max-w-lg mx-auto">
- 
           {/* Add news and announcements section after HorizontalScrollSection and before DonationOverview */}
           <NewsAnnouncementsSection
             news={NEWS_ANNOUNCEMENTS.news}

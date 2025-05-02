@@ -10,6 +10,10 @@ import {
   Heart,
   TrendingUp,
   PlusCircle,
+  Coins,
+  Target,
+  Percent,
+  BarChart,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -114,7 +118,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
 
               <div className="grid grid-cols-2 gap-x-2 gap-y-2.5 mt-1">
                 <div className="flex items-start">
-                  <DollarSign className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
+                  <Coins className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
                   <div className="flex flex-col items-center">
                     <span className="text-xl font-bold text-islamic-gold/95">{data.dailyFunds.current}</span>
                     <span className="text-xs text-islamic-gold/90">USDT</span>
@@ -123,7 +127,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                 </div>
 
                 <div className="flex items-start">
-                  <TrendingUp className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
+                  <Target className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
                   <div className="flex flex-col items-center">
                     <span className="text-xl font-bold text-islamic-gold/95">{data.dailyFunds.max}</span>
                     <span className="text-xs text-islamic-gold/90">USDT</span>
@@ -132,7 +136,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                 </div>
 
                 <div className="flex items-start">
-                  <DollarSign className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
+                  <Percent className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
                   <div className="flex flex-col items-center">
                     <span className="text-xl font-bold text-islamic-gold/95">{data.currentRate}%</span>
                     <span className="text-[10px] text-islamic-cream/60 mt-0.5">Current Rate</span>
@@ -140,7 +144,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                 </div>
 
                 <div className="flex items-start">
-                  <TrendingUp className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
+                  <BarChart className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
                   <div className="flex flex-col items-center">
                     <span className="text-xl font-bold text-islamic-gold/95">{data.maxRate || 2.5}%</span>
                     <span className="text-[10px] text-islamic-cream/60 mt-0.5">Max Rate</span>
@@ -211,7 +215,11 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
         )}
       </Card>
 
-      <PaymentDialog open={paymentOpen} onOpenChange={setPaymentOpen} />
+      <PaymentDialog
+        open={paymentOpen}
+        onOpenChange={setPaymentOpen}
+        nextLevelAmount={200} // This should be dynamically calculated based on current VIP level
+      />
       <ReferralInfoDialog open={referralInfoOpen} onOpenChange={setReferralInfoOpen} />
     </>
   )

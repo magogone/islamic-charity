@@ -1,28 +1,19 @@
 "use client"
 
+import { DialogFooter } from "@/components/ui/dialog"
+
 import { useState } from "react"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Check, CreditCard, Wallet } from "lucide-react"
+import { Wallet } from "lucide-react"
 
 interface PaymentDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  nextLevelAmount?: number
 }
 
-export function PaymentDialog({ open, onOpenChange }: PaymentDialogProps) {
-  const [amount, setAmount] = useState("100")
-  const [paymentMethod, setPaymentMethod] = useState("usdt")
+export function PaymentDialog({ open, onOpenChange, nextLevelAmount = 200 }: PaymentDialogProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [isComplete, setIsComplete] = useState(false)
 
@@ -36,94 +27,41 @@ export function PaymentDialog({ open, onOpenChange }: PaymentDialogProps) {
       setTimeout(() => {
         setIsComplete(false)
         onOpenChange(false)
-        setAmount("100")
       }, 2000)
     }, 1500)
   }
-
-  const predefinedAmounts = ["50", "100", "300", "500", "1000"]
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px] bg-islamic-cardBg text-white border-islamic-medium">
         <DialogHeader>
-          <DialogTitle className="text-islamic-gold">Increase Donation</DialogTitle>
+          <DialogTitle className="text-islamic-gold">Donate</DialogTitle>
           <DialogDescription className="text-islamic-cream/70">
-            Please select or enter the amount you wish to donate and choose a payment method.
+            Donate to upgrade your VIP level and increase your rewards.
           </DialogDescription>
         </DialogHeader>
 
         {!isProcessing && !isComplete ? (
           <>
             <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-3 gap-2">
-                {predefinedAmounts.map((presetAmount) => (
-                  <Button
-                    key={presetAmount}
-                    type="button"
-                    variant={amount === presetAmount ? "default" : "outline"}
-                    className={
-                      amount === presetAmount
-                        ? "bg-islamic-gold text-islamic-dark hover:bg-islamic-gold/90"
-                        : "border-islamic-medium/50 text-islamic-cream hover:bg-islamic-medium/30"
-                    }
-                    onClick={() => setAmount(presetAmount)}
-                  >
-                    {presetAmount} U
-                  </Button>
-                ))}
+              <div className="p-6 rounded-lg bg-islamic-medium/50 border border-islamic-gold/30 text-center">
+                <p className="text-islamic-cream/80 mb-2">Donation Amount</p>
+                <p className="text-3xl font-bold text-islamic-gold">{nextLevelAmount} U</p>
+                <p className="text-xs text-islamic-cream/60 mt-2">Required amount to upgrade to next VIP level</p>
               </div>
 
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="amount" className="text-right text-islamic-cream">
-                  Custom Amount
-                </Label>
-                <div className="col-span-3">
-                  <Input
-                    id="amount"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    className="bg-islamic-medium/50 border-islamic-medium/50 text-islamic-cream"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-islamic-cream">Payment Method</Label>
-                <RadioGroup
-                  defaultValue="usdt"
-                  value={paymentMethod}
-                  onValueChange={setPaymentMethod}
-                  className="flex flex-col space-y-1"
-                >
-                  <div className="flex items-center space-x-2 rounded-md border border-islamic-medium/50 p-3 bg-islamic-medium/30">
-                    <RadioGroupItem value="usdt" id="usdt" className="border-islamic-gold text-islamic-gold" />
-                    <Label htmlFor="usdt" className="flex-1 cursor-pointer">
-                      <div className="flex items-center">
-                        <Wallet className="mr-2 h-5 w-5 text-islamic-gold" />
-                        <span>USDT</span>
-                      </div>
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2 rounded-md border border-islamic-medium/50 p-3 bg-islamic-medium/30">
-                    <RadioGroupItem value="card" id="card" className="border-islamic-gold text-islamic-gold" />
-                    <Label htmlFor="card" className="flex-1 cursor-pointer">
-                      <div className="flex items-center">
-                        <CreditCard className="mr-2 h-5 w-5 text-islamic-gold" />
-                        <span>Credit/Debit Card</span>
-                      </div>
-                    </Label>
-                  </div>
-                </RadioGroup>
+              <div className="flex items-center space-x-2 rounded-md border border-islamic-medium/50 p-3 bg-islamic-medium/30">
+                <Wallet className="mr-2 h-5 w-5 text-islamic-gold" />
+                <span>USDT</span>
               </div>
             </div>
             <DialogFooter>
               <Button
                 type="button"
-                className="bg-islamic-gold text-islamic-dark hover:bg-islamic-gold/90"
+                className="bg-islamic-gold text-islamic-dark hover:bg-islamic-gold/90 w-full"
                 onClick={handlePayment}
               >
-                Confirm Payment
+                Donate Now!
               </Button>
             </DialogFooter>
           </>
@@ -135,7 +73,20 @@ export function PaymentDialog({ open, onOpenChange }: PaymentDialogProps) {
         ) : (
           <div className="py-8 flex flex-col items-center justify-center">
             <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-4">
-              <Check className="h-6 w-6 text-green-500" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-6 w-6 text-green-500"
+              >
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
             </div>
             <p className="text-islamic-cream text-center">Payment Successful!</p>
             <p className="text-islamic-cream/70 text-center text-sm mt-1">

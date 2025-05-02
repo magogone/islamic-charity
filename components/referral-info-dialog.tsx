@@ -36,160 +36,90 @@ export function ReferralInfoDialog({ open, onOpenChange }: ReferralInfoDialogPro
           <div className="space-y-3">
             <h3 className="text-sm font-medium text-islamic-gold">Referral Reward Details</h3>
             <p className="text-xs text-islamic-cream/80">
-              Refer up to 5 generations and receive a total of 30% poverty relief rewards from donation funds. As your
-              VIP level increases, your referral reward rates will also increase.
+              Refer friends and receive rewards from their donations. As your VIP level increases, your total referral
+              reward rate increases from 20% to 30%.
             </p>
 
-            <div className="space-y-2">
-              <div className="p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm font-medium">VIP 1</span>
-                  <span className="font-medium text-islamic-gold">Total 20%</span>
-                </div>
-                <div className="grid grid-cols-5 gap-1 text-xs">
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">1st Gen</div>
-                    <div className="font-medium">10%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">2nd Gen</div>
-                    <div className="font-medium">4%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">3rd Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">4th Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">5th Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
-                </div>
+            <div className="p-4 bg-islamic-medium/30 rounded-lg border border-islamic-medium/50">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-islamic-cream">VIP 1</span>
+                <span className="text-sm font-medium text-islamic-gold">20% Total</span>
               </div>
-
-              <div className="p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm font-medium">VIP 2</span>
-                  <span className="font-medium text-islamic-gold">Total 22%</span>
+              <div className="grid grid-cols-5 gap-1 text-xs">
+                <div className="text-center">
+                  <div className="text-islamic-cream/70">1st Gen</div>
+                  <div className="font-medium">10%</div>
                 </div>
-                <div className="grid grid-cols-5 gap-1 text-xs">
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">1st Gen</div>
-                    <div className="font-medium">12%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">2nd Gen</div>
-                    <div className="font-medium">4%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">3rd Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">4th Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">5th Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
+                <div className="text-center">
+                  <div className="text-islamic-cream/70">2nd Gen</div>
+                  <div className="font-medium">4%</div>
                 </div>
-              </div>
-
-              <div className="p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm font-medium">VIP 3</span>
-                  <span className="font-medium text-islamic-gold">Total 24%</span>
+                <div className="text-center">
+                  <div className="text-islamic-cream/70">3rd Gen</div>
+                  <div className="font-medium">2%</div>
                 </div>
-                <div className="grid grid-cols-5 gap-1 text-xs">
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">1st Gen</div>
-                    <div className="font-medium">14%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">2nd Gen</div>
-                    <div className="font-medium">4%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">3rd Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">4th Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">5th Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
+                <div className="text-center">
+                  <div className="text-islamic-cream/70">4th Gen</div>
+                  <div className="font-medium">2%</div>
                 </div>
-              </div>
-
-              <div className="p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm font-medium">VIP 4</span>
-                  <span className="font-medium text-islamic-gold">Total 26%</span>
-                </div>
-                <div className="grid grid-cols-5 gap-1 text-xs">
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">1st Gen</div>
-                    <div className="font-medium">16%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">2nd Gen</div>
-                    <div className="font-medium">4%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">3rd Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">4th Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">5th Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm font-medium">VIP 5</span>
-                  <span className="font-medium text-islamic-gold">Total 30%</span>
-                </div>
-                <div className="grid grid-cols-5 gap-1 text-xs">
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">1st Gen</div>
-                    <div className="font-medium">20%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">2nd Gen</div>
-                    <div className="font-medium">4%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">3rd Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">4th Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-islamic-cream/70">5th Gen</div>
-                    <div className="font-medium">2%</div>
-                  </div>
+                <div className="text-center">
+                  <div className="text-islamic-cream/70">5th Gen</div>
+                  <div className="font-medium">2%</div>
                 </div>
               </div>
             </div>
 
-            <p className="text-xs text-islamic-cream/70 italic">
-              Refer more friends to participate in donations to not only receive more rewards but also increase your
-              basic reward rate.
+            <div className="flex items-center justify-center my-2">
+              <div className="h-6 w-6 flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-islamic-gold"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <div className="p-4 bg-islamic-medium/30 rounded-lg border border-islamic-gold/30">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-islamic-cream">VIP 5</span>
+                <span className="text-sm font-medium text-islamic-gold">30% Total</span>
+              </div>
+              <div className="grid grid-cols-5 gap-1 text-xs">
+                <div className="text-center">
+                  <div className="text-islamic-cream/70">1st Gen</div>
+                  <div className="font-medium">20%</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-islamic-cream/70">2nd Gen</div>
+                  <div className="font-medium">4%</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-islamic-cream/70">3rd Gen</div>
+                  <div className="font-medium">2%</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-islamic-cream/70">4th Gen</div>
+                  <div className="font-medium">2%</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-islamic-cream/70">5th Gen</div>
+                  <div className="font-medium">2%</div>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-xs text-islamic-cream/70 italic mt-2">
+              Refer more friends to increase your rewards and VIP level.
             </p>
           </div>
         </div>

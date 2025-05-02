@@ -35,7 +35,7 @@ export function NewsAnnouncementsSection({ news, announcements, className }: New
       <div className="flex justify-between items-center mb-4">
         <div>
           <h2 className="text-xl font-bold text-islamic-gold">News & Announcements</h2>
-          <p className="text-sm text-islamic-cream/70">Learn about the latest updates and important information</p>
+          <p className="text-sm text-islamic-cream/70">Learn about the latest information</p>
         </div>
         <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-auto">
           <TabsList className="bg-islamic-dark/50 border border-islamic-medium/30">
@@ -68,7 +68,7 @@ export function NewsAnnouncementsSection({ news, announcements, className }: New
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {filteredItems.map((item) => (
-            <div key={item.id} className="min-w-[280px] w-[280px] snap-start">
+            <div key={item.id} className="min-w-[280px] w-[280px] md:w-[280px] snap-start sm:min-w-[90%] sm:w-[90%]">
               <NewsAnnouncementItem {...item} />
             </div>
           ))}
