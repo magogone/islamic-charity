@@ -23,8 +23,8 @@ export default function SharePage() {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: "Invitation to Join Barkat Foundation",
-        text: "Join Barkat Foundation, participate in Islamic charity, and receive poverty relief fund support!",
+        title: "Invitation to Join Barkat Alliance Foundation",
+        text: "Join Barkat Alliance Foundation, participate in Islamic charity, and receive poverty relief fund support!",
         url: inviteLink,
       })
     } else {
@@ -66,8 +66,8 @@ export default function SharePage() {
           <div className="p-6">
             <h2 className="text-xl font-bold text-center text-[#8dc63f] mb-4">Share Your Invitation Link</h2>
             <p className="text-center text-islamic-cream/80 mb-6">
-              Invite friends to join Barkat Foundation, participate together in Islamic charity, and you'll receive
-              generous referral rewards!
+              Invite friends to join Barkat Alliance Foundation, participate together in Islamic charity, and you'll
+              receive generous referral rewards!
             </p>
 
             <Tabs defaultValue="qrcode" className="w-full" onValueChange={setActiveTab}>

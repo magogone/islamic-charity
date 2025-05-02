@@ -17,7 +17,7 @@ interface MosqueHeroProps {
 }
 
 export function MosqueHero({
-  title = "Barkat Alliance 巴卡特基金",
+  title = "Barkat Alliance Foundation",
   subtitle = "创新慈善模式",
   caption = "真主使命 · 善行 · 回报",
   height = "h-96",

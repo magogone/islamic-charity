@@ -135,7 +135,7 @@ export default function HomePage() {
   }
 
   return (
-    <MainLayout title="Barkat Alliance" currentPath="/">
+    <MainLayout title="Barkat Alliance Foundation" currentPath="/">
       {/* Hero Section with Large Mosque */}
       <HeroSection
         buttonText="Donate Now"

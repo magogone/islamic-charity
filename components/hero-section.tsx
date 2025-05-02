@@ -16,7 +16,7 @@ interface HeroSectionProps {
 
 export function HeroSection({
   title = "Barkat Alliance Foundation",
-  subtitle = "Barkat Foundation",
+  subtitle = "Barkat Alliance Foundation",
   description = "Innovative Charity Model: Divine Mission",
   buttonText = "Donate Now",
   onButtonClick,
@@ -64,9 +64,7 @@ export function HeroSection({
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center">
-        <div className="inline-block px-6 py-2 mb-4 bg-islamic-cream/90 rounded-md">
-          <h2 className="text-lg font-bold tracking-wider text-islamic-dark">{subtitle}</h2>
-        </div>
+  
 
         <h1 className="mb-4 text-4xl font-serif font-light tracking-wide text-white">{title}</h1>
 
