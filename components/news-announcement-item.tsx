@@ -52,7 +52,7 @@ export function NewsAnnouncementItem({
       </div>
       <CardContent className="p-4">
         <h3 className="text-lg font-bold text-islamic-cream mb-2">{title}</h3>
-        <p className="text-sm text-islamic-cream/80 mb-3">{content}</p>
+        <p className="text-sm text-islamic-cream/80 mb-3 line-clamp-3">{content}</p>
         <div className="flex justify-between items-center">
           <span className="text-xs text-islamic-cream/60">{date}</span>
         </div>
