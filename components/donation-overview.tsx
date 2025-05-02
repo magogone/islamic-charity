@@ -3,8 +3,6 @@
 import { useState } from "react"
 import {
   ArrowUp,
-  DollarSign,
-  Wallet,
   Users2,
   InfoIcon as InfoCircle,
   Heart,
@@ -14,6 +12,7 @@ import {
   Target,
   Percent,
   BarChart,
+  Wallet,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -21,7 +20,7 @@ import { PaymentDialog } from "./payment-dialog"
 import { VipLevelProgress } from "./vip-level-progress"
 import { ReferralInfoDialog } from "./referral-info-dialog"
 import { RewardSummaryChart } from "./reward-summary-chart"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { TooltipProvider, TooltipTrigger, TooltipContent, Tooltip as UITooltip } from "@/components/ui/tooltip"
 
 export interface DonationOverviewProps {
   data: {
@@ -173,14 +172,14 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
           <div className="p-4 mb-3 rounded-lg bg-islamic-medium/70 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
-                <DollarSign className="h-4 w-4 text-islamic-gold mr-2" />
-                <span className="text-sm font-medium">Earnings Summary</span>
+                <span className="text-islamic-gold text-2xl mr-2">$</span>
+                <h3 className="text-sm font-medium text-islamic-gold">Earnings Summary</h3>
               </div>
 
               <TooltipProvider>
-                <Tooltip>
+                <UITooltip>
                   <TooltipTrigger asChild>
-                    <button
+                    <Button
                       onClick={handleWithdraw}
                       disabled={!summaryData.withdrawableAmount}
                       className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
@@ -190,17 +189,17 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                       }`}
                     >
                       <Wallet className="h-4 w-4" />
-                    </button>
+                    </Button>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Withdraw Earnings</p>
                   </TooltipContent>
-                </Tooltip>
+                </UITooltip>
               </TooltipProvider>
             </div>
 
             {/* Horizontal stacked bar chart */}
-            <RewardSummaryChart data={summaryData} onWithdraw={handleWithdraw} />
+            <RewardSummaryChart data={summaryData} />
           </div>
         </CardContent>
         {showButtons && (
