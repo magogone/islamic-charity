@@ -2,22 +2,20 @@
 
 import { useState } from "react"
 import {
-  ArrowRight,
   ArrowUp,
-  Calendar,
-  Heart,
-  TrendingUp,
   DollarSign,
   Wallet,
   Users2,
   InfoIcon as InfoCircle,
+  Heart,
+  TrendingUp,
+  PlusCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { PaymentDialog } from "./payment-dialog"
 import { VipLevelProgress } from "./vip-level-progress"
 import { ReferralInfoDialog } from "./referral-info-dialog"
-import { RewardPeriodChart } from "./reward-period-chart"
 import { RewardSummaryChart } from "./reward-summary-chart"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
@@ -57,38 +55,6 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
   const [referralInfoOpen, setReferralInfoOpen] = useState(false)
   const [withdrawOpen, setWithdrawOpen] = useState(false)
 
-  // 确保周期至少为40天
-  const ensureMinimumPeriod = () => {
-    // 解析开始和结束日期
-    const start = new Date(data.startDate)
-    let end = new Date(data.endDate)
-
-    // 计算当前周期的天数
-    const currentDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
-
-    // 如果不足40天，延长结束日期
-    if (currentDays < 40) {
-      end = new Date(start)
-      end.setDate(start.getDate() + 40)
-      data.endDate = end.toISOString().split("T")[0]
-
-      // 计算正确的剩余天数
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
-      const remainingDays = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-      data.remainingDays = Math.max(0, remainingDays) // 确保不会显示负数
-    }
-
-    return { start, end }
-  }
-
-  // 确保周期至少为40天
-  const { start, end } = ensureMinimumPeriod()
-
-  // 生成每日奖励数据（如果没有提供）
-  const dailyRewardsData =
-    data.dailyRewards || generateDefaultDailyRewards(start, end, data.dailyFunds.current, data.dailyFunds.max)
-
   // 收益汇总数据
   const summaryData = {
     expectedReward: data.totalExpectedReward || 120,
@@ -102,10 +68,6 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
     // 这里可以添加提取收益的逻辑
     setWithdrawOpen(true)
     console.log("提取收益", summaryData.withdrawableAmount)
-  }
-
-  const handleInfoClick = () => {
-    setReferralInfoOpen(true)
   }
 
   return (
@@ -199,30 +161,6 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
             </div>
           </div>
 
-          {/* 奖励详情 - 堆叠柱状图 */}
-          <div className="p-4 mb-3 rounded-lg bg-islamic-medium/70 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center">
-                <Calendar className="h-4 w-4 text-islamic-gold mr-2" />
-                <span className="text-sm font-medium">奖励详情</span>
-              </div>
-              <span className="text-sm font-medium">{data.periodProgress}%</span>
-            </div>
-
-            {/* 开始和结束日期 */}
-            <div className="flex justify-between text-xs text-islamic-cream/70 mb-2">
-              <span>
-                开始: {new Date(data.startDate).toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" })}
-              </span>
-              <span>
-                结束: {new Date(data.endDate).toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" })}
-              </span>
-            </div>
-
-            {/* 堆叠柱状图 */}
-            <RewardPeriodChart data={dailyRewardsData} />
-          </div>
-
           {/* 收益汇总信息 - 水平堆叠条形图 */}
           <div className="p-4 mb-3 rounded-lg bg-islamic-medium/70 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
@@ -263,8 +201,11 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
               className="w-full bg-[#d4b96e] hover:bg-[#d4b96e]/90 text-[#1a0d2c]"
               onClick={() => setPaymentOpen(true)}
             >
+              <div className="flex items-center">
+                <Heart className="mr-1 h-4 w-4" />
+                <PlusCircle className="h-3 w-3 -ml-2 -mt-2" />
+              </div>
               增加捐赠
-              <ArrowRight className="ml-1 h-4 w-4" />
             </Button>
           </CardFooter>
         )}
@@ -274,32 +215,4 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
       <ReferralInfoDialog open={referralInfoOpen} onOpenChange={setReferralInfoOpen} />
     </>
   )
-}
-
-// 生成默认的每日奖励数据
-function generateDefaultDailyRewards(start: Date, end: Date, currentAmount: number, maxAmount: number) {
-  const daysDiff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
-  const halfwayPoint = Math.floor(daysDiff / 2)
-
-  const result = []
-  for (let i = 0; i <= daysDiff; i++) {
-    const currentDate = new Date(start)
-    currentDate.setDate(start.getDate() + i)
-    currentDate.setHours(0, 0, 0, 0)
-
-    // 一半是已发放的，一半是未发放的
-    const distributed = i <= halfwayPoint
-
-    // 生成随机的实际奖励值（在最大值的70%-100%之间）
-    const actualValue = maxAmount * (0.7 + Math.random() * 0.3)
-
-    result.push({
-      date: currentDate.toISOString().split("T")[0],
-      actual: Number.parseFloat(actualValue.toFixed(2)),
-      maximum: maxAmount,
-      distributed: distributed, // 添加标志表示是否已发放
-    })
-  }
-
-  return result
 }
