@@ -15,9 +15,9 @@ interface MainLayoutProps {
 
 export function MainLayout({ children, title, currentPath, rightIcon }: MainLayoutProps) {
   return (
-    <div className="min-h-screen bg-islamic-dark text-white pb-16">
+    <div className="min-h-screen bg-islamic-dark text-white">
       {/* Header */}
-      <header className="px-6 py-4 border-b border-islamic-medium/50 bg-islamic-dark/70 backdrop-blur-sm relative z-10">
+      <header className="px-6 py-4 border-b border-islamic-medium/50 bg-islamic-dark/70 backdrop-blur-sm sticky top-0 z-20">
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <div className="flex items-center">
             <BarkatLogo size={32} className="mr-2" />
@@ -28,10 +28,10 @@ export function MainLayout({ children, title, currentPath, rightIcon }: MainLayo
       </header>
 
       {/* Main content */}
-      <div className="container max-w-lg mx-auto px-4 py-6">{children}</div>
+      <div className="container max-w-lg mx-auto px-4 py-6 pb-24">{children}</div>
 
-      {/* Bottom navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-islamic-dark border-t border-islamic-medium/30 py-2">
+      {/* Bottom navigation - Fixed */}
+      <div className="fixed bottom-0 left-0 right-0 bg-islamic-dark border-t border-islamic-medium/30 py-2 z-30">
         <div className="container max-w-lg mx-auto px-4">
           <div className="flex justify-around">
             <Link
