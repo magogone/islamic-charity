@@ -6,10 +6,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { WithdrawDialog } from "@/components/withdraw-dialog"
 import { MainLayout } from "@/components/main-layout"
+import { useUser } from "@/store/use-user"
+import { useDonation } from "@/store/use-donation"
 import Link from "next/link"
 
 export default function ProfilePage() {
   const [withdrawOpen, setWithdrawOpen] = useState(false)
+  const { userData } = useUser()
+  const { donationData } = useDonation()
 
   const rightIcon = (
     <Button variant="ghost" size="icon" className="rounded-full bg-islamic-medium/70">
@@ -30,31 +34,24 @@ export default function ProfilePage() {
               <div className="absolute bottom-0 right-0 w-4 h-4 bg-[#8dc63f] rounded-full border-2 border-[#131b29]"></div>
             </div>
             <div>
-              <h2 className="text-lg font-bold text-[#d4b96e]">User123456</h2>
-              <p className="text-sm text-islamic-cream/70">VIP 1 · Verified</p>
+              <h2 className="text-lg font-bold text-[#d4b96e]">{userData.username}</h2>
+              <p className="text-sm text-islamic-cream/70">VIP {userData.vipLevel} · Verified</p>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="ml-auto border-[#d4b96e] text-[#d4b96e] hover:bg-[#d4b96e] hover:text-[#0a3d2b]"
-            >
-              Edit Profile
-            </Button>
           </div>
 
           {/* User profile content */}
           <div className="mt-6 grid grid-cols-3 gap-3">
             <div className="bg-[#1a1f2c] p-3 rounded-lg text-center">
               <p className="text-xs text-islamic-cream/70 mb-1">Total Donations</p>
-              <p className="text-lg font-bold text-[#d4b96e]">100 U</p>
+              <p className="text-lg font-bold text-[#d4b96e]">{userData.totalDonation} U</p>
             </div>
             <div className="bg-[#1a1f2c] p-3 rounded-lg text-center">
               <p className="text-xs text-islamic-cream/70 mb-1">Relief Funds</p>
-              <p className="text-lg font-bold text-[#8dc63f]">120 U</p>
+              <p className="text-lg font-bold text-[#8dc63f]">{donationData.totalAccumulated} U</p>
             </div>
             <div className="bg-[#1a1f2c] p-3 rounded-lg text-center">
               <p className="text-xs text-islamic-cream/70 mb-1">Referrals</p>
-              <p className="text-lg font-bold text-[#d4b96e]">2</p>
+              <p className="text-lg font-bold text-[#d4b96e]">{userData.referrals}</p>
             </div>
           </div>
         </CardContent>
@@ -71,13 +68,15 @@ export default function ProfilePage() {
             <div className="mt-3 grid grid-cols-2 gap-4">
               <div>
                 <p className="text-xs text-islamic-cream/70">Total Donation Amount</p>
-                <p className="text-lg font-bold text-[#d4b96e]">100 U</p>
-                <p className="text-xs text-islamic-cream/70 mt-1">VIP Level 1</p>
+                <p className="text-lg font-bold text-[#d4b96e]">{donationData.totalDonation} U</p>
+                <p className="text-xs text-islamic-cream/70 mt-1">VIP Level {donationData.vipLevel}</p>
               </div>
               <div>
                 <p className="text-xs text-islamic-cream/70">Daily Relief Funds</p>
-                <p className="text-lg font-bold text-[#8dc63f]">2.4-6.0 U</p>
-                <p className="text-xs text-islamic-cream/70 mt-1">2 referrals</p>
+                <p className="text-lg font-bold text-[#8dc63f]">
+                  {donationData.dailyFunds.current}-{donationData.dailyFunds.max} U
+                </p>
+                <p className="text-xs text-islamic-cream/70 mt-1">{donationData.referrals} referrals</p>
               </div>
             </div>
           </CardContent>
@@ -92,7 +91,7 @@ export default function ProfilePage() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-sm">Direct Referrals</span>
-                <span className="text-sm font-medium">2 people</span>
+                <span className="text-sm font-medium">{userData.referrals} people</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Total Team Size</span>
@@ -123,11 +122,11 @@ export default function ProfilePage() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-sm">Today's Relief Funds</span>
-                <span className="text-sm font-medium text-[#8dc63f]">3 U</span>
+                <span className="text-sm font-medium text-[#8dc63f]">{donationData.dailyFunds.current} U</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Accumulated Relief Funds</span>
-                <span className="text-sm font-medium text-[#8dc63f]">120 U</span>
+                <span className="text-sm font-medium text-[#8dc63f]">{donationData.totalAccumulated} U</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Team Rewards</span>
@@ -135,14 +134,18 @@ export default function ProfilePage() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Available to Withdraw</span>
-                <span className="text-sm font-medium text-[#8dc63f]">30 U</span>
+                <span className="text-sm font-medium text-[#8dc63f]">{donationData.withdrawableAmount} U</span>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <WithdrawDialog open={withdrawOpen} onOpenChange={setWithdrawOpen} availableAmount={30} />
+      <WithdrawDialog
+        open={withdrawOpen}
+        onOpenChange={setWithdrawOpen}
+        availableAmount={donationData.withdrawableAmount}
+      />
     </MainLayout>
   )
 }

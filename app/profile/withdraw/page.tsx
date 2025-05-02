@@ -6,8 +6,11 @@ import { Button } from "@/components/ui/button"
 import { BackgroundWrapper } from "@/components/background-wrapper"
 import { WithdrawCard } from "@/components/withdraw-card"
 import { BarkatLogo } from "@/components/barkat-logo"
+import { useDonation } from "@/store/use-donation"
 
 export default function WithdrawPage() {
+  const { donationData } = useDonation()
+
   return (
     <BackgroundWrapper>
       {/* Page header */}
@@ -28,7 +31,11 @@ export default function WithdrawPage() {
 
       {/* Main content */}
       <div className="max-w-lg mx-auto px-4 py-6">
-        <WithdrawCard availableAmount={30} pendingAmount={15} completedAmount={50} />
+        <WithdrawCard
+          availableAmount={donationData.withdrawableAmount}
+          pendingAmount={15}
+          completedAmount={donationData.withdrawnAmount}
+        />
 
         <div className="mt-6 p-5 rounded-xl bg-[#1a0d2c]/90 backdrop-blur-sm">
           <h2 className="text-lg font-bold text-[#d4b96e] mb-4">Withdrawal Information</h2>

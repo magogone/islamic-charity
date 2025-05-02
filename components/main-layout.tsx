@@ -10,10 +10,9 @@ interface MainLayoutProps {
   children: ReactNode
   title: string
   currentPath: string
-  rightIcon?: ReactNode
 }
 
-export function MainLayout({ children, title, currentPath, rightIcon }: MainLayoutProps) {
+export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
   return (
     <div className="min-h-screen bg-islamic-dark text-white">
       {/* Header */}
@@ -23,7 +22,6 @@ export function MainLayout({ children, title, currentPath, rightIcon }: MainLayo
             <BarkatLogo size={32} className="mr-2" />
             <h1 className="text-xl font-bold text-islamic-gold">{title}</h1>
           </div>
-          {rightIcon}
         </div>
       </header>
 

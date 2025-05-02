@@ -2,24 +2,10 @@
 
 import { BackgroundWrapper } from "@/components/background-wrapper"
 import { DonationOverview } from "@/components/donation-overview"
+import { useDonation } from "@/store/use-donation"
 
 export default function DonationOverviewPage() {
-  // Donation data
-  const donationData = {
-    totalDonation: 100,
-    vipLevel: 1,
-    dailyFunds: {
-      current: 3,
-      max: 6,
-    },
-    referrals: 2,
-    periodProgress: 65,
-    startDate: "2023-04-01",
-    remainingDays: 14,
-    endDate: "2023-05-10",
-    currentRate: 2,
-    totalAccumulated: 120,
-  }
+  const { donationData } = useDonation()
 
   return (
     <BackgroundWrapper>
@@ -60,12 +46,12 @@ export default function DonationOverviewPage() {
           <div className="space-y-4">
             <div className="flex justify-between items-center border-b border-islamic-medium/30 pb-3">
               <span className="text-sm text-islamic-cream/80">Donation Date</span>
-              <span className="text-sm font-medium text-islamic-cream">2023-04-01</span>
+              <span className="text-sm font-medium text-islamic-cream">{donationData.startDate}</span>
             </div>
 
             <div className="flex justify-between items-center border-b border-islamic-medium/30 pb-3">
               <span className="text-sm text-islamic-cream/80">Donation Amount</span>
-              <span className="text-sm font-medium text-islamic-cream">100 U</span>
+              <span className="text-sm font-medium text-islamic-cream">{donationData.totalDonation} U</span>
             </div>
 
             <div className="flex justify-between items-center border-b border-islamic-medium/30 pb-3">
@@ -75,7 +61,7 @@ export default function DonationOverviewPage() {
 
             <div className="flex justify-between items-center border-b border-islamic-medium/30 pb-3">
               <span className="text-sm text-islamic-cream/80">VIP Level</span>
-              <span className="text-sm font-medium text-islamic-cream">VIP 1</span>
+              <span className="text-sm font-medium text-islamic-cream">VIP {donationData.vipLevel}</span>
             </div>
 
             <div className="flex justify-between items-center">

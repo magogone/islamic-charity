@@ -5,29 +5,12 @@ import { Button } from "@/components/ui/button"
 import { DonationOverview } from "@/components/donation-overview"
 import { VipBenefitsCard } from "@/components/vip-benefits-card"
 import { MainLayout } from "@/components/main-layout"
+import { useDonation } from "@/store/use-donation"
+import { useUser } from "@/store/use-user"
 
 export default function DonationPage() {
-  // Sample data
-  const donationData = {
-    totalDonation: 100,
-    vipLevel: 1,
-    dailyFunds: {
-      current: 1.2,
-      max: 3,
-    },
-    referrals: 3,
-    periodProgress: 65,
-    startDate: "2023-03-31",
-    remainingDays: 14,
-    endDate: "2023-05-10",
-    currentRate: 1.2,
-    totalAccumulated: 120,
-    maxRate: 2.5,
-    totalExpectedReward: 120,
-    totalMaxReward: 180,
-    withdrawnAmount: 50,
-    withdrawableAmount: 30,
-  }
+  const { donationData } = useDonation()
+  const { userData } = useUser()
 
   const rightIcon = (
     <Button variant="ghost" size="icon" className="rounded-full bg-islamic-medium/70">
@@ -42,10 +25,10 @@ export default function DonationPage() {
 
       <div className="mt-4">
         <VipBenefitsCard
-          currentLevel={1}
-          nextLevel={2}
+          currentLevel={userData.vipLevel}
+          nextLevel={userData.vipLevel + 1}
           requiredAmount={300}
-          currentAmount={100}
+          currentAmount={userData.totalDonation}
           benefits={[
             "Receive higher daily poverty relief funds",
             "Increased referral reward rates",

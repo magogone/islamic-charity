@@ -7,12 +7,14 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Copy, Check, QrCode, LinkIcon, Share, Users, Award } from "lucide-react"
+import { useUser } from "@/store/use-user"
 
 export default function SharePage() {
   const [copied, setCopied] = useState(false)
   const [activeTab, setActiveTab] = useState("qrcode")
+  const { userData } = useUser()
 
-  const inviteLink = "https://islamicfund.app/invite/user123"
+  const inviteLink = `https://islamicfund.app/invite/${userData.id}`
 
   const handleCopy = () => {
     navigator.clipboard.writeText(inviteLink)
