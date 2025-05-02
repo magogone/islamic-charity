@@ -10,10 +10,10 @@ interface BackgroundWrapperProps {
 export function BackgroundWrapper({ children }: BackgroundWrapperProps) {
   return (
     <div className="min-h-screen bg-[#f8f6f0] dark:bg-[#0c1118] relative">
-      {/* 伊斯兰风格背景 */}
+      {/* Islamic style background */}
       <IslamicBackground />
 
-      {/* 主要内容 */}
+      {/* Main content */}
       {children}
     </div>
   )

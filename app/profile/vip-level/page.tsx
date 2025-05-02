@@ -1,8 +1,8 @@
 import { VipLevelDetail } from "@/components/vip-level-detail"
 
 export default function VipLevelPage() {
-  // 这里应该从API获取用户的VIP等级信息
-  // 以下是模拟数据
+  // This data should be fetched from API for the user's VIP level information
+  // This is sample data
   const vipData = {
     vipLevel: 1,
     currentDailyFund: 1.2,

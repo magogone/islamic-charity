@@ -42,12 +42,12 @@ export function RewardSummaryChart({ data, onWithdraw }: RewardSummaryChartProps
             <div className="mb-1">
               <div className="flex items-center mb-1">
                 <div className="w-3 h-3 rounded-full bg-[#d4b96e] mr-2"></div>
-                <span className="text-xs text-islamic-cream/90">已提取收益:</span>
+                <span className="text-xs text-islamic-cream/90">Withdrawn Earnings:</span>
                 <span className="text-sm font-medium text-islamic-gold ml-2">{data.withdrawnAmount} USDT</span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 rounded-full bg-[#d4b96e]/60 mr-2"></div>
-                <span className="text-xs text-islamic-cream/90">可提取收益:</span>
+                <span className="text-xs text-islamic-cream/90">Withdrawable Earnings:</span>
                 <span className="text-sm font-medium text-islamic-gold/80 ml-2">{data.withdrawableAmount} USDT</span>
               </div>
             </div>
@@ -59,12 +59,12 @@ export function RewardSummaryChart({ data, onWithdraw }: RewardSummaryChartProps
             <div className="mb-1">
               <div className="flex items-center mb-1">
                 <div className="w-3 h-3 rounded-full bg-[#8dc63f] mr-2"></div>
-                <span className="text-xs text-islamic-cream/90">预计总收益:</span>
+                <span className="text-xs text-islamic-cream/90">Expected Total Earnings:</span>
                 <span className="text-sm font-medium text-[#8dc63f] ml-2">{data.expectedReward} USDT</span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 rounded-full bg-[#8dc63f]/60 mr-2"></div>
-                <span className="text-xs text-islamic-cream/90">最大可得总收益:</span>
+                <span className="text-xs text-islamic-cream/90">Maximum Potential Earnings:</span>
                 <span className="text-sm font-medium text-[#8dc63f]/80 ml-2">{data.maxReward} USDT</span>
               </div>
             </div>
@@ -106,7 +106,10 @@ export function RewardSummaryChart({ data, onWithdraw }: RewardSummaryChartProps
   return (
     <div className="w-full h-[140px]">
       <div className="flex items-center mb-2">
-        <div className="text-xs text-islamic-cream/80 w-[70px]">已提取/可提取</div>
+        <div className="text-xs text-islamic-cream/80 w-[70px]">
+          <div>Withdrawn</div>
+          <div>Withdrawable</div>
+        </div>
         <div className="flex-1 h-[30px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
@@ -130,7 +133,10 @@ export function RewardSummaryChart({ data, onWithdraw }: RewardSummaryChartProps
       </div>
 
       <div className="flex items-center mt-4">
-        <div className="text-xs text-islamic-cream/80 w-[70px]">预期/最大</div>
+        <div className="text-xs text-islamic-cream/80 w-[70px]">
+          <div>Expected</div>
+          <div>Maximum</div>
+        </div>
         <div className="flex-1 h-[30px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart

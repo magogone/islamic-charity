@@ -9,7 +9,7 @@ import { DonationOverview } from "@/components/donation-overview"
 import { InvitationCard } from "@/components/invitation-card"
 import { NewsAnnouncementsSection } from "@/components/news-announcements-section"
 
-// 定义静态图片路径
+// Define static image paths
 const IMAGES = {
   donation1: "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?q=80&w=600&auto=format&fit=crop",
   donation2: "https://images.unsplash.com/photo-1593113598332-cd59a93f9dd4?q=80&w=600&auto=format&fit=crop",
@@ -26,14 +26,14 @@ const IMAGES = {
   knowledge4: "https://images.unsplash.com/photo-1580982327559-c1202864eb05?q=80&w=600&auto=format&fit=crop",
 }
 
-// 在 IMAGES 常量之后添加新闻和公告数据
+// Add news and announcements data after the IMAGES constant
 const NEWS_ANNOUNCEMENTS = {
   news: [
     {
       id: "news1",
-      title: "巴卡特基金会启动新的扶贫项目",
+      title: "Barkat Foundation Launches New Poverty Relief Project",
       content:
-        "巴卡特基金会宣布启动新的扶贫项目，旨在帮助更多贫困地区的穆斯林家庭。该项目将提供教育、医疗和生活必需品支持。",
+        "Barkat Foundation announces the launch of a new poverty relief project aimed at helping more Muslim families in impoverished areas. The project will provide education, medical care, and essential living supplies.",
       imageUrl: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=600&auto=format&fit=crop",
       date: "2023-04-15",
       isNew: true,
@@ -41,16 +41,18 @@ const NEWS_ANNOUNCEMENTS = {
     },
     {
       id: "news2",
-      title: "基金会与国际慈善组织达成合作",
-      content: "巴卡特基金会与多个国际慈善组织达成战略合作，共同推进全球穆斯林社区的扶贫工作，扩大慈善影响力。",
+      title: "Foundation Partners with International Charity Organizations",
+      content:
+        "Barkat Foundation has established strategic partnerships with multiple international charity organizations to jointly advance poverty alleviation work in global Muslim communities and expand charitable impact.",
       imageUrl: "https://images.unsplash.com/photo-1560252829-804f1aedf1be?q=80&w=600&auto=format&fit=crop",
       date: "2023-04-10",
       type: "news",
     },
     {
       id: "news3",
-      title: "年度慈善报告发布",
-      content: "巴卡特基金会发布2023年度慈善报告，详细介绍了过去一年的慈善成果、资金使用情况和未来规划。",
+      title: "Annual Charity Report Released",
+      content:
+        "Barkat Foundation releases its 2023 annual charity report, detailing charitable achievements, fund usage, and future plans over the past year.",
       imageUrl: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=600&auto=format&fit=crop",
       date: "2023-04-05",
       type: "news",
@@ -59,8 +61,9 @@ const NEWS_ANNOUNCEMENTS = {
   announcements: [
     {
       id: "announcement1",
-      title: "重要通知：捐赠奖励制度更新",
-      content: "从2023年5月1日起，我们的捐赠奖励制度将进行更新，VIP会员的推荐奖励比例将提高，详情请查看公告。",
+      title: "Important Notice: Donation Reward System Update",
+      content:
+        "Starting May 1, 2023, our donation reward system will be updated. VIP members' referral reward rates will increase. Please check the announcement for details.",
       imageUrl: "https://images.unsplash.com/photo-1579621970590-9d624316904b?q=80&w=600&auto=format&fit=crop",
       date: "2023-04-20",
       isImportant: true,
@@ -68,16 +71,18 @@ const NEWS_ANNOUNCEMENTS = {
     },
     {
       id: "announcement2",
-      title: "系统维护通知",
-      content: "为提升用户体验，系统将于2023年4月25日凌晨2:00-4:00进行维护升级，期间可能无法访问。",
+      title: "System Maintenance Notice",
+      content:
+        "To enhance user experience, the system will undergo maintenance and upgrades from 2:00-4:00 AM on April 25, 2023, during which access may be unavailable.",
       imageUrl: "https://images.unsplash.com/photo-1633613286991-611fe299c4be?q=80&w=600&auto=format&fit=crop",
       date: "2023-04-18",
       type: "announcement",
     },
     {
       id: "announcement3",
-      title: "新功能上线：慈善项目直接捐赠",
-      content: "我们新增了慈善项目直接捐赠功能，用户现在可以选择特定的慈善项目进行定向捐赠，更好地实现慈善意愿。",
+      title: "New Feature: Direct Charity Project Donations",
+      content:
+        "We've added a direct charity project donation feature. Users can now choose specific charity projects for targeted donations to better fulfill their charitable intentions.",
       imageUrl: "https://images.unsplash.com/photo-1607000975631-e05b9830fbea?q=80&w=600&auto=format&fit=crop",
       date: "2023-04-12",
       isNew: true,
@@ -86,7 +91,7 @@ const NEWS_ANNOUNCEMENTS = {
   ],
 }
 
-// VIP等级配置
+// VIP level configuration
 const VIP_CONFIG = [
   { level: 1, requirement: 100, dailyFund: "1.2-3 U" },
   { level: 2, requirement: 300, dailyFund: "3.6-9 U" },
@@ -96,7 +101,7 @@ const VIP_CONFIG = [
 ]
 
 export default function HomePage() {
-  // 捐赠数据
+  // Donation data
   const donationData = {
     totalDonation: 100,
     vipLevel: 1,
@@ -113,7 +118,7 @@ export default function HomePage() {
     totalAccumulated: 120,
   }
 
-  // 邀请数据
+  // Invitation data
   const invitationData = {
     totalReferrals: 5,
     directReferrals: 2,
@@ -139,63 +144,67 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen bg-islamic-dark/90 text-white">
       {/* Hero Section with Large Mosque */}
       <HeroSection
-        buttonText="立即捐赠"
-        description="创新慈善模式：真主使命 - 通过捐赠参与扶贫事业"
-        onButtonClick={() => console.log("开始捐赠")}
+        buttonText="Donate Now"
+        description="Innovative Charity Model: Divine Mission - Participate in poverty relief through donations"
+        onButtonClick={() => console.log("Start donation")}
       />
 
       {/* Main Content */}
       <main className="flex-1 px-4 pb-20 mt-6">
         <div className="max-w-lg mx-auto">
-          {/* 关于我们 - 跑马灯模式 */}
-          <HorizontalScrollSection title="关于我们" subtitle="了解巴卡特基金的慈善理念" carouselMode={true}>
+          {/* About Us - Carousel Mode */}
+          <HorizontalScrollSection
+            title="About Us"
+            subtitle="Learn about Barkat Foundation's charity philosophy"
+            carouselMode={true}
+          >
             <EventCard
               imageUrl={IMAGES.knowledge1}
-              title="参与与收益"
+              title="Participation & Returns"
               description={
-                '我们倡导"先奉献，后受益"的理念。贫困人口需通过捐赠以获得扶贫资格，鼓励他人积极参与慈善活动，实现自我脱贫，助他人脱贫。'
+                'We advocate the principle of "Give first, benefit later." The impoverished need to donate to qualify for poverty relief, encouraging active participation in charity, achieving self-relief and helping others.'
               }
               className="snap-center"
               fullWidth={true}
             />
             <EventCard
               imageUrl={IMAGES.knowledge2}
-              title="捐赠者的福利"
+              title="Donor Benefits"
               description={
-                "邀请奖励：为推动扶贫事业，邀请他人捐赠可获得15%的直接邀请奖励。建立自己的慈善社群，还能获得基金会更多扶贫基金支持。扶贫资金：个人捐赠后，可根据个人捐赠额度的比例获得扶贫资金支持。"
+                "Referral Rewards: To promote poverty relief, inviting others to donate earns a 15% direct referral reward. Building your own charity community can receive more support from the foundation. Poverty Relief Funds: After personal donation, you can receive poverty relief funds proportional to your donation amount."
               }
               className="snap-center"
               fullWidth={true}
             />
             <EventCard
               imageUrl={IMAGES.knowledge3}
-              title="持续支持"
+              title="Continuous Support"
               description={
-                "通过瓦克夫制度，我们提供持续的扶贫支持，激励参与者为全球伊斯兰教贫困人口创造一个更美好的未来，为伊斯兰教慈善事业做贡献，加入我们，一起实现改变！"
+                "Through the Waqf system, we provide continuous poverty relief support, motivating participants to create a better future for impoverished Muslim populations worldwide, contributing to Islamic charity. Join us to make a difference!"
               }
               className="snap-center"
               fullWidth={true}
             />
             <EventCard
               imageUrl={IMAGES.knowledge4}
-              title="基金安排"
-              description={"所有所得资金将于实现自我脱贫或助于他人脱贫及社会善事。"}
+              title="Fund Allocation"
+              description={"All funds received will be used for self-relief, helping others in need, and social good."}
               className="snap-center"
               fullWidth={true}
             />
           </HorizontalScrollSection>
 
-          {/* 在 return 语句中的 main 部分，在 HorizontalScrollSection 之后、DonationOverview 之前添加新闻和公告栏 */}
+          {/* Add news and announcements section after HorizontalScrollSection and before DonationOverview */}
           <NewsAnnouncementsSection
             news={NEWS_ANNOUNCEMENTS.news}
             announcements={NEWS_ANNOUNCEMENTS.announcements}
             className="mb-6"
           />
 
-          {/* 我的捐赠概览卡片 - 使用共享组件 */}
+          {/* My Donation Overview Card - Using shared component */}
           <DonationOverview data={donationData} className="mb-6" />
 
-          {/* 邀请卡片 */}
+          {/* Invitation Card */}
           <InvitationCard data={invitationData} className="mb-6" />
         </div>
       </main>
@@ -205,19 +214,19 @@ export default function HomePage() {
         <nav className="flex justify-around py-3 mx-auto max-w-lg">
           <Link href="/" className="flex flex-col items-center py-2 text-islamic-gold">
             <Home className="w-5 h-5" />
-            <span className="mt-1 text-xs">首页</span>
+            <span className="mt-1 text-xs">Home</span>
           </Link>
           <Link href="/donation" className="flex flex-col items-center py-2 text-islamic-cream/50">
             <Gift className="w-5 h-5" />
-            <span className="mt-1 text-xs">捐赠</span>
+            <span className="mt-1 text-xs">Donate</span>
           </Link>
           <Link href="/promotion" className="flex flex-col items-center py-2 text-islamic-cream/50">
             <Share2 className="w-5 h-5" />
-            <span className="mt-1 text-xs">邀请</span>
+            <span className="mt-1 text-xs">Invite</span>
           </Link>
           <Link href="/profile" className="flex flex-col items-center py-2 text-islamic-cream/50">
             <User className="w-5 h-5" />
-            <span className="mt-1 text-xs">我的</span>
+            <span className="mt-1 text-xs">Profile</span>
           </Link>
         </nav>
       </div>

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { RewardInfoCards } from "@/components/reward-info-cards"
 
-// 模拟数据
+// Sample data
 const rewardSummaryData = {
   expectedReward: 120,
   maxReward: 180,
@@ -11,23 +11,23 @@ const rewardSummaryData = {
   withdrawableAmount: 30,
 }
 
-// 模拟每日奖励数据
+// Sample daily rewards data
 const dailyRewardsData = Array.from({ length: 40 }, (_, i) => {
   const date = new Date()
   date.setDate(date.getDate() - 40 + i)
-  const dateStr = `${date.getMonth() + 1}月${date.getDate()}日`
+  const dateStr = `${date.getMonth() + 1}/${date.getDate()}`
 
-  // 随机生成数据
+  // Generate random data
   const actualReward = Math.random() * 6 + 1
   const maxReward = actualReward + Math.random() * 2
   const completionRate = Math.floor((actualReward / maxReward) * 100)
 
-  // 根据日期确定状态
-  let status: "已发放" | "将发放" | "潜在" = "潜在"
+  // Determine status based on date
+  let status: "Distributed" | "Pending" | "Potential" = "Potential"
   if (i < 30) {
-    status = "已发放"
+    status = "Distributed"
   } else if (i < 35) {
-    status = "将发放"
+    status = "Pending"
   }
 
   return {
@@ -42,7 +42,7 @@ const dailyRewardsData = Array.from({ length: 40 }, (_, i) => {
 export default function RewardsPage() {
   const [showWithdrawConfirm, setShowWithdrawConfirm] = useState(false)
 
-  // 示例数据
+  // Sample data
   const basicReward = {
     current: 1.5,
     max: 2.5,
@@ -71,21 +71,21 @@ export default function RewardsPage() {
 
   const handleWithdraw = () => {
     setShowWithdrawConfirm(true)
-    // 这里可以添加提取逻辑
+    // Add withdrawal logic here
     setTimeout(() => {
       setShowWithdrawConfirm(false)
-      // 显示提取成功提示
+      // Show withdrawal success notification
     }, 2000)
   }
 
   return (
     <div className="min-h-screen bg-islamic-dark/90 text-white p-4">
       <div className="max-w-lg mx-auto">
-        <h1 className="text-xl font-bold text-islamic-gold mb-4">奖励信息</h1>
+        <h1 className="text-xl font-bold text-islamic-gold mb-4">Reward Information</h1>
 
         <RewardInfoCards basicReward={basicReward} referralReward={referralReward} className="mb-6" />
 
-        {/* 这里可以添加更多内容，如奖励历史记录等 */}
+        {/* Add more content here, such as reward history */}
       </div>
     </div>
   )

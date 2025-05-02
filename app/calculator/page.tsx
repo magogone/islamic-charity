@@ -35,12 +35,12 @@ export default function CalculatorPage() {
             <span className="sr-only">Back</span>
           </Button>
         </Link>
-        <h1 className="text-xl font-bold ml-2 text-[#0a3d2b] dark:text-[#d4b96e]">收益计算器</h1>
+        <h1 className="text-xl font-bold ml-2 text-[#0a3d2b] dark:text-[#d4b96e]">Return Calculator</h1>
       </header>
 
       <main className="flex-1 p-4 pb-16 relative z-10">
         <Card className="border-[#d4b96e]/20 bg-white/90 dark:bg-[#131b29]/90 backdrop-blur-sm">
-          {/* 计算器内容 */}
+          {/* Calculator content */}
         </Card>
       </main>
 
@@ -49,19 +49,19 @@ export default function CalculatorPage() {
         <nav className="flex justify-around py-3 max-w-lg mx-auto">
           <Link href="/" className="flex flex-col items-center py-2 text-muted-foreground">
             <Home className="h-5 w-5" />
-            <span className="text-xs mt-1">首页</span>
+            <span className="text-xs mt-1">Home</span>
           </Link>
           <Link href="/investment" className="flex flex-col items-center py-2 text-muted-foreground">
             <PieChart className="h-5 w-5" />
-            <span className="text-xs mt-1">投资</span>
+            <span className="text-xs mt-1">Invest</span>
           </Link>
           <Link href="/promotion" className="flex flex-col items-center py-2 text-muted-foreground">
             <Share2 className="h-5 w-5" />
-            <span className="text-xs mt-1">推广</span>
+            <span className="text-xs mt-1">Promote</span>
           </Link>
           <Link href="/profile" className="flex flex-col items-center py-2 text-muted-foreground">
             <User className="h-5 w-5" />
-            <span className="text-xs mt-1">我的</span>
+            <span className="text-xs mt-1">My Profile</span>
           </Link>
         </nav>
       </div>

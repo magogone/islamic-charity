@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Home, Users, User } from "lucide-react"
+import { Home, User, Share2, UserPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { InvitationCard } from "@/components/invitation-card"
@@ -12,11 +12,11 @@ import { HeartPlusIcon } from "@/components/heart-plus-icon"
 export default function PromotionPage() {
   const [activeTab, setActiveTab] = useState("invite")
 
-  // 修正的示例数据，确保与InvitationCard组件期望的数据结构匹配
+  // Corrected sample data to match the expected data structure for InvitationCard component
   const invitationData = {
-    totalReferrals: 3,
+    totalReferrals: 5,
     directReferrals: 2,
-    indirectReferrals: 1,
+    indirectReferrals: 3,
     totalRewards: 25,
     rewardRate: {
       level1: 10,
@@ -49,10 +49,10 @@ export default function PromotionPage() {
             <div className="w-8 h-8 mr-2">
               <Image src="/islamic-logo.png" width={32} height={32} alt="Logo" className="object-contain" />
             </div>
-            <h1 className="text-xl font-bold text-islamic-gold">邀请好友</h1>
+            <h1 className="text-xl font-bold text-islamic-gold">Invite Friends</h1>
           </div>
           <Button variant="ghost" size="icon" className="rounded-full bg-islamic-medium/70">
-            <Users className="h-5 w-5 text-islamic-gold" />
+            <Share2 className="h-5 w-5 text-islamic-gold" />
             <span className="sr-only">Invitations</span>
           </Button>
         </div>
@@ -66,39 +66,57 @@ export default function PromotionPage() {
 
           {/* Invitation Benefits */}
           <div className="mt-6">
-            <h2 className="text-lg font-bold text-islamic-gold mb-3">邀请好友的福利</h2>
+            <h2 className="text-lg font-bold text-islamic-gold mb-3">Benefits of Inviting Friends</h2>
             <Card className="border-none shadow-xl bg-islamic-cardBg/90 backdrop-blur-lg text-white overflow-hidden">
               <CardHeader className="pb-2">
-                <CardTitle className="text-base text-islamic-gold">推荐奖励计划</CardTitle>
-                <CardDescription className="text-islamic-cream/70">邀请好友加入，双方都能获得丰厚奖励</CardDescription>
+                <CardTitle className="text-base text-islamic-gold">Referral Reward Program</CardTitle>
+                <CardDescription className="text-islamic-cream/70">
+                  Invite friends to join, both parties receive generous rewards
+                </CardDescription>
               </CardHeader>
               <CardContent className="pb-2">
                 <div className="space-y-4">
                   <div className="p-3 rounded-lg bg-islamic-medium/70 backdrop-blur-sm">
-                    <h3 className="text-sm font-medium mb-2 text-islamic-gold">一级推荐奖励</h3>
+                    <h3 className="text-sm font-medium mb-2 text-islamic-gold flex items-center">
+                      <UserPlus className="h-4 w-4 mr-2 text-islamic-gold" />
+                      Level 1 Referral Rewards
+                    </h3>
                     <p className="text-sm text-islamic-cream/90">
-                      当您直接推荐的好友进行捐赠时，您将获得其每日扶贫资金的10%作为奖励。
+                      When your directly referred friends make donations, you'll receive 10% of their daily poverty
+                      relief funds as a reward.
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-islamic-medium/70 backdrop-blur-sm">
-                    <h3 className="text-sm font-medium mb-2 text-islamic-gold">二级推荐奖励</h3>
+                    <h3 className="text-sm font-medium mb-2 text-islamic-gold flex items-center">
+                      <UserPlus className="h-4 w-4 mr-2 text-islamic-gold" />
+                      Level 2 Referral Rewards
+                    </h3>
                     <p className="text-sm text-islamic-cream/90">
-                      当您的好友推荐他人进行捐赠时，您将获得其每日扶贫资金的5%作为奖励。
+                      When your friends refer others to donate, you'll receive 4% of their daily poverty relief funds as
+                      a reward.
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-islamic-medium/70 backdrop-blur-sm">
-                    <h3 className="text-sm font-medium mb-2 text-islamic-gold">三级推荐奖励</h3>
+                    <h3 className="text-sm font-medium mb-2 text-islamic-gold flex items-center">
+                      <UserPlus className="h-4 w-4 mr-2 text-islamic-gold" />
+                      Level 3 Referral Rewards
+                    </h3>
                     <p className="text-sm text-islamic-cream/90">
-                      当您的二级好友推荐他人进行捐赠时，您将获得其每日扶贫资金的3%作为奖励。
+                      When your level 2 friends refer others to donate, you'll receive 2% of their daily poverty relief
+                      funds as a reward.
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-islamic-medium/70 backdrop-blur-sm">
-                    <h3 className="text-sm font-medium mb-2 text-islamic-gold">VIP等级提升</h3>
+                    <h3 className="text-sm font-medium mb-2 text-islamic-gold flex items-center">
+                      <User className="h-4 w-4 mr-2 text-islamic-gold" />
+                      VIP Level Increase
+                    </h3>
                     <p className="text-sm text-islamic-cream/90">
-                      随着您的VIP等级提升，推荐奖励比例也会相应提高，最高可达30%的总推荐奖励。
+                      As your VIP level increases, your referral reward rates will also increase, up to a total of 30%
+                      in referral rewards.
                     </p>
                   </div>
                 </div>
@@ -107,7 +125,7 @@ export default function PromotionPage() {
                 <Button className="w-full bg-islamic-gold hover:bg-islamic-gold/90 text-islamic-dark" asChild>
                   <Link href="/donation">
                     <HeartPlusIcon className="mr-2 h-4 w-4" />
-                    立即捐赠
+                    Donate Now
                   </Link>
                 </Button>
               </CardFooter>
@@ -121,19 +139,19 @@ export default function PromotionPage() {
         <nav className="flex justify-around py-3 mx-auto max-w-lg">
           <Link href="/" className="flex flex-col items-center py-2 text-islamic-cream/50">
             <Home className="h-5 w-5" />
-            <span className="mt-1 text-xs">首页</span>
+            <span className="mt-1 text-xs">Home</span>
           </Link>
           <Link href="/donation" className="flex flex-col items-center py-2 text-islamic-cream/50">
             <HeartPlusIcon />
-            <span className="mt-1 text-xs">捐赠</span>
+            <span className="mt-1 text-xs">Donate</span>
           </Link>
           <Link href="/promotion" className="flex flex-col items-center py-2 text-islamic-gold">
-            <Users className="h-5 w-5" />
-            <span className="mt-1 text-xs">邀请</span>
+            <Share2 className="h-5 w-5" />
+            <span className="mt-1 text-xs">Invite</span>
           </Link>
           <Link href="/profile" className="flex flex-col items-center py-2 text-islamic-cream/50">
             <User className="h-5 w-5" />
-            <span className="mt-1 text-xs">我的</span>
+            <span className="mt-1 text-xs">Profile</span>
           </Link>
         </nav>
       </div>

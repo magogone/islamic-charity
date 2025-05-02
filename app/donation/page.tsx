@@ -6,7 +6,7 @@ import { VipBenefitsCard } from "@/components/vip-benefits-card"
 import { HeartPlusIcon } from "@/components/heart-plus-icon"
 
 export default function DonationPage() {
-  // 示例数据
+  // Sample data
   const donationData = {
     totalDonation: 100,
     vipLevel: 1,
@@ -30,7 +30,7 @@ export default function DonationPage() {
 
   return (
     <div className="min-h-screen bg-islamic-dark text-white pb-16">
-      {/* 主要内容 */}
+      {/* Main content */}
       <div className="container max-w-md mx-auto px-4 py-6">
         <DonationOverview data={donationData} />
 
@@ -40,12 +40,17 @@ export default function DonationPage() {
             nextLevel={2}
             requiredAmount={300}
             currentAmount={100}
-            benefits={["每日获得更高的扶贫资金", "提高推荐奖励比例", "专属VIP客服支持", "优先参与特别活动"]}
+            benefits={[
+              "Receive higher daily poverty relief funds",
+              "Increased referral reward rates",
+              "Exclusive VIP customer support",
+              "Priority access to special events",
+            ]}
           />
         </div>
       </div>
 
-      {/* 底部导航 */}
+      {/* Bottom navigation */}
       <div className="fixed bottom-0 left-0 right-0 bg-islamic-dark border-t border-islamic-medium/30 py-2">
         <div className="container max-w-md mx-auto px-4">
           <div className="flex justify-around">
@@ -54,25 +59,25 @@ export default function DonationPage() {
               className="flex flex-col items-center text-islamic-cream/60 hover:text-islamic-gold transition-colors"
             >
               <Home className="h-6 w-6" />
-              <span className="text-xs mt-1">首页</span>
+              <span className="text-xs mt-1">Home</span>
             </Link>
             <Link href="/donation" className="flex flex-col items-center text-islamic-gold transition-colors">
               <HeartPlusIcon className="h-6 w-6" />
-              <span className="text-xs mt-1">捐赠</span>
+              <span className="text-xs mt-1">Donate</span>
             </Link>
             <Link
               href="/promotion"
               className="flex flex-col items-center text-islamic-cream/60 hover:text-islamic-gold transition-colors"
             >
               <Users className="h-6 w-6" />
-              <span className="text-xs mt-1">邀请</span>
+              <span className="text-xs mt-1">Invite</span>
             </Link>
             <Link
               href="/profile"
               className="flex flex-col items-center text-islamic-cream/60 hover:text-islamic-gold transition-colors"
             >
               <User className="h-6 w-6" />
-              <span className="text-xs mt-1">我的</span>
+              <span className="text-xs mt-1">Profile</span>
             </Link>
           </div>
         </div>

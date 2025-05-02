@@ -9,10 +9,10 @@ interface ReferralInfoDialogProps {
 }
 
 export function ReferralInfoDialog({ open, onOpenChange }: ReferralInfoDialogProps) {
-  // 当前用户的推荐人数（示例数据）
+  // Current user's referral count (example data)
   const currentReferrals = 2
 
-  // 根据推荐人数获取对应的奖励率
+  // Get reward rate class based on referral count
   const getRateClass = (referrals: number) => {
     if (currentReferrals >= referrals) {
       return "bg-[#8dc63f]/20 border-[#8dc63f] text-[#8dc63f]"
@@ -27,43 +27,44 @@ export function ReferralInfoDialog({ open, onOpenChange }: ReferralInfoDialogPro
         <DialogHeader>
           <DialogTitle className="text-islamic-gold flex items-center">
             <Users className="mr-2 h-5 w-5" />
-            推荐奖励说明
+            Referral Reward Explanation
           </DialogTitle>
-          <DialogDescription className="text-islamic-cream/70">了解更多关于推荐奖励的信息</DialogDescription>
+          <DialogDescription className="text-islamic-cream/70">Learn more about referral rewards</DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-2">
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-islamic-gold">推荐奖励详情</h3>
+            <h3 className="text-sm font-medium text-islamic-gold">Referral Reward Details</h3>
             <p className="text-xs text-islamic-cream/80">
-              推荐5代，获得捐赠资金总共30%的扶贫奖励。随着您的VIP等级提升，推荐奖励比例也会相应提高。
+              Refer up to 5 generations and receive a total of 30% poverty relief rewards from donation funds. As your
+              VIP level increases, your referral reward rates will also increase.
             </p>
 
             <div className="space-y-2">
               <div className="p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-sm font-medium">VIP 1</span>
-                  <span className="font-medium text-islamic-gold">总计 20%</span>
+                  <span className="font-medium text-islamic-gold">Total 20%</span>
                 </div>
                 <div className="grid grid-cols-5 gap-1 text-xs">
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">1代</div>
+                    <div className="text-islamic-cream/70">1st Gen</div>
                     <div className="font-medium">10%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">2代</div>
+                    <div className="text-islamic-cream/70">2nd Gen</div>
                     <div className="font-medium">4%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">3代</div>
+                    <div className="text-islamic-cream/70">3rd Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">4代</div>
+                    <div className="text-islamic-cream/70">4th Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">5代</div>
+                    <div className="text-islamic-cream/70">5th Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                 </div>
@@ -72,27 +73,27 @@ export function ReferralInfoDialog({ open, onOpenChange }: ReferralInfoDialogPro
               <div className="p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-sm font-medium">VIP 2</span>
-                  <span className="font-medium text-islamic-gold">总计 22%</span>
+                  <span className="font-medium text-islamic-gold">Total 22%</span>
                 </div>
                 <div className="grid grid-cols-5 gap-1 text-xs">
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">1代</div>
+                    <div className="text-islamic-cream/70">1st Gen</div>
                     <div className="font-medium">12%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">2代</div>
+                    <div className="text-islamic-cream/70">2nd Gen</div>
                     <div className="font-medium">4%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">3代</div>
+                    <div className="text-islamic-cream/70">3rd Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">4代</div>
+                    <div className="text-islamic-cream/70">4th Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">5代</div>
+                    <div className="text-islamic-cream/70">5th Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                 </div>
@@ -101,27 +102,27 @@ export function ReferralInfoDialog({ open, onOpenChange }: ReferralInfoDialogPro
               <div className="p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-sm font-medium">VIP 3</span>
-                  <span className="font-medium text-islamic-gold">总计 24%</span>
+                  <span className="font-medium text-islamic-gold">Total 24%</span>
                 </div>
                 <div className="grid grid-cols-5 gap-1 text-xs">
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">1代</div>
+                    <div className="text-islamic-cream/70">1st Gen</div>
                     <div className="font-medium">14%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">2代</div>
+                    <div className="text-islamic-cream/70">2nd Gen</div>
                     <div className="font-medium">4%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">3代</div>
+                    <div className="text-islamic-cream/70">3rd Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">4代</div>
+                    <div className="text-islamic-cream/70">4th Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">5代</div>
+                    <div className="text-islamic-cream/70">5th Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                 </div>
@@ -130,27 +131,27 @@ export function ReferralInfoDialog({ open, onOpenChange }: ReferralInfoDialogPro
               <div className="p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-sm font-medium">VIP 4</span>
-                  <span className="font-medium text-islamic-gold">总计 26%</span>
+                  <span className="font-medium text-islamic-gold">Total 26%</span>
                 </div>
                 <div className="grid grid-cols-5 gap-1 text-xs">
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">1代</div>
+                    <div className="text-islamic-cream/70">1st Gen</div>
                     <div className="font-medium">16%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">2代</div>
+                    <div className="text-islamic-cream/70">2nd Gen</div>
                     <div className="font-medium">4%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">3代</div>
+                    <div className="text-islamic-cream/70">3rd Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">4代</div>
+                    <div className="text-islamic-cream/70">4th Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">5代</div>
+                    <div className="text-islamic-cream/70">5th Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                 </div>
@@ -159,27 +160,27 @@ export function ReferralInfoDialog({ open, onOpenChange }: ReferralInfoDialogPro
               <div className="p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-sm font-medium">VIP 5</span>
-                  <span className="font-medium text-islamic-gold">总计 30%</span>
+                  <span className="font-medium text-islamic-gold">Total 30%</span>
                 </div>
                 <div className="grid grid-cols-5 gap-1 text-xs">
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">1代</div>
+                    <div className="text-islamic-cream/70">1st Gen</div>
                     <div className="font-medium">20%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">2代</div>
+                    <div className="text-islamic-cream/70">2nd Gen</div>
                     <div className="font-medium">4%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">3代</div>
+                    <div className="text-islamic-cream/70">3rd Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">4代</div>
+                    <div className="text-islamic-cream/70">4th Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-islamic-cream/70">5代</div>
+                    <div className="text-islamic-cream/70">5th Gen</div>
                     <div className="font-medium">2%</div>
                   </div>
                 </div>
@@ -187,7 +188,8 @@ export function ReferralInfoDialog({ open, onOpenChange }: ReferralInfoDialogPro
             </div>
 
             <p className="text-xs text-islamic-cream/70 italic">
-              推荐更多好友参与捐赠，不仅可以获得更多奖励，还能提升您的基础奖励比例。
+              Refer more friends to participate in donations to not only receive more rewards but also increase your
+              basic reward rate.
             </p>
           </div>
         </div>

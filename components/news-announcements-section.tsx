@@ -16,10 +16,10 @@ interface NewsAnnouncementsSectionProps {
 export function NewsAnnouncementsSection({ news, announcements, className }: NewsAnnouncementsSectionProps) {
   const [activeTab, setActiveTab] = useState<string>("all")
 
-  // 合并并按日期排序
+  // Merge and sort by date
   const allItems = [...news, ...announcements].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
-  // 根据当前选项卡筛选项目
+  // Filter items based on current tab
   const filteredItems = activeTab === "all" ? allItems : activeTab === "news" ? news : announcements
 
   const scrollContainer = (direction: "left" | "right") => {
@@ -34,8 +34,8 @@ export function NewsAnnouncementsSection({ news, announcements, className }: New
     <div className={cn("w-full my-6", className)}>
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h2 className="text-xl font-bold text-islamic-gold">新闻与公告</h2>
-          <p className="text-sm text-islamic-cream/70">了解最新动态和重要信息</p>
+          <h2 className="text-xl font-bold text-islamic-gold">News & Announcements</h2>
+          <p className="text-sm text-islamic-cream/70">Learn about the latest updates and important information</p>
         </div>
         <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-auto">
           <TabsList className="bg-islamic-dark/50 border border-islamic-medium/30">
@@ -43,19 +43,19 @@ export function NewsAnnouncementsSection({ news, announcements, className }: New
               value="all"
               className="data-[state=active]:bg-islamic-gold data-[state=active]:text-islamic-dark"
             >
-              全部
+              All
             </TabsTrigger>
             <TabsTrigger
               value="news"
               className="data-[state=active]:bg-islamic-gold data-[state=active]:text-islamic-dark"
             >
-              新闻
+              News
             </TabsTrigger>
             <TabsTrigger
               value="announcement"
               className="data-[state=active]:bg-islamic-gold data-[state=active]:text-islamic-dark"
             >
-              公告
+              Announcements
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -81,7 +81,7 @@ export function NewsAnnouncementsSection({ news, announcements, className }: New
           onClick={() => scrollContainer("left")}
         >
           <ChevronLeft className="h-4 w-4" />
-          <span className="sr-only">向左滚动</span>
+          <span className="sr-only">Scroll Left</span>
         </Button>
 
         <Button
@@ -91,7 +91,7 @@ export function NewsAnnouncementsSection({ news, announcements, className }: New
           onClick={() => scrollContainer("right")}
         >
           <ChevronRight className="h-4 w-4" />
-          <span className="sr-only">向右滚动</span>
+          <span className="sr-only">Scroll Right</span>
         </Button>
       </div>
     </div>

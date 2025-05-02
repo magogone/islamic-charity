@@ -28,11 +28,11 @@ export function PaymentDialog({ open, onOpenChange }: PaymentDialogProps) {
 
   const handlePayment = () => {
     setIsProcessing(true)
-    // 模拟支付处理
+    // Simulate payment processing
     setTimeout(() => {
       setIsProcessing(false)
       setIsComplete(true)
-      // 重置状态并关闭对话框
+      // Reset state and close dialog
       setTimeout(() => {
         setIsComplete(false)
         onOpenChange(false)
@@ -47,9 +47,9 @@ export function PaymentDialog({ open, onOpenChange }: PaymentDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px] bg-islamic-cardBg text-white border-islamic-medium">
         <DialogHeader>
-          <DialogTitle className="text-islamic-gold">增加捐赠</DialogTitle>
+          <DialogTitle className="text-islamic-gold">Increase Donation</DialogTitle>
           <DialogDescription className="text-islamic-cream/70">
-            请选择或输入您想要捐赠的金额，并选择支付方式。
+            Please select or enter the amount you wish to donate and choose a payment method.
           </DialogDescription>
         </DialogHeader>
 
@@ -76,7 +76,7 @@ export function PaymentDialog({ open, onOpenChange }: PaymentDialogProps) {
 
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="amount" className="text-right text-islamic-cream">
-                  自定义金额
+                  Custom Amount
                 </Label>
                 <div className="col-span-3">
                   <Input
@@ -89,7 +89,7 @@ export function PaymentDialog({ open, onOpenChange }: PaymentDialogProps) {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-islamic-cream">支付方式</Label>
+                <Label className="text-islamic-cream">Payment Method</Label>
                 <RadioGroup
                   defaultValue="usdt"
                   value={paymentMethod}
@@ -110,7 +110,7 @@ export function PaymentDialog({ open, onOpenChange }: PaymentDialogProps) {
                     <Label htmlFor="card" className="flex-1 cursor-pointer">
                       <div className="flex items-center">
                         <CreditCard className="mr-2 h-5 w-5 text-islamic-gold" />
-                        <span>信用卡/借记卡</span>
+                        <span>Credit/Debit Card</span>
                       </div>
                     </Label>
                   </div>
@@ -123,23 +123,23 @@ export function PaymentDialog({ open, onOpenChange }: PaymentDialogProps) {
                 className="bg-islamic-gold text-islamic-dark hover:bg-islamic-gold/90"
                 onClick={handlePayment}
               >
-                确认支付
+                Confirm Payment
               </Button>
             </DialogFooter>
           </>
         ) : isProcessing ? (
           <div className="py-8 flex flex-col items-center justify-center">
             <div className="w-12 h-12 rounded-full border-4 border-islamic-gold/30 border-t-islamic-gold animate-spin mb-4"></div>
-            <p className="text-islamic-cream">处理中，请稍候...</p>
+            <p className="text-islamic-cream">Processing, please wait...</p>
           </div>
         ) : (
           <div className="py-8 flex flex-col items-center justify-center">
             <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-4">
               <Check className="h-6 w-6 text-green-500" />
             </div>
-            <p className="text-islamic-cream text-center">支付成功！</p>
+            <p className="text-islamic-cream text-center">Payment Successful!</p>
             <p className="text-islamic-cream/70 text-center text-sm mt-1">
-              感谢您的捐赠，您的善举将帮助更多需要帮助的人。
+              Thank you for your donation. Your generosity will help more people in need.
             </p>
           </div>
         )}

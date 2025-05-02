@@ -55,7 +55,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
   const [referralInfoOpen, setReferralInfoOpen] = useState(false)
   const [withdrawOpen, setWithdrawOpen] = useState(false)
 
-  // 收益汇总数据
+  // Summary data
   const summaryData = {
     expectedReward: data.totalExpectedReward || 120,
     maxReward: data.totalMaxReward || 180,
@@ -63,11 +63,11 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
     withdrawableAmount: data.withdrawableAmount || 30,
   }
 
-  // 处理提取收益
+  // Handle withdrawal
   const handleWithdraw = () => {
-    // 这里可以添加提取收益的逻辑
+    // Add withdrawal logic here
     setWithdrawOpen(true)
-    console.log("提取收益", summaryData.withdrawableAmount)
+    console.log("Withdraw earnings", summaryData.withdrawableAmount)
   }
 
   return (
@@ -77,16 +77,16 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
       >
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-islamic-gold to-islamic-gold/50"></div>
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center text-xl text-islamic-gold">我的捐赠概览</CardTitle>
+          <CardTitle className="flex items-center text-xl text-islamic-gold">My Donation Overview</CardTitle>
         </CardHeader>
         <CardContent className="pb-2">
-          {/* 捐赠金额和收益卡片 */}
+          {/* Donation amount and earnings cards */}
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3 flex flex-col h-full">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center">
                   <Heart className="h-4 w-4 text-islamic-gold mr-2" />
-                  <span className="text-xs text-islamic-cream/70">总捐赠金额</span>
+                  <span className="text-xs text-islamic-cream/70">Total Donation</span>
                 </div>
                 <button
                   onClick={() => setPaymentOpen(true)}
@@ -97,7 +97,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
               </div>
               <span className="text-2xl font-bold text-islamic-gold mb-3">{data.totalDonation} U</span>
 
-              {/* 使用改进后的VIP等级指示器 */}
+              {/* Use improved VIP level indicator */}
               <VipLevelProgress
                 currentLevel={data.vipLevel}
                 currentDonation={data.totalDonation}
@@ -109,7 +109,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
             <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3 flex flex-col h-full">
               <div className="flex items-center mb-2">
                 <TrendingUp className="h-3.5 w-3.5 text-islamic-gold mr-1.5" />
-                <span className="text-sm text-islamic-gold">捐赠奖励</span>
+                <span className="text-sm text-islamic-gold">Donation Rewards</span>
               </div>
 
               <div className="grid grid-cols-2 gap-x-2 gap-y-2.5 mt-1">
@@ -118,7 +118,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                   <div className="flex flex-col items-center">
                     <span className="text-xl font-bold text-islamic-gold/95">{data.dailyFunds.current}</span>
                     <span className="text-xs text-islamic-gold/90">USDT</span>
-                    <span className="text-[10px] text-islamic-cream/60 mt-0.5">当前获得</span>
+                    <span className="text-[10px] text-islamic-cream/60 mt-0.5">Current</span>
                   </div>
                 </div>
 
@@ -127,7 +127,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                   <div className="flex flex-col items-center">
                     <span className="text-xl font-bold text-islamic-gold/95">{data.dailyFunds.max}</span>
                     <span className="text-xs text-islamic-gold/90">USDT</span>
-                    <span className="text-[10px] text-islamic-cream/60 mt-0.5">最大可得</span>
+                    <span className="text-[10px] text-islamic-cream/60 mt-0.5">Maximum</span>
                   </div>
                 </div>
 
@@ -135,7 +135,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                   <DollarSign className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
                   <div className="flex flex-col items-center">
                     <span className="text-xl font-bold text-islamic-gold/95">{data.currentRate}%</span>
-                    <span className="text-[10px] text-islamic-cream/60 mt-0.5">当前比例</span>
+                    <span className="text-[10px] text-islamic-cream/60 mt-0.5">Current Rate</span>
                   </div>
                 </div>
 
@@ -143,14 +143,14 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                   <TrendingUp className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
                   <div className="flex flex-col items-center">
                     <span className="text-xl font-bold text-islamic-gold/95">{data.maxRate || 2.5}%</span>
-                    <span className="text-[10px] text-islamic-cream/60 mt-0.5">最高比例</span>
+                    <span className="text-[10px] text-islamic-cream/60 mt-0.5">Max Rate</span>
                   </div>
                 </div>
               </div>
 
               <div className="flex items-center mt-auto justify-center">
                 <Users2 className="h-3 w-3 text-islamic-cream/60 mr-1" />
-                <span className="text-[10px] text-islamic-cream/60">已推荐 {data.referrals} 人</span>
+                <span className="text-[10px] text-islamic-cream/60">Referred {data.referrals} people</span>
                 <button
                   onClick={() => setReferralInfoOpen(true)}
                   className="ml-1 p-0.5 rounded-full hover:bg-islamic-medium/50 transition-colors"
@@ -161,12 +161,12 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
             </div>
           </div>
 
-          {/* 收益汇总信息 - 水平堆叠条形图 */}
+          {/* Earnings summary information - horizontal stacked bar chart */}
           <div className="p-4 mb-3 rounded-lg bg-islamic-medium/70 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <DollarSign className="h-4 w-4 text-islamic-gold mr-2" />
-                <span className="text-sm font-medium">收益汇总</span>
+                <span className="text-sm font-medium">Earnings Summary</span>
               </div>
 
               <TooltipProvider>
@@ -185,13 +185,13 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>提取收益</p>
+                    <p>Withdraw Earnings</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
 
-            {/* 水平堆叠条形图 */}
+            {/* Horizontal stacked bar chart */}
             <RewardSummaryChart data={summaryData} onWithdraw={handleWithdraw} />
           </div>
         </CardContent>
@@ -205,7 +205,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                 <Heart className="mr-1 h-4 w-4" />
                 <PlusCircle className="h-3 w-3 -ml-2 -mt-2" />
               </div>
-              增加捐赠
+              Increase Donation
             </Button>
           </CardFooter>
         )}

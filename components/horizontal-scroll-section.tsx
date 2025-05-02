@@ -12,8 +12,8 @@ interface HorizontalScrollSectionProps {
   className?: string
   showControls?: boolean
   showHeader?: boolean
-  carouselMode?: boolean // 新增跑马灯模式选项
-  itemsToShow?: number // 一次显示的卡片数量
+  carouselMode?: boolean // New carousel mode option
+  itemsToShow?: number // Number of cards to show at once
 }
 
 export function HorizontalScrollSection({
@@ -23,8 +23,8 @@ export function HorizontalScrollSection({
   className,
   showControls = true,
   showHeader = true,
-  carouselMode = true, // 默认启用跑马灯模式
-  itemsToShow = 1, // 默认一次显示1个卡片
+  carouselMode = true, // Default enable carousel mode
+  itemsToShow = 1, // Default show 1 card at a time
 }: HorizontalScrollSectionProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
@@ -34,20 +34,20 @@ export function HorizontalScrollSection({
   const [containerWidth, setContainerWidth] = useState(0)
   const [childrenCount, setChildrenCount] = useState(0)
 
-  // 计算子元素数量
+  // Calculate number of children
   useEffect(() => {
     if (scrollContainerRef.current) {
       const childCount = scrollContainerRef.current.children.length
       setChildrenCount(childCount)
 
-      // 计算容器宽度
+      // Calculate container width
       const containerWidth = scrollContainerRef.current.clientWidth
       setContainerWidth(containerWidth)
 
-      // 计算每个项目的宽度（包括间距）
+      // Calculate each item's width (including spacing)
       if (childCount > 0) {
         const firstChild = scrollContainerRef.current.children[0] as HTMLElement
-        const itemFullWidth = firstChild.offsetWidth + 16 // 16px是间距
+        const itemFullWidth = firstChild.offsetWidth + 16 // 16px is spacing
         setItemWidth(itemFullWidth)
       }
     }
@@ -59,7 +59,7 @@ export function HorizontalScrollSection({
       setCanScrollLeft(scrollLeft > 0)
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10) // 10px buffer
 
-      // 更新当前索引
+      // Update current index
       if (itemWidth > 0) {
         const newIndex = Math.round(scrollLeft / itemWidth)
         setCurrentIndex(newIndex)
@@ -72,11 +72,11 @@ export function HorizontalScrollSection({
       let scrollAmount = 0
 
       if (carouselMode) {
-        // 跑马灯模式：滚动一个或多个完整卡片
-        const itemsToScroll = Math.min(itemsToShow, 1) // 至少滚动1个
+        // Carousel mode: scroll one or more complete cards
+        const itemsToScroll = Math.min(itemsToShow, 1) // Scroll at least 1
         scrollAmount = itemWidth * itemsToScroll
       } else {
-        // 普通模式：滚动容器宽度的75%
+        // Normal mode: scroll 75% of container width
         scrollAmount = scrollContainerRef.current.clientWidth * 0.75
       }
 
@@ -119,7 +119,7 @@ export function HorizontalScrollSection({
                 disabled={!canScrollLeft}
               >
                 <ChevronLeft className="h-4 w-4" />
-                <span className="sr-only">向左滚动</span>
+                <span className="sr-only">Scroll Left</span>
               </Button>
               <Button
                 variant="outline"
@@ -132,7 +132,7 @@ export function HorizontalScrollSection({
                 disabled={!canScrollRight}
               >
                 <ChevronRight className="h-4 w-4" />
-                <span className="sr-only">向右滚动</span>
+                <span className="sr-only">Scroll Right</span>
               </Button>
             </div>
           )}
@@ -150,7 +150,7 @@ export function HorizontalScrollSection({
         {children}
       </div>
 
-      {/* 跑马灯指示器 */}
+      {/* Carousel indicators */}
       {carouselMode && childrenCount > 1 && (
         <div className="flex justify-center mt-2 space-x-1">
           {Array.from({ length: childrenCount }).map((_, index) => (
@@ -168,7 +168,7 @@ export function HorizontalScrollSection({
                   })
                 }
               }}
-              aria-label={`转到第 ${index + 1} 项`}
+              aria-label={`Go to item ${index + 1}`}
             />
           ))}
         </div>

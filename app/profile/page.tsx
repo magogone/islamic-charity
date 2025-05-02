@@ -18,7 +18,7 @@ export default function ProfilePage() {
             <div className="w-8 h-8 mr-2">
               <Image src="/islamic-logo.png" width={32} height={32} alt="Logo" className="object-contain" />
             </div>
-            <h1 className="text-xl font-bold text-[#0a3d2b] dark:text-[#d4b96e]">个人中心</h1>
+            <h1 className="text-xl font-bold text-[#0a3d2b] dark:text-[#d4b96e]">Profile</h1>
           </div>
           <Button variant="ghost" size="icon" className="rounded-full bg-[#f0ece0] dark:bg-[#1a1f2c]">
             <Settings className="h-5 w-5 text-[#0a3d2b] dark:text-[#d4b96e]" />
@@ -40,76 +40,76 @@ export default function ProfilePage() {
                   <div className="absolute bottom-0 right-0 w-4 h-4 bg-[#8dc63f] rounded-full border-2 border-white dark:border-[#131b29]"></div>
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-[#0a3d2b] dark:text-[#d4b96e]">用户123456</h2>
-                  <p className="text-sm text-muted-foreground">VIP 1 · 已认证</p>
+                  <h2 className="text-lg font-bold text-[#0a3d2b] dark:text-[#d4b96e]">User123456</h2>
+                  <p className="text-sm text-muted-foreground">VIP 1 · Verified</p>
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
                   className="ml-auto border-[#0a3d2b] text-[#0a3d2b] hover:bg-[#0a3d2b] hover:text-white dark:border-[#d4b96e] dark:text-[#d4b96e] dark:hover:bg-[#d4b96e] dark:hover:text-[#0a3d2b]"
                 >
-                  编辑资料
+                  Edit Profile
                 </Button>
               </div>
 
-              {/* 用户资料内容 */}
+              {/* User profile content */}
               <div className="mt-6 grid grid-cols-3 gap-3">
                 <div className="bg-[#f0ece0] dark:bg-[#1a1f2c] p-3 rounded-lg text-center">
-                  <p className="text-xs text-muted-foreground mb-1">总捐赠</p>
+                  <p className="text-xs text-muted-foreground mb-1">Total Donations</p>
                   <p className="text-lg font-bold text-[#0a3d2b] dark:text-[#d4b96e]">100 U</p>
                 </div>
                 <div className="bg-[#f0ece0] dark:bg-[#1a1f2c] p-3 rounded-lg text-center">
-                  <p className="text-xs text-muted-foreground mb-1">扶贫资金</p>
+                  <p className="text-xs text-muted-foreground mb-1">Relief Funds</p>
                   <p className="text-lg font-bold text-[#0a3d2b] dark:text-[#8dc63f]">120 U</p>
                 </div>
                 <div className="bg-[#f0ece0] dark:bg-[#1a1f2c] p-3 rounded-lg text-center">
-                  <p className="text-xs text-muted-foreground mb-1">邀请人数</p>
+                  <p className="text-xs text-muted-foreground mb-1">Referrals</p>
                   <p className="text-lg font-bold text-[#0a3d2b] dark:text-[#d4b96e]">2</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* 我的捐赠概览卡片 */}
+          {/* My Donation Overview Card */}
           <Link href="/profile/donation-overview">
             <Card className="border-[#d4b96e]/20 bg-white/80 dark:bg-[#131b29]/80 backdrop-blur-sm overflow-hidden mb-4">
               <CardContent className="p-4">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-base font-medium text-[#0a3d2b] dark:text-[#d4b96e]">我的捐赠概览</h3>
+                  <h3 className="text-base font-medium text-[#0a3d2b] dark:text-[#d4b96e]">My Donation Overview</h3>
                   <ArrowRight className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div className="mt-3 grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-xs text-muted-foreground">总捐赠金额</p>
+                    <p className="text-xs text-muted-foreground">Total Donation Amount</p>
                     <p className="text-lg font-bold text-[#0a3d2b] dark:text-[#d4b96e]">100 U</p>
-                    <p className="text-xs text-muted-foreground mt-1">VIP 1 级别</p>
+                    <p className="text-xs text-muted-foreground mt-1">VIP Level 1</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">每日扶贫资金</p>
+                    <p className="text-xs text-muted-foreground">Daily Relief Funds</p>
                     <p className="text-lg font-bold text-[#0a3d2b] dark:text-[#8dc63f]">2.4-6.0 U</p>
-                    <p className="text-xs text-muted-foreground mt-1">已推荐 2 人</p>
+                    <p className="text-xs text-muted-foreground mt-1">2 referrals</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </Link>
 
-          {/* 其他个人中心内容 */}
+          {/* Other profile content */}
           <div className="space-y-4">
             <Card className="border-[#d4b96e]/20 bg-white/80 dark:bg-[#131b29]/80 backdrop-blur-sm overflow-hidden">
               <CardContent className="p-4">
-                <h3 className="text-base font-medium text-[#0a3d2b] dark:text-[#d4b96e] mb-3">我的团队</h3>
+                <h3 className="text-base font-medium text-[#0a3d2b] dark:text-[#d4b96e] mb-3">My Team</h3>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">直接邀请</span>
-                    <span className="text-sm font-medium">2人</span>
+                    <span className="text-sm">Direct Referrals</span>
+                    <span className="text-sm font-medium">2 people</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">团队总人数</span>
-                    <span className="text-sm font-medium">5人</span>
+                    <span className="text-sm">Total Team Size</span>
+                    <span className="text-sm font-medium">5 people</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">团队总捐赠</span>
+                    <span className="text-sm">Team Total Donations</span>
                     <span className="text-sm font-medium">500 U</span>
                   </div>
                 </div>
@@ -118,18 +118,18 @@ export default function ProfilePage() {
 
             <Card className="border-[#d4b96e]/20 bg-white/80 dark:bg-[#131b29]/80 backdrop-blur-sm overflow-hidden">
               <CardContent className="p-4">
-                <h3 className="text-base font-medium text-[#0a3d2b] dark:text-[#d4b96e] mb-3">我的收益</h3>
+                <h3 className="text-base font-medium text-[#0a3d2b] dark:text-[#d4b96e] mb-3">My Earnings</h3>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">今日扶贫资金</span>
+                    <span className="text-sm">Today's Relief Funds</span>
                     <span className="text-sm font-medium text-[#8dc63f]">3 U</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">累计扶贫资金</span>
+                    <span className="text-sm">Accumulated Relief Funds</span>
                     <span className="text-sm font-medium text-[#8dc63f]">120 U</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">团队奖励</span>
+                    <span className="text-sm">Team Rewards</span>
                     <span className="text-sm font-medium text-[#8dc63f]">25 U</span>
                   </div>
                 </div>
@@ -144,19 +144,19 @@ export default function ProfilePage() {
         <nav className="flex justify-around py-3 max-w-lg mx-auto">
           <Link href="/" className="flex flex-col items-center py-2 text-muted-foreground">
             <Home className="h-5 w-5" />
-            <span className="text-xs mt-1">首页</span>
+            <span className="text-xs mt-1">Home</span>
           </Link>
           <Link href="/donation" className="flex flex-col items-center py-2 text-muted-foreground">
             <Gift className="h-5 w-5" />
-            <span className="text-xs mt-1">捐赠</span>
+            <span className="text-xs mt-1">Donate</span>
           </Link>
           <Link href="/promotion" className="flex flex-col items-center py-2 text-muted-foreground">
             <Share2 className="h-5 w-5" />
-            <span className="text-xs mt-1">邀请</span>
+            <span className="text-xs mt-1">Invite</span>
           </Link>
           <Link href="/profile" className="flex flex-col items-center py-2 text-[#0a3d2b] dark:text-[#d4b96e]">
             <User className="h-5 w-5" />
-            <span className="text-xs mt-1">我的</span>
+            <span className="text-xs mt-1">Profile</span>
           </Link>
         </nav>
       </div>

@@ -44,16 +44,16 @@ export function NewsAnnouncementItem({
           <div className="absolute top-2 right-2 flex gap-2">
             {isNew && (
               <Badge variant="secondary" className="bg-islamic-gold text-islamic-dark">
-                新
+                New
               </Badge>
             )}
             {isImportant && (
               <Badge variant="destructive" className="bg-red-500">
-                重要
+                Important
               </Badge>
             )}
             <Badge className={cn(type === "news" ? "bg-islamic-teal/80" : "bg-islamic-gold/80", "text-white")}>
-              {type === "news" ? "新闻" : "公告"}
+              {type === "news" ? "News" : "Announcement"}
             </Badge>
           </div>
         </div>

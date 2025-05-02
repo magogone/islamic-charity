@@ -76,10 +76,10 @@ export function VipLevelProgress({ currentLevel, onUpgrade, className }: VipLeve
   return (
     <div className={cn("mt-3", className)}>
       <div className="flex justify-between mb-2">
-        <span className="text-sm text-islamic-cream/80">当前VIP{currentLevel}</span>
+        <span className="text-sm text-islamic-cream/80">Current VIP{currentLevel}</span>
         {nextLevel && (
           <span className="text-sm text-islamic-cream/80">
-            距离VIP{nextLevel}还需{VIP_LEVELS[nextLevel - 1].amount - VIP_LEVELS[currentLevel - 1].amount}U
+            {VIP_LEVELS[nextLevel - 1].amount - VIP_LEVELS[currentLevel - 1].amount}U needed for VIP{nextLevel}
           </span>
         )}
       </div>

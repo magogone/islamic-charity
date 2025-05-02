@@ -16,7 +16,7 @@ export default function PlansPage() {
               <span className="sr-only">Back</span>
             </Button>
           </Link>
-          <h1 className="text-xl font-bold text-[#0a3d2b] dark:text-[#d4b96e]">投资方案</h1>
+          <h1 className="text-xl font-bold text-[#0a3d2b] dark:text-[#d4b96e]">Investment Plans</h1>
         </div>
       </header>
 
@@ -24,21 +24,23 @@ export default function PlansPage() {
         <div className="text-center mb-6 pt-4">
           <div className="flex items-center justify-center mb-2">
             <div className="h-1 w-12 bg-[#d4b96e] mr-3"></div>
-            <h2 className="text-sm font-medium text-[#d4b96e] uppercase tracking-wider">符合伊斯兰教法</h2>
+            <h2 className="text-sm font-medium text-[#d4b96e] uppercase tracking-wider">Shariah Compliant</h2>
             <div className="h-1 w-12 bg-[#d4b96e] ml-3"></div>
           </div>
-          <h2 className="text-3xl font-bold text-[#0a3d2b] dark:text-[#d4b96e]">选择适合您的投资方案</h2>
-          <p className="text-muted-foreground mt-2">所有方案均符合伊斯兰教法，无利息，共享收益</p>
+          <h2 className="text-3xl font-bold text-[#0a3d2b] dark:text-[#d4b96e]">Choose Your Investment Plan</h2>
+          <p className="text-muted-foreground mt-2">
+            All plans are Shariah compliant, interest-free, with shared returns
+          </p>
         </div>
 
         <Card className="border-[#d4b96e]/20 bg-white/90 dark:bg-[#131b29]/90 backdrop-blur-sm overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#0a3d2b]"></div>
           <CardHeader className="bg-[#f0ece0]/50 dark:bg-[#1a1f2c]/50 border-b border-[#d4b96e]/10">
-            <CardTitle className="text-[#0a3d2b] dark:text-[#d4b96e]">基础方案</CardTitle>
-            <CardDescription>适合初次投资者</CardDescription>
+            <CardTitle className="text-[#0a3d2b] dark:text-[#d4b96e]">Basic Plan</CardTitle>
+            <CardDescription>Suitable for first-time investors</CardDescription>
             <div className="mt-4">
               <span className="text-4xl font-bold text-[#0a3d2b] dark:text-[#d4b96e]">1.0%</span>
-              <span className="text-muted-foreground ml-2">日化收益率</span>
+              <span className="text-muted-foreground ml-2">Daily Return Rate</span>
             </div>
           </CardHeader>
           <CardContent className="pt-6">
@@ -48,7 +50,7 @@ export default function PlansPage() {
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
                 <span>
-                  最低投资金额 <span className="font-medium">500 元</span>
+                  Minimum investment <span className="font-medium">500 units</span>
                 </span>
               </li>
               <li className="flex items-start">
@@ -56,20 +58,20 @@ export default function PlansPage() {
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
                 <span>
-                  投资期限 <span className="font-medium">30 天</span>
+                  Investment period <span className="font-medium">30 days</span>
                 </span>
               </li>
               <li className="flex items-start">
                 <div className="rounded-full p-1 bg-[#0a3d2b]/10 dark:bg-[#d4b96e]/10 mr-3 mt-0.5">
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
-                <span>随时可取（提前取出收益减半）</span>
+                <span>Withdrawable anytime (early withdrawal reduces returns by half)</span>
               </li>
               <li className="flex items-start">
                 <div className="rounded-full p-1 bg-[#0a3d2b]/10 dark:bg-[#d4b96e]/10 mr-3 mt-0.5">
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
-                <span>每日收益报告</span>
+                <span>Daily return reports</span>
               </li>
             </ul>
           </CardContent>
@@ -78,7 +80,7 @@ export default function PlansPage() {
               variant="outline"
               className="w-full border-[#0a3d2b] text-[#0a3d2b] hover:bg-[#0a3d2b] hover:text-white dark:border-[#d4b96e] dark:text-[#d4b96e] dark:hover:bg-[#d4b96e] dark:hover:text-[#0a3d2b]"
             >
-              选择基础方案
+              Choose Basic Plan
             </Button>
           </CardFooter>
         </Card>
@@ -87,13 +89,13 @@ export default function PlansPage() {
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0a3d2b] to-[#d4b96e]"></div>
           <CardHeader className="bg-[#f0ece0]/50 dark:bg-[#1a1f2c]/50 border-b border-[#d4b96e]/10">
             <div className="py-1 px-4 bg-[#0a3d2b] text-white dark:bg-[#d4b96e] dark:text-[#0a3d2b] rounded-full text-xs w-fit mb-2 shadow-lg">
-              最受欢迎
+              Most Popular
             </div>
-            <CardTitle className="text-[#0a3d2b] dark:text-[#d4b96e]">标准方案</CardTitle>
-            <CardDescription>稳健增长</CardDescription>
+            <CardTitle className="text-[#0a3d2b] dark:text-[#d4b96e]">Standard Plan</CardTitle>
+            <CardDescription>Steady Growth</CardDescription>
             <div className="mt-4">
               <span className="text-4xl font-bold text-[#0a3d2b] dark:text-[#d4b96e]">1.5%</span>
-              <span className="text-muted-foreground ml-2">日化收益率</span>
+              <span className="text-muted-foreground ml-2">Daily Return Rate</span>
             </div>
           </CardHeader>
           <CardContent className="pt-6">
@@ -103,7 +105,7 @@ export default function PlansPage() {
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
                 <span>
-                  最低投资金额 <span className="font-medium">1,000 元</span>
+                  Minimum investment <span className="font-medium">1,000 units</span>
                 </span>
               </li>
               <li className="flex items-start">
@@ -111,42 +113,42 @@ export default function PlansPage() {
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
                 <span>
-                  投资期限 <span className="font-medium">60 天</span>
+                  Investment period <span className="font-medium">60 days</span>
                 </span>
               </li>
               <li className="flex items-start">
                 <div className="rounded-full p-1 bg-[#0a3d2b]/10 dark:bg-[#d4b96e]/10 mr-3 mt-0.5">
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
-                <span>随时可取（提前取出收益减半）</span>
+                <span>Withdrawable anytime (early withdrawal reduces returns by half)</span>
               </li>
               <li className="flex items-start">
                 <div className="rounded-full p-1 bg-[#0a3d2b]/10 dark:bg-[#d4b96e]/10 mr-3 mt-0.5">
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
-                <span>每日收益报告</span>
+                <span>Daily return reports</span>
               </li>
               <li className="flex items-start">
                 <div className="rounded-full p-1 bg-[#0a3d2b]/10 dark:bg-[#d4b96e]/10 mr-3 mt-0.5">
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
-                <span>专属投资顾问</span>
+                <span>Dedicated investment advisor</span>
               </li>
             </ul>
           </CardContent>
           <CardFooter className="border-t border-[#d4b96e]/10 mt-4 bg-[#f0ece0]/30 dark:bg-[#1a1f2c]/30">
-            <Button className="w-full bg-[#0a3d2b] hover:bg-[#0a3d2b]/90 text-white">选择标准方案</Button>
+            <Button className="w-full bg-[#0a3d2b] hover:bg-[#0a3d2b]/90 text-white">Choose Standard Plan</Button>
           </CardFooter>
         </Card>
 
         <Card className="border-[#d4b96e]/20 bg-white/90 dark:bg-[#131b29]/90 backdrop-blur-sm overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#d4b96e]"></div>
           <CardHeader className="bg-[#f0ece0]/50 dark:bg-[#1a1f2c]/50 border-b border-[#d4b96e]/10">
-            <CardTitle className="text-[#0a3d2b] dark:text-[#d4b96e]">高级方案</CardTitle>
-            <CardDescription>长期稳定收益</CardDescription>
+            <CardTitle className="text-[#0a3d2b] dark:text-[#d4b96e]">Premium Plan</CardTitle>
+            <CardDescription>Long-term stable returns</CardDescription>
             <div className="mt-4">
               <span className="text-4xl font-bold text-[#0a3d2b] dark:text-[#d4b96e]">2.5%</span>
-              <span className="text-muted-foreground ml-2">日化收益率</span>
+              <span className="text-muted-foreground ml-2">Daily Return Rate</span>
             </div>
           </CardHeader>
           <CardContent className="pt-6">
@@ -156,7 +158,7 @@ export default function PlansPage() {
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
                 <span>
-                  最低投资金额 <span className="font-medium">5,000 元</span>
+                  Minimum investment <span className="font-medium">5,000 units</span>
                 </span>
               </li>
               <li className="flex items-start">
@@ -164,38 +166,38 @@ export default function PlansPage() {
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
                 <span>
-                  投资期限 <span className="font-medium">90 天</span>
+                  Investment period <span className="font-medium">90 days</span>
                 </span>
               </li>
               <li className="flex items-start">
                 <div className="rounded-full p-1 bg-[#0a3d2b]/10 dark:bg-[#d4b96e]/10 mr-3 mt-0.5">
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
-                <span>随时可取（提前取出收益减半）</span>
+                <span>Withdrawable anytime (early withdrawal reduces returns by half)</span>
               </li>
               <li className="flex items-start">
                 <div className="rounded-full p-1 bg-[#0a3d2b]/10 dark:bg-[#d4b96e]/10 mr-3 mt-0.5">
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
-                <span>每日收益报告</span>
+                <span>Daily return reports</span>
               </li>
               <li className="flex items-start">
                 <div className="rounded-full p-1 bg-[#0a3d2b]/10 dark:bg-[#d4b96e]/10 mr-3 mt-0.5">
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
-                <span>专属投资顾问</span>
+                <span>Dedicated investment advisor</span>
               </li>
               <li className="flex items-start">
                 <div className="rounded-full p-1 bg-[#0a3d2b]/10 dark:bg-[#d4b96e]/10 mr-3 mt-0.5">
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
-                <span>优先获得新投资机会</span>
+                <span>Priority access to new investment opportunities</span>
               </li>
               <li className="flex items-start">
                 <div className="rounded-full p-1 bg-[#0a3d2b]/10 dark:bg-[#d4b96e]/10 mr-3 mt-0.5">
                   <Check className="h-4 w-4 text-[#0a3d2b] dark:text-[#d4b96e]" />
                 </div>
-                <span>推广奖励提升至3%</span>
+                <span>Promotion reward increased to 3%</span>
               </li>
             </ul>
           </CardContent>
@@ -204,7 +206,7 @@ export default function PlansPage() {
               variant="outline"
               className="w-full border-[#0a3d2b] text-[#0a3d2b] hover:bg-[#0a3d2b] hover:text-white dark:border-[#d4b96e] dark:text-[#d4b96e] dark:hover:bg-[#d4b96e] dark:hover:text-[#0a3d2b]"
             >
-              选择高级方案
+              Choose Premium Plan
             </Button>
           </CardFooter>
         </Card>
@@ -215,19 +217,19 @@ export default function PlansPage() {
         <nav className="flex justify-around py-3 max-w-lg mx-auto">
           <Link href="/" className="flex flex-col items-center py-2 text-muted-foreground">
             <Home className="h-5 w-5" />
-            <span className="text-xs mt-1">首页</span>
+            <span className="text-xs mt-1">Home</span>
           </Link>
           <Link href="/investment" className="flex flex-col items-center py-2 text-muted-foreground">
             <PieChart className="h-5 w-5" />
-            <span className="text-xs mt-1">投资</span>
+            <span className="text-xs mt-1">Invest</span>
           </Link>
           <Link href="/promotion" className="flex flex-col items-center py-2 text-muted-foreground">
             <Share2 className="h-5 w-5" />
-            <span className="text-xs mt-1">推广</span>
+            <span className="text-xs mt-1">Promote</span>
           </Link>
           <Link href="/profile" className="flex flex-col items-center py-2 text-muted-foreground">
             <User className="h-5 w-5" />
-            <span className="text-xs mt-1">我的</span>
+            <span className="text-xs mt-1">Profile</span>
           </Link>
         </nav>
       </div>

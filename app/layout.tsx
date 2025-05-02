@@ -8,8 +8,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
 
 export const metadata = {
-  title: "Barkat Alliance - 巴卡特基金",
-  description: "创新慈善模式：真主使命",
+  title: "Barkat Alliance - Islamic Charity Foundation",
+  description: "Innovative Charity Model: Divine Mission",
   generator: "v0.dev",
 }
 
@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="zh" className="dark">
+    <html lang="en" className="dark">
       <body className={`${inter.variable} ${playfair.variable} font-sans`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           {children}

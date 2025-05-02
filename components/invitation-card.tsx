@@ -1,6 +1,6 @@
 "use client"
 
-import { Share2, Users, InfoIcon } from "lucide-react"
+import { Share2, InfoIcon, User, UserPlus, Percent, Users, UsersIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
@@ -43,11 +43,11 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
   const [referralInfoOpen, setReferralInfoOpen] = useState(false)
 
   const handleShare = () => {
-    // 这里可以实现分享逻辑，例如打开分享对话框
-    console.log("分享邀请链接")
+    // Implementation of sharing logic, such as opening a share dialog
+    console.log("Share invitation link")
   }
 
-  // 根据直推人数获取对应的奖励率样式
+  // Get reward rate style based on direct referral count
   const getRateClass = (referrals: number) => {
     if (data.directReferrals >= referrals) {
       return "border-islamic-gold/50 bg-islamic-gold/10 text-islamic-gold"
@@ -63,38 +63,41 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center text-xl text-[#8dc63f]">
           <Share2 className="mr-2 h-5 w-5" />
-          邀请好友
+          Invite Friends
         </CardTitle>
       </CardHeader>
       <CardContent className="pb-2">
-        {/* 邀请统计 */}
+        {/* Invitation Statistics */}
         <div className="grid grid-cols-3 gap-3 mb-4">
-          <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3 flex flex-col items-center">
-            <span className="text-xs text-islamic-cream/70 mb-1">总推荐人数</span>
-            <span className="text-xl font-medium text-[#8dc63f]">{data.totalReferrals}</span>
+          <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-4 flex flex-col items-center">
+            <span className="text-sm text-islamic-cream/70 mb-1">Total</span>
+            <span className="text-4xl font-bold text-[#8dc63f]">{data.totalReferrals}</span>
+            <Users className="h-5 w-5 text-islamic-cream/50 mt-2" />
           </div>
-          <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3 flex flex-col items-center">
-            <span className="text-xs text-islamic-cream/70 mb-1">直接推荐</span>
-            <span className="text-xl font-medium text-[#8dc63f]">{data.directReferrals}</span>
+          <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-4 flex flex-col items-center">
+            <span className="text-sm text-islamic-cream/70 mb-1">Direct</span>
+            <span className="text-4xl font-bold text-[#8dc63f]">{data.directReferrals}</span>
+            <UserPlus className="h-5 w-5 text-islamic-cream/50 mt-2" />
           </div>
-          <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3 flex flex-col items-center">
-            <span className="text-xs text-islamic-cream/70 mb-1">间接推荐</span>
-            <span className="text-xl font-medium text-[#8dc63f]">{data.indirectReferrals}</span>
+          <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-4 flex flex-col items-center">
+            <span className="text-sm text-islamic-cream/70 mb-1">Indirect</span>
+            <span className="text-4xl font-bold text-[#8dc63f]">{data.indirectReferrals}</span>
+            <UsersIcon className="h-5 w-5 text-islamic-cream/50 mt-2" />
           </div>
         </div>
 
-        {/* 奖励信息卡片 */}
+        {/* Reward Information Cards */}
         <div className="grid grid-cols-2 gap-3 mb-3">
-          {/* 基础奖励卡片 */}
+          {/* Basic Reward Card */}
           <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3">
             <div className="flex items-center mb-3">
-              <Users className="h-4 w-4 text-islamic-gold mr-2" />
-              <span className="text-sm text-islamic-gold">基础奖励</span>
+              <User className="h-4 w-4 text-islamic-gold mr-2" />
+              <span className="text-sm text-islamic-gold">Basic Rewards</span>
             </div>
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-islamic-cream/70">当前奖励比例</span>
+                <span className="text-xs text-islamic-cream/70">Current </span>
                 <div className="flex items-center">
                   <span className="text-sm font-medium text-islamic-gold">{data.basicReward.current}%</span>
                   <TooltipProvider>
@@ -108,7 +111,7 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>查看基础奖励详情</p>
+                        <p>View basic reward details</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -116,44 +119,44 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs text-islamic-cream/70">最高奖励比例</span>
+                <span className="text-xs text-islamic-cream/70">Maximum</span>
                 <span className="text-sm font-medium text-islamic-gold/80">{data.basicReward.max}%</span>
               </div>
             </div>
           </div>
 
-          {/* 推荐奖励卡片 */}
+          {/* Referral Reward Card */}
           <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3">
             <div className="flex items-center mb-2">
-              <Users className="h-4 w-4 text-islamic-gold mr-2" />
-              <span className="text-sm text-islamic-gold">推荐奖励</span>
+              <UserPlus className="h-4 w-4 text-islamic-gold mr-2" />
+              <span className="text-sm text-islamic-gold">Referral Rewards</span>
             </div>
 
             <div className="grid grid-cols-5 gap-1 mb-2">
               <div className="text-center">
-                <div className="text-xs text-islamic-cream/70">1代</div>
+                <div className="text-xs text-islamic-cream/70">1st Gen</div>
                 <div className="text-sm font-medium text-islamic-gold">{data.rewardRate.level1}%</div>
               </div>
               <div className="text-center">
-                <div className="text-xs text-islamic-cream/70">2代</div>
+                <div className="text-xs text-islamic-cream/70">2nd Gen</div>
                 <div className="text-sm font-medium text-islamic-gold">{data.rewardRate.level2}%</div>
               </div>
               <div className="text-center">
-                <div className="text-xs text-islamic-cream/70">3代</div>
+                <div className="text-xs text-islamic-cream/70">3rd Gen</div>
                 <div className="text-sm font-medium text-islamic-gold">{data.rewardRate.level3}%</div>
               </div>
               <div className="text-center">
-                <div className="text-xs text-islamic-cream/70">4代</div>
+                <div className="text-xs text-islamic-cream/70">4th Gen</div>
                 <div className="text-sm font-medium text-islamic-gold">{data.rewardRate.level4}%</div>
               </div>
               <div className="text-center">
-                <div className="text-xs text-islamic-cream/70">5代</div>
+                <div className="text-xs text-islamic-cream/70">5th Gen</div>
                 <div className="text-sm font-medium text-islamic-gold">{data.rewardRate.level5}%</div>
               </div>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-xs text-islamic-cream/70">总计</span>
+              <span className="text-xs text-islamic-cream/70">Total</span>
               <div className="flex items-center">
                 <span className="text-sm font-medium text-islamic-gold">{data.rewardRate.total}%</span>
                 <span className="text-xs text-islamic-cream/60 ml-1">/ {data.maxReferralReward.total}%</span>
@@ -168,7 +171,7 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
                       </button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>查看推荐奖励详情</p>
+                      <p>View referral reward details</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -177,64 +180,69 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
           </div>
         </div>
 
-        {/* 邀请提示 */}
+        {/* Invitation Tip */}
         <div className="p-3 rounded-lg bg-[#8dc63f]/20 border border-[#8dc63f]/30 text-xs text-islamic-cream/90">
-          <p>邀请好友参与捐赠，最高获得好友捐赠金额的30%作为奖励，同时提高您的每日基础捐赠奖励率！</p>
+          <p>
+            Invite friends to donate and receive up to 30% of their donation amount as rewards, while also increasing
+            your daily basic donation reward rate!
+          </p>
         </div>
       </CardContent>
       <CardFooter className="pt-3 pb-4">
         <Link href="/promotion/share" className="w-full">
-          <Button className="w-full bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c]">
-            立即邀请
-            <Share2 className="ml-1 h-4 w-4" />
+          <Button className="w-full bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c] flex items-center justify-center">
+            Invite Now
+            <Share2 className="ml-2 h-4 w-4" />
           </Button>
         </Link>
       </CardFooter>
 
-      {/* 基础奖励详情弹窗 */}
+      {/* Basic Reward Details Dialog */}
       <Dialog open={basicInfoOpen} onOpenChange={setBasicInfoOpen}>
         <DialogContent className="sm:max-w-[425px] bg-islamic-cardBg text-white border-islamic-medium">
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-islamic-gold to-islamic-gold/50"></div>
           <DialogHeader>
             <DialogTitle className="text-islamic-gold flex items-center">
-              <Users className="mr-2 h-5 w-5" />
-              基础奖励详情
+              <User className="mr-2 h-5 w-5" />
+              Basic Reward Details
             </DialogTitle>
-            <DialogDescription className="text-islamic-cream/70">了解更多关于基础奖励的信息</DialogDescription>
+            <DialogDescription className="text-islamic-cream/70">Learn more about basic rewards</DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
             <div className="space-y-3">
               <h3 className="text-sm font-medium text-islamic-gold flex items-center">
-                <Share2 className="mr-2 h-4 w-4" />
-                扶贫资金比例
+                <Percent className="mr-2 h-4 w-4" />
+                Poverty Relief Fund Rate
               </h3>
-              <p className="text-xs text-islamic-cream/80">根据您推荐的人数，您的扶贫资金比例会相应提高：</p>
+              <p className="text-xs text-islamic-cream/80">
+                Based on the number of people you refer, your poverty relief fund rate will increase accordingly:
+              </p>
 
               <div className="space-y-2">
                 <div className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(0)}`}>
-                  <span className="text-sm">无推荐</span>
+                  <span className="text-sm">No Referrals</span>
                   <span className="font-medium">1%</span>
                 </div>
 
                 <div className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(1)}`}>
-                  <span className="text-sm">推荐1人</span>
+                  <span className="text-sm">1 Referral</span>
                   <span className="font-medium">1.5%</span>
                 </div>
 
                 <div className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(3)}`}>
-                  <span className="text-sm">推荐3人</span>
+                  <span className="text-sm">3 Referrals</span>
                   <span className="font-medium">2%</span>
                 </div>
 
                 <div className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(5)}`}>
-                  <span className="text-sm">推荐5人</span>
+                  <span className="text-sm">5 Referrals</span>
                   <span className="font-medium">2.5%</span>
                 </div>
               </div>
 
               <p className="text-xs text-islamic-cream/70 italic">
-                您当前已推荐 {data.directReferrals} 人，扶贫资金比例为{" "}
+                You have currently referred {data.directReferrals} people, poverty relief fund rate is{" "}
                 {data.directReferrals === 0
                   ? "1%"
                   : data.directReferrals >= 5
@@ -248,50 +256,51 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
         </DialogContent>
       </Dialog>
 
-      {/* 推荐奖励详情弹窗 */}
+      {/* Referral Reward Details Dialog */}
       <Dialog open={referralInfoOpen} onOpenChange={setReferralInfoOpen}>
         <DialogContent className="sm:max-w-[425px] bg-islamic-cardBg text-white border-islamic-medium">
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-islamic-gold to-islamic-gold/50"></div>
           <DialogHeader>
             <DialogTitle className="text-islamic-gold flex items-center">
-              <Users className="mr-2 h-5 w-5" />
-              推荐奖励详情
+              <UserPlus className="mr-2 h-5 w-5" />
+              Referral Reward Details
             </DialogTitle>
-            <DialogDescription className="text-islamic-cream/70">了解更多关于推荐奖励的信息</DialogDescription>
+            <DialogDescription className="text-islamic-cream/70">Learn more about referral rewards</DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
             <div className="space-y-3">
-              <h3 className="text-sm font-medium text-islamic-gold">推荐奖励详情</h3>
+              <h3 className="text-sm font-medium text-islamic-gold">Referral Reward Details</h3>
               <p className="text-xs text-islamic-cream/80">
-                推荐5代，获得捐赠资金总共30%的扶贫奖励。随着您的VIP等级提升，推荐奖励比例也会相应提高。
+                Refer up to 5 generations and receive a total of 30% poverty relief rewards from donation funds. As your
+                VIP level increases, your referral reward rates will also increase.
               </p>
 
               <div className="space-y-2">
                 <div className="p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
                   <div className="flex justify-between items-center mb-1">
                     <span className="text-sm font-medium">VIP 1</span>
-                    <span className="font-medium text-islamic-gold">总计 20%</span>
+                    <span className="font-medium text-islamic-gold">Total 20%</span>
                   </div>
                   <div className="grid grid-cols-5 gap-1 text-xs">
                     <div className="text-center">
-                      <div className="text-islamic-cream/70">1代</div>
+                      <div className="text-islamic-cream/70">1st Gen</div>
                       <div className="font-medium">10%</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-islamic-cream/70">2代</div>
+                      <div className="text-islamic-cream/70">2nd Gen</div>
                       <div className="font-medium">4%</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-islamic-cream/70">3代</div>
+                      <div className="text-islamic-cream/70">3rd Gen</div>
                       <div className="font-medium">2%</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-islamic-cream/70">4代</div>
+                      <div className="text-islamic-cream/70">4th Gen</div>
                       <div className="font-medium">2%</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-islamic-cream/70">5代</div>
+                      <div className="text-islamic-cream/70">5th Gen</div>
                       <div className="font-medium">2%</div>
                     </div>
                   </div>
@@ -300,27 +309,27 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
                 <div className="p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
                   <div className="flex justify-between items-center mb-1">
                     <span className="text-sm font-medium">VIP 5</span>
-                    <span className="font-medium text-islamic-gold">总计 30%</span>
+                    <span className="font-medium text-islamic-gold">Total 30%</span>
                   </div>
                   <div className="grid grid-cols-5 gap-1 text-xs">
                     <div className="text-center">
-                      <div className="text-islamic-cream/70">1代</div>
+                      <div className="text-islamic-cream/70">1st Gen</div>
                       <div className="font-medium">20%</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-islamic-cream/70">2代</div>
+                      <div className="text-islamic-cream/70">2nd Gen</div>
                       <div className="font-medium">4%</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-islamic-cream/70">3代</div>
+                      <div className="text-islamic-cream/70">3rd Gen</div>
                       <div className="font-medium">2%</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-islamic-cream/70">4代</div>
+                      <div className="text-islamic-cream/70">4th Gen</div>
                       <div className="font-medium">2%</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-islamic-cream/70">5代</div>
+                      <div className="text-islamic-cream/70">5th Gen</div>
                       <div className="font-medium">2%</div>
                     </div>
                   </div>
@@ -328,7 +337,8 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
               </div>
 
               <p className="text-xs text-islamic-cream/70 italic">
-                推荐更多好友参与捐赠，不仅可以获得更多奖励，还能提升您的基础奖励比例。
+                Refer more friends to participate in donations to not only receive more rewards but also increase your
+                basic reward rate.
               </p>
             </div>
           </div>
