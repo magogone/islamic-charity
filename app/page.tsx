@@ -1,11 +1,10 @@
 "use client"
-import Link from "next/link"
-import { Home, Gift, Share2, User } from "lucide-react"
+
 import { HeroSection } from "@/components/hero-section"
 import { DonationOverview } from "@/components/donation-overview"
 import { InvitationCard } from "@/components/invitation-card"
 import { NewsAnnouncementsSection } from "@/components/news-announcements-section"
-import { BarkatLogo } from "@/components/barkat-logo"
+import { MainLayout } from "@/components/main-layout"
 
 // Define static image paths
 const IMAGES = {
@@ -89,15 +88,6 @@ const NEWS_ANNOUNCEMENTS = {
   ],
 }
 
-// VIP level configuration
-const VIP_CONFIG = [
-  { level: 1, requirement: 100, dailyFund: "1.2-3 U" },
-  { level: 2, requirement: 300, dailyFund: "3.6-9 U" },
-  { level: 3, requirement: 500, dailyFund: "6-15 U" },
-  { level: 4, requirement: 800, dailyFund: "9.6-24 U" },
-  { level: 5, requirement: 1200, dailyFund: "14.4-36 U" },
-]
-
 export default function HomePage() {
   // Donation data
   const donationData = {
@@ -145,17 +135,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-islamic-dark/90 text-white">
-      {/* Header with logo */}
-      <header className="px-6 py-4 border-b border-islamic-medium/50 bg-islamic-dark/70 backdrop-blur-sm relative z-10">
-        <div className="flex items-center justify-between max-w-lg mx-auto">
-          <div className="flex items-center">
-            <BarkatLogo size={32} className="mr-2" />
-            <h1 className="text-xl font-bold text-islamic-gold">Barkat Alliance</h1>
-          </div>
-        </div>
-      </header>
-
+    <MainLayout title="Barkat Alliance" currentPath="/">
       {/* Hero Section with Large Mosque */}
       <HeroSection
         buttonText="Donate Now"
@@ -163,45 +143,18 @@ export default function HomePage() {
         onButtonClick={() => console.log("Start donation")}
       />
 
-      {/* Main Content */}
-      <main className="flex-1 px-4 pb-20 mt-6">
-        <div className="max-w-lg mx-auto">
-          {/* Add news and announcements section after HorizontalScrollSection and before DonationOverview */}
-          <NewsAnnouncementsSection
-            news={NEWS_ANNOUNCEMENTS.news}
-            announcements={NEWS_ANNOUNCEMENTS.announcements}
-            className="mb-6"
-          />
+      {/* Add news and announcements section after HorizontalScrollSection and before DonationOverview */}
+      <NewsAnnouncementsSection
+        news={NEWS_ANNOUNCEMENTS.news}
+        announcements={NEWS_ANNOUNCEMENTS.announcements}
+        className="mb-6"
+      />
 
-          {/* My Donation Overview Card - Using shared component */}
-          <DonationOverview data={donationData} className="mb-6" />
+      {/* My Donation Overview Card - Using shared component */}
+      <DonationOverview data={donationData} className="mb-6" />
 
-          {/* Invitation Card */}
-          <InvitationCard data={invitationData} className="mb-6" />
-        </div>
-      </main>
-
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-20 border-t border-islamic-medium/50 bg-islamic-dark/80 backdrop-blur-sm">
-        <nav className="flex justify-around py-3 mx-auto max-w-lg">
-          <Link href="/" className="flex flex-col items-center py-2 text-islamic-gold">
-            <Home className="w-5 h-5" />
-            <span className="mt-1 text-xs">Home</span>
-          </Link>
-          <Link href="/donation" className="flex flex-col items-center py-2 text-islamic-cream/50">
-            <Gift className="w-5 h-5" />
-            <span className="mt-1 text-xs">Donate</span>
-          </Link>
-          <Link href="/promotion" className="flex flex-col items-center py-2 text-islamic-cream/50">
-            <Share2 className="w-5 h-5" />
-            <span className="mt-1 text-xs">Invite</span>
-          </Link>
-          <Link href="/profile" className="flex flex-col items-center py-2 text-islamic-cream/50">
-            <User className="w-5 h-5" />
-            <span className="mt-1 text-xs">Profile</span>
-          </Link>
-        </nav>
-      </div>
-    </div>
+      {/* Invitation Card */}
+      <InvitationCard data={invitationData} className="mb-6" />
+    </MainLayout>
   )
 }

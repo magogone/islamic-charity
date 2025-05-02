@@ -85,9 +85,26 @@ export function VipLevelProgress({ currentLevel, onUpgrade, className }: VipLeve
       </div>
 
       {/* 调整容器宽度和圆圈大小 */}
-      <div className="flex items-center justify-between w-full gap-1">
+      <div className="flex items-center justify-between w-full gap-1 relative">
+        {/* Add connecting lines between circles */}
+        <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-islamic-medium/40 -translate-y-1/2 z-0"></div>
+
+        {/* Progress line showing completed levels */}
+        <div
+          className="absolute top-1/2 left-0 h-0.5 bg-islamic-gold/70 -translate-y-1/2 z-0"
+          style={{
+            width: `${Math.min(
+              ((currentLevel - 1) / (VIP_LEVELS.length - 1)) * 100 +
+                (nextLevel
+                  ? (1 / (VIP_LEVELS.length - 1)) * (animationState === 1 ? 0.3 : animationState === 2 ? 0.2 : 0.1)
+                  : 0),
+              100,
+            )}%`,
+          }}
+        ></div>
+
         {VIP_LEVELS.map((vip) => (
-          <div key={vip.level} className="flex flex-col items-center">
+          <div key={vip.level} className="flex flex-col items-center z-10">
             <button
               onClick={() => handleLevelClick(vip.level)}
               disabled={vip.level !== nextLevel}
@@ -127,12 +144,12 @@ export function VipLevelProgress({ currentLevel, onUpgrade, className }: VipLeve
                 </span>
               )}
 
-              {/* 当前等级的绿色指示点 */}
+              {/* Current level indicator */}
               {vip.level === currentLevel && (
                 <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-green-500 rounded-full border border-islamic-dark"></div>
               )}
 
-              {/* 下一等级的升级图标 - 使用更好看的图标 */}
+              {/* Next level upgrade icon */}
               {vip.level === nextLevel && (
                 <div
                   className={cn(

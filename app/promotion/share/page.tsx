@@ -6,7 +6,7 @@ import { BackgroundWrapper } from "@/components/background-wrapper"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Copy, Check, QrCode, LinkIcon, Share } from "lucide-react"
+import { Copy, Check, QrCode, LinkIcon, Share, Users, Award } from "lucide-react"
 
 export default function SharePage() {
   const [copied, setCopied] = useState(false)
@@ -140,40 +140,158 @@ export default function SharePage() {
           </div>
         </Card>
 
-        {/* Invitation Reward Explanation */}
+        {/* Invitation Reward Explanation - REPLACED WITH TABLE */}
         <Card className="overflow-hidden border-none shadow-xl bg-islamic-cardBg/90 backdrop-blur-lg text-white">
           <div className="p-6">
-            <h2 className="text-xl font-bold text-[#8dc63f] mb-4">Invitation Reward Explanation</h2>
+            <h2 className="text-xl font-bold text-[#8dc63f] mb-4">Referral Reward Program</h2>
 
-            <div className="space-y-4">
-              <div className="bg-islamic-medium/30 rounded-lg p-4">
-                <h3 className="font-medium text-[#8dc63f] mb-2">Direct Invitation Rewards</h3>
-                <p className="text-sm text-islamic-cream/80">
-                  When your directly invited friends complete a donation, you'll receive 10% of their donation amount as
-                  a reward.
-                </p>
-              </div>
+            {/* Table-based reward explanation */}
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b border-islamic-medium/30">
+                    <th className="p-2 text-left text-xs font-medium text-islamic-cream/70">Level</th>
+                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 1</th>
+                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 2</th>
+                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 3</th>
+                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 4</th>
+                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 5</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Level 1 */}
+                  <tr className="border-b border-islamic-medium/20">
+                    <td className="p-2 text-left">
+                      <div className="flex items-center">
+                        <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
+                        <span className="text-xs">Level 1</span>
+                      </div>
+                    </td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">10%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">12%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">15%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">18%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">20%</td>
+                  </tr>
 
-              <div className="bg-islamic-medium/30 rounded-lg p-4">
-                <h3 className="font-medium text-[#8dc63f] mb-2">Indirect Invitation Rewards</h3>
-                <p className="text-sm text-islamic-cream/80">
-                  When your direct invitees invite others (2nd generation), you'll receive 4% reward. For 3rd-5th
-                  generations, you'll receive 2% reward.
-                </p>
-              </div>
+                  {/* Level 2 */}
+                  <tr className="border-b border-islamic-medium/20">
+                    <td className="p-2 text-left">
+                      <div className="flex items-center">
+                        <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
+                        <span className="text-xs">Level 2</span>
+                      </div>
+                    </td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">4%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">4%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">4%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">4%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">4%</td>
+                  </tr>
 
+                  {/* Level 3 */}
+                  <tr className="border-b border-islamic-medium/20">
+                    <td className="p-2 text-left">
+                      <div className="flex items-center">
+                        <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
+                        <span className="text-xs">Level 3</span>
+                      </div>
+                    </td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                  </tr>
+
+                  {/* Level 4 */}
+                  <tr className="border-b border-islamic-medium/20">
+                    <td className="p-2 text-left">
+                      <div className="flex items-center">
+                        <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
+                        <span className="text-xs">Level 4</span>
+                      </div>
+                    </td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                  </tr>
+
+                  {/* Level 5 */}
+                  <tr className="border-b border-islamic-medium/20">
+                    <td className="p-2 text-left">
+                      <div className="flex items-center">
+                        <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
+                        <span className="text-xs">Level 5</span>
+                      </div>
+                    </td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">2%</td>
+                  </tr>
+
+                  {/* Total Row */}
+                  <tr className="bg-islamic-medium/30">
+                    <td className="p-2 text-left font-medium">
+                      <div className="flex items-center">
+                        <Award className="h-4 w-4 mr-1 text-islamic-gold" />
+                        <span className="text-xs">Total</span>
+                      </div>
+                    </td>
+                    <td className="p-2 text-center text-xs font-bold text-islamic-gold">20%</td>
+                    <td className="p-2 text-center text-xs font-bold text-islamic-gold">22%</td>
+                    <td className="p-2 text-center text-xs font-bold text-islamic-gold">25%</td>
+                    <td className="p-2 text-center text-xs font-bold text-islamic-gold">28%</td>
+                    <td className="p-2 text-center text-xs font-bold text-islamic-gold">30%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Additional explanation sections */}
+            <div className="mt-6 space-y-4">
               <div className="bg-islamic-medium/30 rounded-lg p-4">
-                <h3 className="font-medium text-[#8dc63f] mb-2">Relief Fund Increase</h3>
+                <h3 className="font-medium text-[#8dc63f] mb-2 flex items-center">
+                  <Users className="h-4 w-4 mr-2" />
+                  Relief Fund Increase
+                </h3>
                 <p className="text-sm text-islamic-cream/80">
                   The more people you invite, the higher your relief fund rate:
-                  <br />
-                  No referrals: Base rate 1%
-                  <br />1 referral: Increased to 1.5%
-                  <br />
-                  2-4 referrals: Increased to 2%
-                  <br />
-                  5+ referrals: Increased to 2.5%
                 </p>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/20">
+                    <span className="text-xs flex items-center">
+                      <Users className="h-3 w-3 mr-1 opacity-70" />
+                      <span>0 people</span>
+                    </span>
+                    <span className="text-xs font-medium text-islamic-gold">1%</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/20">
+                    <span className="text-xs flex items-center">
+                      <Users className="h-3 w-3 mr-1 opacity-70" />
+                      <span>1 person</span>
+                    </span>
+                    <span className="text-xs font-medium text-islamic-gold">1.5%</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/20">
+                    <span className="text-xs flex items-center">
+                      <Users className="h-3 w-3 mr-1 opacity-70" />
+                      <span>2-4 people</span>
+                    </span>
+                    <span className="text-xs font-medium text-islamic-gold">2%</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/20">
+                    <span className="text-xs flex items-center">
+                      <Users className="h-3 w-3 mr-1 opacity-70" />
+                      <span>5+ people</span>
+                    </span>
+                    <span className="text-xs font-medium text-islamic-gold">2.5%</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

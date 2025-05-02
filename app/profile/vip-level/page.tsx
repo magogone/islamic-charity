@@ -34,7 +34,7 @@ export default function VipLevelPage() {
   }
 
   return (
-    <div className="min-h-screen bg-islamic-dark py-8 px-4">
+    <div className="min-h-screen bg-islamic-dark py-8 px-4 max-w-lg mx-auto">
       <VipLevelDetail {...vipData} />
     </div>
   )
