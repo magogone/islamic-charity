@@ -1,27 +1,15 @@
 "use client"
-
-import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { NewsAnnouncementItem, type NewsAnnouncementItemProps } from "./news-announcement-item"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 
-interface NewsAnnouncementsSectionProps {
+interface NewsSectionProps {
   news: NewsAnnouncementItemProps[]
-  announcements: NewsAnnouncementItemProps[]
   className?: string
 }
 
-export function NewsAnnouncementsSection({ news, announcements, className }: NewsAnnouncementsSectionProps) {
-  const [activeTab, setActiveTab] = useState<string>("all")
-
-  // Merge and sort by date
-  const allItems = [...news, ...announcements].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-
-  // Filter items based on current tab
-  const filteredItems = activeTab === "all" ? allItems : activeTab === "news" ? news : announcements
-
+export function NewsSection({ news, className }: NewsSectionProps) {
   const scrollContainer = (direction: "left" | "right") => {
     const container = document.getElementById("news-scroll-container")
     if (container) {
@@ -34,31 +22,9 @@ export function NewsAnnouncementsSection({ news, announcements, className }: New
     <div className={cn("w-full my-6", className)}>
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h2 className="text-xl font-bold text-islamic-gold">News & Announcements</h2>
+          <h2 className="text-xl font-bold text-islamic-gold">News</h2>
           <p className="text-sm text-islamic-cream/70">Learn about the latest information</p>
         </div>
-        <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-auto">
-          <TabsList className="bg-islamic-dark/50 border border-islamic-medium/30">
-            <TabsTrigger
-              value="all"
-              className="data-[state=active]:bg-islamic-gold data-[state=active]:text-islamic-dark"
-            >
-              All
-            </TabsTrigger>
-            <TabsTrigger
-              value="news"
-              className="data-[state=active]:bg-islamic-gold data-[state=active]:text-islamic-dark"
-            >
-              News
-            </TabsTrigger>
-            <TabsTrigger
-              value="announcement"
-              className="data-[state=active]:bg-islamic-gold data-[state=active]:text-islamic-dark"
-            >
-              Announcements
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
       </div>
 
       <div className="relative">
@@ -67,7 +33,7 @@ export function NewsAnnouncementsSection({ news, announcements, className }: New
           className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {filteredItems.map((item) => (
+          {news.map((item) => (
             <div key={item.id} className="min-w-[280px] w-[280px] md:w-[280px] snap-start sm:min-w-[90%] sm:w-[90%]">
               <NewsAnnouncementItem {...item} />
             </div>

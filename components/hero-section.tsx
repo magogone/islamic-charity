@@ -8,7 +8,6 @@ import { PaymentDialog } from "./payment-dialog"
 
 interface HeroSectionProps {
   title?: string
-  subtitle?: string
   description?: string
   buttonText?: string
   onButtonClick?: () => void
@@ -16,7 +15,6 @@ interface HeroSectionProps {
 
 export function HeroSection({
   title = "Barkat Alliance Foundation",
-  subtitle = "Barkat Alliance Foundation",
   description = "Innovative Charity Model: Divine Mission",
   buttonText = "Donate Now",
   onButtonClick,
@@ -24,10 +22,6 @@ export function HeroSection({
   const [isLoading, setIsLoading] = useState(true)
   const [paymentOpen, setPaymentOpen] = useState(false)
 
-  // Change image in HeroSection component
-  // Replace mosque image with one more suitable for a charity organization
-
-  // Modify primaryImage and fallbackImage variables
   const primaryImage = "/grand-mosque.png" // Change back to mosque image
   const fallbackImage =
     "https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=1200" // Mosque backup image
