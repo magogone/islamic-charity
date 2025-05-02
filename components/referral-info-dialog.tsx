@@ -27,99 +27,49 @@ export function ReferralInfoDialog({ open, onOpenChange }: ReferralInfoDialogPro
         <DialogHeader>
           <DialogTitle className="text-islamic-gold flex items-center">
             <Users className="mr-2 h-5 w-5" />
-            Referral Reward Explanation
+            Relief Fund Rate
           </DialogTitle>
           <DialogDescription className="text-islamic-cream/70">Learn more about referral rewards</DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-2">
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-islamic-gold">Referral Reward Details</h3>
-            <p className="text-xs text-islamic-cream/80">
-              Refer friends and receive rewards from their donations. As your VIP level increases, your total referral
-              reward rate increases from 20% to 30%.
-            </p>
-
-            <div className="p-4 bg-islamic-medium/30 rounded-lg border border-islamic-medium/50">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-islamic-cream">VIP 1</span>
-                <span className="text-sm font-medium text-islamic-gold">20% Total</span>
+            <div className="space-y-2">
+              <div className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(0)}`}>
+                <span className="text-sm flex items-center">
+                  <Users className="h-4 w-4 mr-2 opacity-70" />
+                  <span>0</span>
+                </span>
+                <span className="font-medium">1%</span>
               </div>
-              <div className="grid grid-cols-5 gap-1 text-xs">
-                <div className="text-center">
-                  <div className="text-islamic-cream/70">1st Gen</div>
-                  <div className="font-medium">10%</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-islamic-cream/70">2nd Gen</div>
-                  <div className="font-medium">4%</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-islamic-cream/70">3rd Gen</div>
-                  <div className="font-medium">2%</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-islamic-cream/70">4th Gen</div>
-                  <div className="font-medium">2%</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-islamic-cream/70">5th Gen</div>
-                  <div className="font-medium">2%</div>
-                </div>
+
+              <div className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(1)}`}>
+                <span className="text-sm flex items-center">
+                  <Users className="h-4 w-4 mr-2 opacity-70" />
+                  <span>1</span>
+                </span>
+                <span className="font-medium">1.5%</span>
+              </div>
+
+              <div className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(3)}`}>
+                <span className="text-sm flex items-center">
+                  <Users className="h-4 w-4 mr-2 opacity-70" />
+                  <span>3</span>
+                </span>
+                <span className="font-medium">2%</span>
+              </div>
+
+              <div className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(5)}`}>
+                <span className="text-sm flex items-center">
+                  <Users className="h-4 w-4 mr-2 opacity-70" />
+                  <span>5</span>
+                </span>
+                <span className="font-medium">2.5%</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-center my-2">
-              <div className="h-6 w-6 flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-islamic-gold"
-                >
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <polyline points="19 12 12 19 5 12"></polyline>
-                </svg>
-              </div>
-            </div>
-
-            <div className="p-4 bg-islamic-medium/30 rounded-lg border border-islamic-gold/30">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-islamic-cream">VIP 5</span>
-                <span className="text-sm font-medium text-islamic-gold">30% Total</span>
-              </div>
-              <div className="grid grid-cols-5 gap-1 text-xs">
-                <div className="text-center">
-                  <div className="text-islamic-cream/70">1st Gen</div>
-                  <div className="font-medium">20%</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-islamic-cream/70">2nd Gen</div>
-                  <div className="font-medium">4%</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-islamic-cream/70">3rd Gen</div>
-                  <div className="font-medium">2%</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-islamic-cream/70">4th Gen</div>
-                  <div className="font-medium">2%</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-islamic-cream/70">5th Gen</div>
-                  <div className="font-medium">2%</div>
-                </div>
-              </div>
-            </div>
-
-            <p className="text-xs text-islamic-cream/70 italic mt-2">
-              Refer more friends to increase your rewards and VIP level.
+            <p className="text-xs text-islamic-cream/70 italic">
+              Refer more friends to increase your relief fund rate.
             </p>
           </div>
         </div>

@@ -74,25 +74,25 @@ export function VipLevelProgress({ currentLevel, onUpgrade, className }: VipLeve
   )
 
   return (
-    <div className={cn("mt-3", className)}>
+    <div className={cn("mt-3 w-full", className)}>
       <div className="flex justify-between mb-2">
         <span className="text-sm text-islamic-cream/80">Current VIP{currentLevel}</span>
         {nextLevel && (
           <span className="text-sm text-islamic-cream/80">
-            {VIP_LEVELS[nextLevel - 1].amount - VIP_LEVELS[currentLevel - 1].amount}U needed for VIP{nextLevel}
+            {VIP_LEVELS[nextLevel - 1].amount - VIP_LEVELS[currentLevel - 1].amount}U to VIP{nextLevel}
           </span>
         )}
       </div>
 
       {/* 调整容器宽度和圆圈大小 */}
-      <div className="flex items-center justify-between w-full">
+      <div className="flex items-center justify-between w-full gap-1">
         {VIP_LEVELS.map((vip) => (
           <div key={vip.level} className="flex flex-col items-center">
             <button
               onClick={() => handleLevelClick(vip.level)}
               disabled={vip.level !== nextLevel}
               className={cn(
-                "w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 relative",
+                "w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-300 relative",
                 getLevelStyle(vip.level),
                 vip.level === nextLevel && "hover:scale-110 active:scale-95",
               )}
@@ -104,7 +104,7 @@ export function VipLevelProgress({ currentLevel, onUpgrade, className }: VipLeve
               {vip.level === 5 ? (
                 <Crown
                   className={cn(
-                    "w-4 h-4",
+                    "w-3 h-3 sm:w-4 sm:h-4",
                     vip.level === currentLevel
                       ? "text-islamic-dark"
                       : vip.level === nextLevel
@@ -115,7 +115,7 @@ export function VipLevelProgress({ currentLevel, onUpgrade, className }: VipLeve
               ) : (
                 <span
                   className={cn(
-                    "text-base font-bold",
+                    "text-sm sm:text-base font-bold",
                     vip.level === currentLevel
                       ? "text-islamic-dark"
                       : vip.level === nextLevel
@@ -129,21 +129,21 @@ export function VipLevelProgress({ currentLevel, onUpgrade, className }: VipLeve
 
               {/* 当前等级的绿色指示点 */}
               {vip.level === currentLevel && (
-                <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full border border-islamic-dark"></div>
+                <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-green-500 rounded-full border border-islamic-dark"></div>
               )}
 
               {/* 下一等级的升级图标 - 使用更好看的图标 */}
               {vip.level === nextLevel && (
                 <div
                   className={cn(
-                    "absolute -top-3 -right-1",
+                    "absolute -top-2 -right-1 sm:-top-3 sm:-right-1",
                     animationState === 1 && "scale-110",
                     animationState === 2 && "scale-105",
                   )}
                 >
                   <StarUpgradeIcon
                     className={cn(
-                      "w-5 h-5 text-islamic-gold drop-shadow-[0_0_2px_rgba(0,0,0,0.5)]",
+                      "w-4 h-4 sm:w-5 sm:h-5 text-islamic-gold drop-shadow-[0_0_2px_rgba(0,0,0,0.5)]",
                       animationState === 1 && "text-islamic-gold/90",
                       animationState === 2 && "text-islamic-gold/80",
                     )}

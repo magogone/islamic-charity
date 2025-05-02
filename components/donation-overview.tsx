@@ -85,12 +85,12 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
         </CardHeader>
         <CardContent className="pb-2">
           {/* Donation amount and earnings cards */}
-          <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="grid grid-cols-1 gap-3 mb-4">
             <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3 flex flex-col h-full">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center">
                   <Heart className="h-4 w-4 text-islamic-gold mr-2" />
-                  <span className="text-xs text-islamic-cream/70">Total Donation</span>
+                  <span className="text-xs text-islamic-cream/70">Total</span>
                 </div>
                 <button
                   onClick={() => setPaymentOpen(true)}
@@ -109,57 +109,61 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
               />
             </div>
 
-            {/* Right side - Donation Rewards */}
+            {/* Right side - Donation Rewards - UPDATED LAYOUT */}
             <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3 flex flex-col h-full">
-              <div className="flex items-center mb-2">
-                <TrendingUp className="h-3.5 w-3.5 text-islamic-gold mr-1.5" />
-                <span className="text-sm text-islamic-gold">Donation Rewards</span>
+              <div className="flex items-center mb-3">
+                <TrendingUp className="h-4 w-4 text-islamic-gold mr-2" />
+                <span className="text-sm text-islamic-gold">Rewards</span>
               </div>
 
-              <div className="grid grid-cols-2 gap-x-2 gap-y-2.5 mt-1">
-                <div className="flex items-start">
-                  <Coins className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
-                  <div className="flex flex-col items-center">
-                    <span className="text-xl font-bold text-islamic-gold/95">{data.dailyFunds.current}</span>
+              <div className="grid grid-cols-2 gap-4">
+                {/* Current USDT */}
+                <div className="flex items-center">
+                  <Coins className="h-5 w-5 text-islamic-gold/90 mr-3" />
+                  <div className="text-2xl font-bold text-islamic-gold/95">{data.dailyFunds.current}</div>
+                  <div className="ml-3 flex flex-col">
                     <span className="text-xs text-islamic-gold/90">USDT</span>
-                    <span className="text-[10px] text-islamic-cream/60 mt-0.5">Current</span>
+                    <span className="text-[10px] text-islamic-cream/60">Current</span>
                   </div>
                 </div>
 
-                <div className="flex items-start">
-                  <Target className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
-                  <div className="flex flex-col items-center">
-                    <span className="text-xl font-bold text-islamic-gold/95">{data.dailyFunds.max}</span>
+                {/* Maximum USDT */}
+                <div className="flex items-center">
+                  <Target className="h-5 w-5 text-islamic-gold/90 mr-3" />
+                  <div className="text-2xl font-bold text-islamic-gold/95">{data.dailyFunds.max}</div>
+                  <div className="ml-3 flex flex-col">
                     <span className="text-xs text-islamic-gold/90">USDT</span>
-                    <span className="text-[10px] text-islamic-cream/60 mt-0.5">Maximum</span>
+                    <span className="text-[10px] text-islamic-cream/60">Maximum</span>
                   </div>
                 </div>
 
-                <div className="flex items-start">
-                  <Percent className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
-                  <div className="flex flex-col items-center">
-                    <span className="text-xl font-bold text-islamic-gold/95">{data.currentRate}%</span>
-                    <span className="text-[10px] text-islamic-cream/60 mt-0.5">Current Rate</span>
+                {/* Current Rate */}
+                <div className="flex items-center">
+                  <Percent className="h-5 w-5 text-islamic-gold/90 mr-3" />
+                  <div className="text-2xl font-bold text-islamic-gold/95">{data.currentRate}%</div>
+                  <div className="ml-3 flex flex-col">
+                    <span className="text-[10px] text-islamic-cream/60">Current</span>
                   </div>
                 </div>
 
-                <div className="flex items-start">
-                  <BarChart className="h-4 w-4 text-islamic-gold/90 mr-1.5 mt-0.5" />
-                  <div className="flex flex-col items-center">
-                    <span className="text-xl font-bold text-islamic-gold/95">{data.maxRate || 2.5}%</span>
-                    <span className="text-[10px] text-islamic-cream/60 mt-0.5">Max Rate</span>
+                {/* Max Rate */}
+                <div className="flex items-center">
+                  <BarChart className="h-5 w-5 text-islamic-gold/90 mr-3" />
+                  <div className="text-2xl font-bold text-islamic-gold/95">{data.maxRate || 2.5}%</div>
+                  <div className="ml-3 flex flex-col">
+                    <span className="text-[10px] text-islamic-cream/60">Max</span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center mt-auto justify-center">
-                <Users2 className="h-3 w-3 text-islamic-cream/60 mr-1" />
-                <span className="text-[10px] text-islamic-cream/60">Referred {data.referrals} people</span>
+              <div className="flex items-center mt-3 justify-end">
+                <Users2 className="h-3.5 w-3.5 text-islamic-cream/70 mr-1.5" />
+                <span className="text-xs text-islamic-cream/70">Referred {data.referrals} people</span>
                 <button
                   onClick={() => setReferralInfoOpen(true)}
                   className="ml-1 p-0.5 rounded-full hover:bg-islamic-medium/50 transition-colors"
                 >
-                  <InfoCircle className="h-2.5 w-2.5 text-islamic-cream/60" />
+                  <InfoCircle className="h-3 w-3 text-islamic-cream/60" />
                 </button>
               </div>
             </div>
