@@ -6,41 +6,13 @@ import { Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { useVipInfo } from "@/store/use-vip-info"
 
 interface VipLevelDetailProps {
   vipLevel: number
   currentDailyFund: number
   maxDailyFund: number
-  referralRewards: {
-    level1: number
-    level2: number
-    level3: number
-    level4: number
-    level5: number
-    total: number
-  }
-  maxReferralRewards: {
-    level1: number
-    level2: number
-    level3: number
-    level4: number
-    level5: number
-    total: number
-  }
-  totalRewardRatio: number
-  maxTotalRewardRatio: number
-  povertyFundRatios: {
-    noReferral: number
-    referral1: number
-    referral3: number
-    referral5: number
-  }
-  maxPovertyFundRatios: {
-    noReferral: number
-    referral1: number
-    referral3: number
-    referral5: number
-  }
+  currentReferrals: number
   className?: string
 }
 
@@ -48,15 +20,20 @@ export function VipLevelDetail({
   vipLevel,
   currentDailyFund,
   maxDailyFund,
-  referralRewards,
-  maxReferralRewards,
-  totalRewardRatio,
-  maxTotalRewardRatio,
-  povertyFundRatios,
-  maxPovertyFundRatios,
+  currentReferrals,
   className,
 }: VipLevelDetailProps) {
   const [showExplanation, setShowExplanation] = useState(false)
+  const { getRewardRatesForLevel, getAllReliefFundRates } = useVipInfo()
+
+  // 获取当前 VIP 等级的奖励比例
+  const rewardRates = getRewardRatesForLevel(vipLevel)
+
+  // 获取最高 VIP 等级 (5) 的奖励比例作为最大值
+  const maxRewardRates = getRewardRatesForLevel(5)
+
+  // 获取扶贫基金比例
+  const reliefFundRates = getAllReliefFundRates()
 
   return (
     <div className={cn("w-full max-w-md mx-auto", className)}>
@@ -122,34 +99,34 @@ export function VipLevelDetail({
             <div className="grid grid-cols-5 gap-2 mb-3">
               <div className="text-center">
                 <p className="text-sm text-islamic-cream/70 mb-1">1代</p>
-                <p className="text-xl font-semibold text-[#8bc34a]">{referralRewards.level1}%</p>
-                <p className="text-xs text-islamic-cream/60">/ {maxReferralRewards.level1}%</p>
+                <p className="text-xl font-semibold text-[#8bc34a]">{rewardRates.level1}%</p>
+                <p className="text-xs text-islamic-cream/60">/ {maxRewardRates.level1}%</p>
               </div>
               <div className="text-center">
                 <p className="text-sm text-islamic-cream/70 mb-1">2代</p>
-                <p className="text-xl font-semibold text-[#8bc34a]">{referralRewards.level2}%</p>
-                <p className="text-xs text-islamic-cream/60">/ {maxReferralRewards.level2}%</p>
+                <p className="text-xl font-semibold text-[#8bc34a]">{rewardRates.level2}%</p>
+                <p className="text-xs text-islamic-cream/60">/ {maxRewardRates.level2}%</p>
               </div>
               <div className="text-center">
                 <p className="text-sm text-islamic-cream/70 mb-1">3代</p>
-                <p className="text-xl font-semibold text-[#8bc34a]">{referralRewards.level3}%</p>
-                <p className="text-xs text-islamic-cream/60">/ {maxReferralRewards.level3}%</p>
+                <p className="text-xl font-semibold text-[#8bc34a]">{rewardRates.level3}%</p>
+                <p className="text-xs text-islamic-cream/60">/ {maxRewardRates.level3}%</p>
               </div>
               <div className="text-center">
                 <p className="text-sm text-islamic-cream/70 mb-1">4代</p>
-                <p className="text-xl font-semibold text-[#8bc34a]">{referralRewards.level4}%</p>
-                <p className="text-xs text-islamic-cream/60">/ {maxReferralRewards.level4}%</p>
+                <p className="text-xl font-semibold text-[#8bc34a]">{rewardRates.level4}%</p>
+                <p className="text-xs text-islamic-cream/60">/ {maxRewardRates.level4}%</p>
               </div>
               <div className="text-center">
                 <p className="text-sm text-islamic-cream/70 mb-1">5代</p>
-                <p className="text-xl font-semibold text-[#8bc34a]">{referralRewards.level5}%</p>
-                <p className="text-xs text-islamic-cream/60">/ {maxReferralRewards.level5}%</p>
+                <p className="text-xl font-semibold text-[#8bc34a]">{rewardRates.level5}%</p>
+                <p className="text-xs text-islamic-cream/60">/ {maxRewardRates.level5}%</p>
               </div>
             </div>
             <div className="flex justify-end items-center mt-3">
               <p className="text-sm text-islamic-cream/70">总奖励比例:</p>
-              <p className="text-lg font-semibold text-[#8bc34a] ml-2">{referralRewards.total}%</p>
-              <p className="text-xs text-islamic-cream/60 ml-1">/ {maxReferralRewards.total}%</p>
+              <p className="text-lg font-semibold text-[#8bc34a] ml-2">{rewardRates.total}%</p>
+              <p className="text-xs text-islamic-cream/60 ml-1">/ {maxRewardRates.total}%</p>
             </div>
           </div>
         </div>
@@ -177,29 +154,29 @@ export function VipLevelDetail({
               <div className="flex justify-between items-center">
                 <p className="text-sm text-islamic-cream/70">无推荐</p>
                 <div className="text-right">
-                  <p className="text-lg font-semibold text-[#8bc34a]">{povertyFundRatios.noReferral}%</p>
-                  <p className="text-xs text-islamic-cream/60">/ {maxPovertyFundRatios.noReferral}%</p>
+                  <p className="text-lg font-semibold text-[#8bc34a]">{reliefFundRates.noReferral}%</p>
+                  <p className="text-xs text-islamic-cream/60">/ {reliefFundRates.referral5}%</p>
                 </div>
               </div>
               <div className="flex justify-between items-center">
                 <p className="text-sm text-islamic-cream/70">推荐1人</p>
                 <div className="text-right">
-                  <p className="text-lg font-semibold text-[#8bc34a]">{povertyFundRatios.referral1}%</p>
-                  <p className="text-xs text-islamic-cream/60">/ {maxPovertyFundRatios.referral1}%</p>
+                  <p className="text-lg font-semibold text-[#8bc34a]">{reliefFundRates.referral1}%</p>
+                  <p className="text-xs text-islamic-cream/60">/ {reliefFundRates.referral5}%</p>
                 </div>
               </div>
               <div className="flex justify-between items-center">
                 <p className="text-sm text-islamic-cream/70">推荐3人</p>
                 <div className="text-right">
-                  <p className="text-lg font-semibold text-[#8bc34a]">{povertyFundRatios.referral3}%</p>
-                  <p className="text-xs text-islamic-cream/60">/ {maxPovertyFundRatios.referral3}%</p>
+                  <p className="text-lg font-semibold text-[#8bc34a]">{reliefFundRates.referral3}%</p>
+                  <p className="text-xs text-islamic-cream/60">/ {reliefFundRates.referral5}%</p>
                 </div>
               </div>
               <div className="flex justify-between items-center">
                 <p className="text-sm text-islamic-cream/70">推荐5人</p>
                 <div className="text-right">
-                  <p className="text-lg font-semibold text-[#8bc34a]">{povertyFundRatios.referral5}%</p>
-                  <p className="text-xs text-islamic-cream/60">/ {maxPovertyFundRatios.referral5}%</p>
+                  <p className="text-lg font-semibold text-[#8bc34a]">{reliefFundRates.referral5}%</p>
+                  <p className="text-xs text-islamic-cream/60">/ {reliefFundRates.referral5}%</p>
                 </div>
               </div>
             </div>

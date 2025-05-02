@@ -3,6 +3,7 @@
 import { Users } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useVipInfo } from "@/store/use-vip-info"
 
 interface ReliefFundRateCardProps {
   currentReferrals: number
@@ -10,6 +11,9 @@ interface ReliefFundRateCardProps {
 }
 
 export function ReliefFundRateCard({ currentReferrals, className }: ReliefFundRateCardProps) {
+  const { getAllReliefFundRates } = useVipInfo()
+  const reliefFundRates = getAllReliefFundRates()
+
   // Get rate class based on referral count
   const getRateClass = (referrals: number) => {
     if (currentReferrals >= referrals) {
@@ -30,7 +34,7 @@ export function ReliefFundRateCard({ currentReferrals, className }: ReliefFundRa
               <Users className="h-4 w-4 mr-2 opacity-70" />
               <span>0</span>
             </span>
-            <span className={cn("font-medium", getRateClass(0))}>1%</span>
+            <span className={cn("font-medium", getRateClass(0))}>{reliefFundRates.noReferral}%</span>
           </div>
 
           <div className="flex justify-between items-center p-2 rounded-md bg-islamic-medium/30">
@@ -38,7 +42,7 @@ export function ReliefFundRateCard({ currentReferrals, className }: ReliefFundRa
               <Users className="h-4 w-4 mr-2 opacity-70" />
               <span>1</span>
             </span>
-            <span className={cn("font-medium", getRateClass(1))}>1.5%</span>
+            <span className={cn("font-medium", getRateClass(1))}>{reliefFundRates.referral1}%</span>
           </div>
 
           <div className="flex justify-between items-center p-2 rounded-md bg-islamic-medium/30">
@@ -46,7 +50,7 @@ export function ReliefFundRateCard({ currentReferrals, className }: ReliefFundRa
               <Users className="h-4 w-4 mr-2 opacity-70" />
               <span>3</span>
             </span>
-            <span className={cn("font-medium", getRateClass(3))}>2%</span>
+            <span className={cn("font-medium", getRateClass(3))}>{reliefFundRates.referral3}%</span>
           </div>
 
           <div className="flex justify-between items-center p-2 rounded-md bg-islamic-medium/30">
@@ -54,7 +58,7 @@ export function ReliefFundRateCard({ currentReferrals, className }: ReliefFundRa
               <Users className="h-4 w-4 mr-2 opacity-70" />
               <span>5</span>
             </span>
-            <span className={cn("font-medium", getRateClass(5))}>2.5%</span>
+            <span className={cn("font-medium", getRateClass(5))}>{reliefFundRates.referral5}%</span>
           </div>
         </div>
       </CardContent>

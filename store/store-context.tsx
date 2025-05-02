@@ -112,6 +112,29 @@ export interface StoreState {
     }
   }
 
+  // VIP data
+  vipInfo: {
+    levels: {
+      [key: number]: {
+        rewardRates: {
+          level1: number
+          level2: number
+          level3: number
+          level4: number
+          level5: number
+          total: number
+        }
+        dailyFundRange: string
+      }
+    }
+    reliefFundRates: {
+      noReferral: number
+      referral1: number
+      referral3: number
+      referral5: number
+    }
+  }
+
   // News data
   news: NewsAnnouncementItemProps[]
 
@@ -209,12 +232,78 @@ const initialState: StoreState = {
       max: 2.5,
     },
     maxReferralReward: {
-      level1: 15,
-      level2: 6,
-      level3: 3,
-      level4: 3,
-      level5: 3,
+      level1: 20,
+      level2: 4,
+      level3: 2,
+      level4: 2,
+      level5: 2,
       total: 30,
+    },
+  },
+  // 新增 VIP 信息数据
+  vipInfo: {
+    levels: {
+      1: {
+        rewardRates: {
+          level1: 10,
+          level2: 4,
+          level3: 2,
+          level4: 2,
+          level5: 2,
+          total: 20,
+        },
+        dailyFundRange: "1.2-3 U",
+      },
+      2: {
+        rewardRates: {
+          level1: 12,
+          level2: 4,
+          level3: 2,
+          level4: 2,
+          level5: 2,
+          total: 22,
+        },
+        dailyFundRange: "3.6-9 U",
+      },
+      3: {
+        rewardRates: {
+          level1: 14,
+          level2: 4,
+          level3: 2,
+          level4: 2,
+          level5: 2,
+          total: 24,
+        },
+        dailyFundRange: "6-15 U",
+      },
+      4: {
+        rewardRates: {
+          level1: 16,
+          level2: 4,
+          level3: 2,
+          level4: 2,
+          level5: 2,
+          total: 26,
+        },
+        dailyFundRange: "9.6-24 U",
+      },
+      5: {
+        rewardRates: {
+          level1: 20,
+          level2: 4,
+          level3: 2,
+          level4: 2,
+          level5: 2,
+          total: 30,
+        },
+        dailyFundRange: "14.4-36 U",
+      },
+    },
+    reliefFundRates: {
+      noReferral: 1,
+      referral1: 1.5,
+      referral3: 2,
+      referral5: 2.5,
     },
   },
   news: [
