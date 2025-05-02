@@ -71,7 +71,7 @@ export function HeroSection({
         </Button>
       </div>
 
-      <PaymentDialog open={paymentOpen} onOpenChange={setPaymentOpen} nextLevelAmount={200} />
+      <PaymentDialog open={paymentOpen} onOpenChange={setPaymentOpen} />
     </div>
   )
 }

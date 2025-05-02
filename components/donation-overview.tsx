@@ -21,6 +21,7 @@ import { VipLevelProgress } from "./vip-level-progress"
 import { ReferralInfoDialog } from "./referral-info-dialog"
 import { RewardSummaryChart } from "./reward-summary-chart"
 import { TooltipProvider, TooltipTrigger, TooltipContent, Tooltip as UITooltip } from "@/components/ui/tooltip"
+import { useVipInfo } from "@/store/use-vip-info"
 
 export interface DonationOverviewProps {
   data?: {
@@ -80,6 +81,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
   const [paymentOpen, setPaymentOpen] = useState(false)
   const [referralInfoOpen, setReferralInfoOpen] = useState(false)
   const [withdrawOpen, setWithdrawOpen] = useState(false)
+  const { getVipLevelDonationAmount } = useVipInfo()
 
   // Merge provided data with default data to ensure all properties exist
   const safeData = {
@@ -90,6 +92,10 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
       ...(data?.dailyFunds || {}),
     },
   }
+
+  // 获取下一级VIP的全额费用
+  const nextVipLevel = safeData.vipLevel < 5 ? safeData.vipLevel + 1 : 5
+  const nextLevelAmount = getVipLevelDonationAmount(nextVipLevel)
 
   // Summary data
   const summaryData = {
@@ -254,7 +260,8 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
       <PaymentDialog
         open={paymentOpen}
         onOpenChange={setPaymentOpen}
-        nextLevelAmount={200} // This should be dynamically calculated based on current VIP level
+        currentVipLevel={safeData.vipLevel}
+        nextLevelAmount={nextLevelAmount}
       />
       <ReferralInfoDialog open={referralInfoOpen} onOpenChange={setReferralInfoOpen} />
     </>

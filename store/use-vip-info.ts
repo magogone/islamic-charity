@@ -136,12 +136,53 @@ export function useVipInfo() {
     )
   }
 
+  // 添加新的方法来获取VIP等级的捐赠金额和总回报
+  const getVipLevelDonationAmount = (level: number) => {
+    const safeLevel = Math.min(Math.max(1, level), 5) // 确保等级在 1-5 之间
+
+    // 添加安全检查，确保 levels 和对应的 level 存在
+    if (!vipInfo.levels || !vipInfo.levels[safeLevel]) {
+      // 返回默认值
+      return safeLevel * 100
+    }
+
+    return vipInfo.levels[safeLevel].donationAmount
+  }
+
+  const getVipLevelTotalReturn = (level: number) => {
+    const safeLevel = Math.min(Math.max(1, level), 5) // 确保等级在 1-5 之间
+
+    // 添加安全检查，确保 levels 和对应的 level 存在
+    if (!vipInfo.levels || !vipInfo.levels[safeLevel]) {
+      // 返回默认值
+      return safeLevel * 120
+    }
+
+    return vipInfo.levels[safeLevel].totalReturn
+  }
+
+  const getVipLevelPeriod = (level: number) => {
+    const safeLevel = Math.min(Math.max(1, level), 5) // 确保等级在 1-5 之间
+
+    // 添加安全检查，确保 levels 和对应的 level 存在
+    if (!vipInfo.levels || !vipInfo.levels[safeLevel]) {
+      // 返回默认值
+      return 40
+    }
+
+    return vipInfo.levels[safeLevel].period
+  }
+
+  // 在 return 语句中添加这些新方法
   return {
     getRewardRatesForLevel,
     getDailyFundRangeForLevel,
     getReliefFundRateByReferrals,
     getAllVipLevels,
     getAllReliefFundRates,
+    getVipLevelDonationAmount,
+    getVipLevelTotalReturn,
+    getVipLevelPeriod,
     vipInfo,
   }
 }

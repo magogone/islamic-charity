@@ -124,7 +124,10 @@ export interface StoreState {
           level5: number
           total: number
         }
+        donationAmount: number
+        totalReturn: number
         dailyFundRange: string
+        period: number
       }
     }
     reliefFundRates: {
@@ -252,7 +255,10 @@ const initialState: StoreState = {
           level5: 2,
           total: 20,
         },
+        donationAmount: 100,
+        totalReturn: 120,
         dailyFundRange: "1.2-3 U",
+        period: 40,
       },
       2: {
         rewardRates: {
@@ -263,7 +269,10 @@ const initialState: StoreState = {
           level5: 2,
           total: 22,
         },
+        donationAmount: 300,
+        totalReturn: 360,
         dailyFundRange: "3.6-9 U",
+        period: 40,
       },
       3: {
         rewardRates: {
@@ -274,7 +283,10 @@ const initialState: StoreState = {
           level5: 2,
           total: 24,
         },
+        donationAmount: 500,
+        totalReturn: 600,
         dailyFundRange: "6-15 U",
+        period: 40,
       },
       4: {
         rewardRates: {
@@ -285,7 +297,10 @@ const initialState: StoreState = {
           level5: 2,
           total: 26,
         },
+        donationAmount: 800,
+        totalReturn: 960,
         dailyFundRange: "9.6-24 U",
+        period: 40,
       },
       5: {
         rewardRates: {
@@ -296,7 +311,10 @@ const initialState: StoreState = {
           level5: 2,
           total: 30,
         },
+        donationAmount: 1200,
+        totalReturn: 1440,
         dailyFundRange: "14.4-36 U",
+        period: 40,
       },
     },
     reliefFundRates: {

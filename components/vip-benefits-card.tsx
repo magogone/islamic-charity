@@ -11,7 +11,14 @@ interface VipBenefitsCardProps {
 }
 
 export function VipBenefitsCard({ vipLevel, className }: VipBenefitsCardProps) {
-  const { getDailyFundRangeForLevel, getRewardRatesForLevel, getAllReliefFundRates } = useVipInfo()
+  const {
+    getDailyFundRangeForLevel,
+    getRewardRatesForLevel,
+    getAllReliefFundRates,
+    getVipLevelDonationAmount,
+    getVipLevelTotalReturn,
+    getVipLevelPeriod,
+  } = useVipInfo()
 
   // 获取当前 VIP 等级的每日扶贫资金范围
   const dailyFundRange = getDailyFundRangeForLevel(vipLevel || 1)
@@ -21,6 +28,11 @@ export function VipBenefitsCard({ vipLevel, className }: VipBenefitsCardProps) {
 
   // 获取扶贫基金比例
   const reliefFundRates = getAllReliefFundRates()
+
+  // 获取捐赠金额和总回报
+  const donationAmount = getVipLevelDonationAmount(vipLevel || 1)
+  const totalReturn = getVipLevelTotalReturn(vipLevel || 1)
+  const period = getVipLevelPeriod(vipLevel || 1)
 
   return (
     <Card className={cn("border-none shadow-xl bg-islamic-cardBg/90 backdrop-blur-lg text-white", className)}>
@@ -34,6 +46,24 @@ export function VipBenefitsCard({ vipLevel, className }: VipBenefitsCardProps) {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
+          <div className="p-3 rounded-lg bg-islamic-medium/70 backdrop-blur-sm">
+            <h4 className="text-sm font-medium text-islamic-gold mb-2">Donation & Returns</h4>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex flex-col p-2 bg-islamic-dark/30 rounded-lg">
+                <span className="text-xs text-islamic-cream/70">Donation</span>
+                <span className="text-lg font-bold text-islamic-gold">{donationAmount} U</span>
+              </div>
+              <div className="flex flex-col p-2 bg-islamic-dark/30 rounded-lg">
+                <span className="text-xs text-islamic-cream/70">Total Return</span>
+                <span className="text-lg font-bold text-[#8dc63f]">{totalReturn} U</span>
+              </div>
+              <div className="flex flex-col p-2 bg-islamic-dark/30 rounded-lg col-span-2">
+                <span className="text-xs text-islamic-cream/70">Period</span>
+                <span className="text-base font-medium text-islamic-cream">{period} days</span>
+              </div>
+            </div>
+          </div>
+
           <div className="p-3 rounded-lg bg-islamic-medium/70 backdrop-blur-sm">
             <h4 className="text-sm font-medium text-islamic-gold mb-2">Daily Relief Funds</h4>
             <div className="flex items-baseline">
