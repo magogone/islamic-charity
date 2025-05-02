@@ -9,30 +9,30 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useState } from "react"
 
 export interface InvitationCardProps {
-  data: {
-    totalReferrals: number
-    directReferrals: number
-    indirectReferrals: number
-    totalRewards: number
-    rewardRate: {
-      level1: number
-      level2: number
-      level3: number
-      level4: number
-      level5: number
-      total: number
+  data?: {
+    totalReferrals?: number
+    directReferrals?: number
+    indirectReferrals?: number
+    totalRewards?: number
+    rewardRate?: {
+      level1?: number
+      level2?: number
+      level3?: number
+      level4?: number
+      level5?: number
+      total?: number
     }
-    basicReward: {
-      current: number
-      max: number
+    basicReward?: {
+      current?: number
+      max?: number
     }
-    maxReferralReward: {
-      level1: number
-      level2: number
-      level3: number
-      level4: number
-      level5: number
-      total: number
+    maxReferralReward?: {
+      level1?: number
+      level2?: number
+      level3?: number
+      level4?: number
+      level5?: number
+      total?: number
     }
   }
   className?: string
@@ -42,6 +42,62 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
   const [basicInfoOpen, setBasicInfoOpen] = useState(false)
   const [referralInfoOpen, setReferralInfoOpen] = useState(false)
 
+  // Default data to prevent undefined errors
+  const defaultData = {
+    totalReferrals: 0,
+    directReferrals: 0,
+    indirectReferrals: 0,
+    totalRewards: 0,
+    rewardRate: {
+      level1: 10,
+      level2: 4,
+      level3: 2,
+      level4: 2,
+      level5: 2,
+      total: 20,
+    },
+    basicReward: {
+      current: 1,
+      max: 2.5,
+    },
+    maxReferralReward: {
+      level1: 20,
+      level2: 4,
+      level3: 2,
+      level4: 2,
+      level5: 2,
+      total: 30,
+    },
+  }
+
+  // Safely merge provided data with default data
+  const safeData = {
+    totalReferrals: data?.totalReferrals ?? defaultData.totalReferrals,
+    directReferrals: data?.directReferrals ?? defaultData.directReferrals,
+    indirectReferrals: data?.indirectReferrals ?? defaultData.indirectReferrals,
+    totalRewards: data?.totalRewards ?? defaultData.totalRewards,
+    rewardRate: {
+      level1: data?.rewardRate?.level1 ?? defaultData.rewardRate.level1,
+      level2: data?.rewardRate?.level2 ?? defaultData.rewardRate.level2,
+      level3: data?.rewardRate?.level3 ?? defaultData.rewardRate.level3,
+      level4: data?.rewardRate?.level4 ?? defaultData.rewardRate.level4,
+      level5: data?.rewardRate?.level5 ?? defaultData.rewardRate.level5,
+      total: data?.rewardRate?.total ?? defaultData.rewardRate.total,
+    },
+    basicReward: {
+      current: data?.basicReward?.current ?? defaultData.basicReward.current,
+      max: data?.basicReward?.max ?? defaultData.basicReward.max,
+    },
+    maxReferralReward: {
+      level1: data?.maxReferralReward?.level1 ?? defaultData.maxReferralReward.level1,
+      level2: data?.maxReferralReward?.level2 ?? defaultData.maxReferralReward.level2,
+      level3: data?.maxReferralReward?.level3 ?? defaultData.maxReferralReward.level3,
+      level4: data?.maxReferralReward?.level4 ?? defaultData.maxReferralReward.level4,
+      level5: data?.maxReferralReward?.level5 ?? defaultData.maxReferralReward.level5,
+      total: data?.maxReferralReward?.total ?? defaultData.maxReferralReward.total,
+    },
+  }
+
   const handleShare = () => {
     // Implementation of sharing logic, such as opening a share dialog
     console.log("Share invitation link")
@@ -49,14 +105,14 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
 
   // Get reward rate style based on direct referral count
   const getRateClass = (referrals: number) => {
-    if (data.directReferrals >= referrals) {
+    if (safeData.directReferrals >= referrals) {
       return "border-islamic-gold/50 bg-islamic-gold/10 text-islamic-gold"
     }
     return "border-islamic-medium/50 bg-islamic-medium/30 text-islamic-cream/90"
   }
 
   // Calculate progress percentage for the reward rate
-  const rewardProgress = (data.rewardRate.total / data.maxReferralReward.total) * 100
+  const rewardProgress = (safeData.rewardRate.total / safeData.maxReferralReward.total) * 100
 
   return (
     <Card
@@ -75,21 +131,21 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
           <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-4 flex items-center">
             <Users className="h-8 w-8 text-islamic-cream/50 mr-3" />
             <div className="flex flex-col">
-              <span className="text-3xl font-bold text-[#8dc63f] leading-tight">{data.totalReferrals}</span>
+              <span className="text-3xl font-bold text-[#8dc63f] leading-tight">{safeData.totalReferrals}</span>
               <span className="text-xs text-islamic-cream/70">Total</span>
             </div>
           </div>
           <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-4 flex items-center">
             <UserPlus className="h-8 w-8 text-islamic-cream/50 mr-3" />
             <div className="flex flex-col">
-              <span className="text-3xl font-bold text-[#8dc63f] leading-tight">{data.directReferrals}</span>
+              <span className="text-3xl font-bold text-[#8dc63f] leading-tight">{safeData.directReferrals}</span>
               <span className="text-xs text-islamic-cream/70">Direct</span>
             </div>
           </div>
           <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-4 flex items-center">
             <UsersIcon className="h-8 w-8 text-islamic-cream/50 mr-3" />
             <div className="flex flex-col">
-              <span className="text-3xl font-bold text-[#8dc63f] leading-tight">{data.indirectReferrals}</span>
+              <span className="text-3xl font-bold text-[#8dc63f] leading-tight">{safeData.indirectReferrals}</span>
               <span className="text-xs text-islamic-cream/70">Indirect</span>
             </div>
           </div>
@@ -109,7 +165,7 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
               <div className="relative pt-1 pb-3">
                 <div className="flex mb-1 items-center justify-between">
                   <div className="text-xs text-islamic-cream/70">1%</div>
-                  <div className="text-xs text-islamic-cream/70">{data.basicReward.max}%</div>
+                  <div className="text-xs text-islamic-cream/70">{safeData.basicReward.max}%</div>
                 </div>
                 <div className="overflow-hidden h-2 mb-1 text-xs flex rounded bg-islamic-dark/50">
                   <div
@@ -120,7 +176,7 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
                 {/* Current position marker */}
                 <div
                   className="absolute bottom-0 w-2 h-2 bg-white rounded-full transform -translate-x-1/2"
-                  style={{ left: `${(data.basicReward.current / data.basicReward.max) * 100}%` }}
+                  style={{ left: `${(safeData.basicReward.current / safeData.basicReward.max) * 100}%` }}
                 ></div>
               </div>
             </div>
@@ -131,7 +187,7 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
                 <span className="text-xs text-islamic-cream">Current Rewards</span>
               </div>
               <div className="flex items-center">
-                <span className="text-sm font-medium text-islamic-gold">{data.basicReward.current}%</span>
+                <span className="text-sm font-medium text-islamic-gold">{safeData.basicReward.current}%</span>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -186,7 +242,7 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
                 <span className="text-xs text-islamic-cream">Current Rewards</span>
               </div>
               <div className="flex items-center">
-                <span className="text-sm font-medium text-islamic-gold">{data.rewardRate.total}%</span>
+                <span className="text-sm font-medium text-islamic-gold">{safeData.rewardRate.total}%</span>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -281,12 +337,12 @@ export function InvitationCard({ data, className = "" }: InvitationCardProps) {
               </div>
 
               <p className="text-xs text-islamic-cream/70 italic">
-                You have currently referred {data.directReferrals} people, poverty relief fund rate is{" "}
-                {data.directReferrals === 0
+                You have currently referred {safeData.directReferrals} people, poverty relief fund rate is{" "}
+                {safeData.directReferrals === 0
                   ? "1%"
-                  : data.directReferrals >= 5
+                  : safeData.directReferrals >= 5
                     ? "2.5%"
-                    : data.directReferrals >= 3
+                    : safeData.directReferrals >= 3
                       ? "2%"
                       : "1.5%"}
               </p>

@@ -1,8 +1,49 @@
 "use client"
 
 import type React from "react"
-import { createContext, useContext, useReducer, type ReactNode } from "react"
+import { createContext, useContext, useReducer, useEffect, type ReactNode } from "react"
 import type { NewsAnnouncementItemProps } from "@/components/news-announcement-item"
+import type { AuthState, AuthUser } from "./auth-types"
+
+// Define storage keys
+const STORAGE_KEYS = {
+  AUTH_TOKEN: "barkat_auth_token",
+  AUTH_USER: "barkat_auth_user",
+}
+
+// Storage utility functions implemented directly to avoid import issues
+const saveToStorage = <T,>(key: string, data: T): void => {
+  if (typeof window !== "undefined") {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(data))
+    } catch (error: any) {
+      console.error(`Error saving to localStorage: ${error}`)
+    }
+  }
+}
+
+const getFromStorage = <T,>(key: string): T | null => {
+  if (typeof window !== "undefined") {
+    try {
+      const item = window.localStorage.getItem(key)
+      return item ? JSON.parse(item) : null
+    } catch (error: any) {
+      console.error(`Error getting from localStorage: ${error}`)
+      return null
+    }
+  }
+  return null
+}
+
+const removeFromStorage = (key: string): void => {
+  if (typeof window !== "undefined") {
+    try {
+      window.localStorage.removeItem(key)
+    } catch (error: any) {
+      console.error(`Error removing from localStorage: ${error}`)
+    }
+  }
+}
 
 // Define the store state types
 export interface StoreState {
@@ -35,6 +76,12 @@ export interface StoreState {
     totalMaxReward: number
     withdrawnAmount: number
     withdrawableAmount: number
+    dailyRewards?: Array<{
+      date: string
+      actual: number
+      maximum: number
+      distributed?: boolean
+    }>
   }
 
   // Invitation data
@@ -67,6 +114,9 @@ export interface StoreState {
 
   // News data
   news: NewsAnnouncementItemProps[]
+
+  // Auth data
+  auth: AuthState
 }
 
 // Define action types
@@ -75,6 +125,28 @@ type ActionType =
   | { type: "UPDATE_DONATION"; payload: Partial<StoreState["donation"]> }
   | { type: "UPDATE_INVITATION"; payload: Partial<StoreState["invitation"]> }
   | { type: "UPDATE_NEWS"; payload: NewsAnnouncementItemProps[] }
+  | { type: "AUTH_LOGIN_START" }
+  | { type: "AUTH_LOGIN_SUCCESS"; payload: AuthUser }
+  | { type: "AUTH_REGISTER_START" }
+  | { type: "AUTH_REGISTER_SUCCESS"; payload: AuthUser }
+  | { type: "AUTH_LOGIN_FAILURE"; payload: string }
+  | { type: "AUTH_REGISTER_FAILURE"; payload: string }
+  | { type: "AUTH_LOGOUT" }
+  | { type: "AUTH_RESTORE_SESSION"; payload: AuthUser }
+
+// Get saved auth user from storage
+const getSavedAuthUser = (): AuthUser | null => {
+  return getFromStorage<AuthUser>(STORAGE_KEYS.AUTH_USER)
+}
+
+// Initial auth state with persisted user if available
+const savedUser = typeof window !== "undefined" ? getSavedAuthUser() : null
+const initialAuthState: AuthState = {
+  user: savedUser,
+  isAuthenticated: !!savedUser,
+  isLoading: false,
+  error: null,
+}
 
 // Initial state
 const initialState: StoreState = {
@@ -104,6 +176,20 @@ const initialState: StoreState = {
     totalMaxReward: 180,
     withdrawnAmount: 50,
     withdrawableAmount: 30,
+    dailyRewards: [
+      {
+        date: "2023-04-01",
+        actual: 2.5,
+        maximum: 5,
+        distributed: true,
+      },
+      {
+        date: "2023-04-02",
+        actual: 3,
+        maximum: 5,
+        distributed: true,
+      },
+    ],
   },
   invitation: {
     totalReferrals: 5,
@@ -171,6 +257,7 @@ const initialState: StoreState = {
       type: "news",
     },
   ],
+  auth: initialAuthState,
 }
 
 // Create reducer
@@ -205,6 +292,54 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
         ...state,
         news: action.payload,
       }
+    case "AUTH_LOGIN_START":
+    case "AUTH_REGISTER_START":
+      return {
+        ...state,
+        auth: {
+          ...state.auth,
+          isLoading: true,
+          error: null,
+        },
+      }
+    case "AUTH_LOGIN_SUCCESS":
+    case "AUTH_REGISTER_SUCCESS":
+    case "AUTH_RESTORE_SESSION":
+      // Save user to localStorage
+      saveToStorage(STORAGE_KEYS.AUTH_USER, action.payload)
+
+      return {
+        ...state,
+        auth: {
+          user: action.payload,
+          isAuthenticated: true,
+          isLoading: false,
+          error: null,
+        },
+      }
+    case "AUTH_LOGIN_FAILURE":
+    case "AUTH_REGISTER_FAILURE":
+      return {
+        ...state,
+        auth: {
+          ...state.auth,
+          isLoading: false,
+          error: action.payload,
+        },
+      }
+    case "AUTH_LOGOUT":
+      // Remove user from localStorage
+      removeFromStorage(STORAGE_KEYS.AUTH_USER)
+
+      return {
+        ...state,
+        auth: {
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+          error: null,
+        },
+      }
     default:
       return state
   }
@@ -221,6 +356,16 @@ const StoreContext = createContext<StoreContextType | undefined>(undefined)
 // Create provider component
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState)
+
+  // Check for saved session on initial load
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedUser = getSavedAuthUser()
+      if (savedUser && !state.auth.isAuthenticated) {
+        dispatch({ type: "AUTH_RESTORE_SESSION", payload: savedUser })
+      }
+    }
+  }, [state.auth.isAuthenticated])
 
   return <StoreContext.Provider value={{ state, dispatch }}>{children}</StoreContext.Provider>
 }

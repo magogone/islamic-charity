@@ -4,6 +4,7 @@ import { Inter, Playfair_Display } from "next/font/google"
 
 import { ThemeProvider } from "@/components/theme-provider"
 import { StoreProvider } from "@/store/store-context"
+import { AuthProvider } from "@/store/auth-context"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
@@ -23,7 +24,9 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${inter.variable} ${playfair.variable} font-sans`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
-          <StoreProvider>{children}</StoreProvider>
+          <StoreProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </StoreProvider>
         </ThemeProvider>
       </body>
     </html>

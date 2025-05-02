@@ -23,26 +23,26 @@ import { RewardSummaryChart } from "./reward-summary-chart"
 import { TooltipProvider, TooltipTrigger, TooltipContent, Tooltip as UITooltip } from "@/components/ui/tooltip"
 
 export interface DonationOverviewProps {
-  data: {
-    totalDonation: number
-    vipLevel: number
-    dailyFunds: {
-      current: number
-      max: number
+  data?: {
+    totalDonation?: number
+    vipLevel?: number
+    dailyFunds?: {
+      current?: number
+      max?: number
     }
-    referrals: number
-    periodProgress: number
-    startDate: string
-    remainingDays: number
-    endDate: string
-    currentRate: number
-    totalAccumulated: number
-    maxRate: number
-    totalExpectedReward: number
-    totalMaxReward: number
-    withdrawnAmount: number
-    withdrawableAmount: number
-    dailyRewards: Array<{
+    referrals?: number
+    periodProgress?: number
+    startDate?: string
+    remainingDays?: number
+    endDate?: string
+    currentRate?: number
+    totalAccumulated?: number
+    maxRate?: number
+    totalExpectedReward?: number
+    totalMaxReward?: number
+    withdrawnAmount?: number
+    withdrawableAmount?: number
+    dailyRewards?: Array<{
       date: string
       actual: number
       maximum: number
@@ -53,17 +53,50 @@ export interface DonationOverviewProps {
   className?: string
 }
 
+// Default data to use when data prop is undefined or incomplete
+const defaultData = {
+  totalDonation: 100,
+  vipLevel: 1,
+  dailyFunds: {
+    current: 5,
+    max: 10,
+  },
+  referrals: 0,
+  periodProgress: 25,
+  startDate: "2023-01-01",
+  remainingDays: 30,
+  endDate: "2023-02-01",
+  currentRate: 1.5,
+  totalAccumulated: 15,
+  maxRate: 2.5,
+  totalExpectedReward: 120,
+  totalMaxReward: 180,
+  withdrawnAmount: 50,
+  withdrawableAmount: 30,
+  dailyRewards: [],
+}
+
 export function DonationOverview({ data, showButtons = true, className = "" }: DonationOverviewProps) {
   const [paymentOpen, setPaymentOpen] = useState(false)
   const [referralInfoOpen, setReferralInfoOpen] = useState(false)
   const [withdrawOpen, setWithdrawOpen] = useState(false)
 
+  // Merge provided data with default data to ensure all properties exist
+  const safeData = {
+    ...defaultData,
+    ...data,
+    dailyFunds: {
+      ...defaultData.dailyFunds,
+      ...(data?.dailyFunds || {}),
+    },
+  }
+
   // Summary data
   const summaryData = {
-    expectedReward: data.totalExpectedReward || 120,
-    maxReward: data.totalMaxReward || 180,
-    withdrawnAmount: data.withdrawnAmount || 50,
-    withdrawableAmount: data.withdrawableAmount || 30,
+    expectedReward: safeData.totalExpectedReward,
+    maxReward: safeData.totalMaxReward,
+    withdrawnAmount: safeData.withdrawnAmount,
+    withdrawableAmount: safeData.withdrawableAmount,
   }
 
   // Handle withdrawal
@@ -98,12 +131,12 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                   <ArrowUp className="h-5 w-5 text-islamic-dark" />
                 </button>
               </div>
-              <span className="text-2xl font-bold text-islamic-gold mb-3">{data.totalDonation} U</span>
+              <span className="text-2xl font-bold text-islamic-gold mb-3">{safeData.totalDonation} U</span>
 
               {/* Use improved VIP level indicator */}
               <VipLevelProgress
-                currentLevel={data.vipLevel}
-                currentDonation={data.totalDonation}
+                currentLevel={safeData.vipLevel}
+                currentDonation={safeData.totalDonation}
                 onUpgrade={() => setPaymentOpen(true)}
               />
             </div>
@@ -119,7 +152,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                 {/* Current USDT */}
                 <div className="flex items-center">
                   <Coins className="h-5 w-5 text-islamic-gold/90 mr-3" />
-                  <div className="text-2xl font-bold text-islamic-gold/95">{data.dailyFunds.current}</div>
+                  <div className="text-2xl font-bold text-islamic-gold/95">{safeData.dailyFunds.current}</div>
                   <div className="ml-3 flex flex-col">
                     <span className="text-xs text-islamic-gold/90">USDT</span>
                     <span className="text-[10px] text-islamic-cream/60">Current</span>
@@ -129,7 +162,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                 {/* Maximum USDT */}
                 <div className="flex items-center">
                   <Target className="h-5 w-5 text-islamic-gold/90 mr-3" />
-                  <div className="text-2xl font-bold text-islamic-gold/95">{data.dailyFunds.max}</div>
+                  <div className="text-2xl font-bold text-islamic-gold/95">{safeData.dailyFunds.max}</div>
                   <div className="ml-3 flex flex-col">
                     <span className="text-xs text-islamic-gold/90">USDT</span>
                     <span className="text-[10px] text-islamic-cream/60">Maximum</span>
@@ -139,7 +172,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                 {/* Current Rate */}
                 <div className="flex items-center">
                   <Percent className="h-5 w-5 text-islamic-gold/90 mr-3" />
-                  <div className="text-2xl font-bold text-islamic-gold/95">{data.currentRate}%</div>
+                  <div className="text-2xl font-bold text-islamic-gold/95">{safeData.currentRate}%</div>
                   <div className="ml-3 flex flex-col">
                     <span className="text-[10px] text-islamic-cream/60">Current</span>
                   </div>
@@ -148,7 +181,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                 {/* Max Rate */}
                 <div className="flex items-center">
                   <BarChart className="h-5 w-5 text-islamic-gold/90 mr-3" />
-                  <div className="text-2xl font-bold text-islamic-gold/95">{data.maxRate || 2.5}%</div>
+                  <div className="text-2xl font-bold text-islamic-gold/95">{safeData.maxRate}%</div>
                   <div className="ml-3 flex flex-col">
                     <span className="text-[10px] text-islamic-cream/60">Max</span>
                   </div>
@@ -157,7 +190,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
 
               <div className="flex items-center mt-3 justify-end">
                 <Users2 className="h-3.5 w-3.5 text-islamic-cream/70 mr-1.5" />
-                <span className="text-xs text-islamic-cream/70">Referred {data.referrals} people</span>
+                <span className="text-xs text-islamic-cream/70">Referred {safeData.referrals} people</span>
                 <button
                   onClick={() => setReferralInfoOpen(true)}
                   className="ml-1 p-0.5 rounded-full hover:bg-islamic-medium/50 transition-colors"

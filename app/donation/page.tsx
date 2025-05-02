@@ -12,6 +12,12 @@ export default function DonationPage() {
   const { donationData } = useDonation()
   const { userData } = useUser()
 
+  // Create safe userData with default values
+  const safeUserData = {
+    vipLevel: userData?.vipLevel ?? 1,
+    totalDonation: userData?.totalDonation ?? 0,
+  }
+
   const rightIcon = (
     <Button variant="ghost" size="icon" className="rounded-full bg-islamic-medium/70">
       <Heart className="h-5 w-5 text-islamic-gold" />
@@ -20,15 +26,15 @@ export default function DonationPage() {
   )
 
   return (
-    <MainLayout title="Donate" currentPath="/donation" rightIcon={rightIcon}>
+    <MainLayout title="Donate" currentPath="/donation">
       <DonationOverview data={donationData} />
 
       <div className="mt-4">
         <VipBenefitsCard
-          currentLevel={userData.vipLevel}
-          nextLevel={userData.vipLevel + 1}
+          currentLevel={safeUserData.vipLevel}
+          nextLevel={safeUserData.vipLevel + 1}
           requiredAmount={300}
-          currentAmount={userData.totalDonation}
+          currentAmount={safeUserData.totalDonation}
           benefits={[
             "Receive higher daily poverty relief funds",
             "Increased referral reward rates",

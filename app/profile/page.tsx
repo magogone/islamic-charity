@@ -1,29 +1,34 @@
 "use client"
 
-import { Settings, User, ArrowRight, Wallet } from "lucide-react"
 import { useState } from "react"
+import { User, ArrowRight, Wallet } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { WithdrawDialog } from "@/components/withdraw-dialog"
 import { MainLayout } from "@/components/main-layout"
 import { useUser } from "@/store/use-user"
 import { useDonation } from "@/store/use-donation"
+import { useAuth } from "@/store/use-auth"
 import Link from "next/link"
 
 export default function ProfilePage() {
   const [withdrawOpen, setWithdrawOpen] = useState(false)
   const { userData } = useUser()
   const { donationData } = useDonation()
+  const { user, logout } = useAuth()
 
-  const rightIcon = (
-    <Button variant="ghost" size="icon" className="rounded-full bg-islamic-medium/70">
-      <Settings className="h-5 w-5 text-islamic-gold" />
-      <span className="sr-only">Settings</span>
-    </Button>
-  )
+  // Prioritize auth user data over store user data
+  const displayData = {
+    username: user?.username || userData?.username || "User",
+    email: user?.email || "user@example.com",
+    vipLevel: userData?.vipLevel || 1,
+    totalDonation: userData?.totalDonation || 0,
+    referrals: userData?.referrals || 0,
+    isVerified: user?.isVerified || false,
+  }
 
   return (
-    <MainLayout title="Profile" currentPath="/profile" rightIcon={rightIcon}>
+    <MainLayout title="Profile" currentPath="/profile">
       {/* User Profile Card */}
       <Card className="border-[#d4b96e]/20 bg-[#131b29]/80 backdrop-blur-sm mb-6 overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0a3d2b] to-[#d4b96e]"></div>
@@ -33,9 +38,22 @@ export default function ProfilePage() {
               <User className="h-8 w-8 text-[#d4b96e]" />
               <div className="absolute bottom-0 right-0 w-4 h-4 bg-[#8dc63f] rounded-full border-2 border-[#131b29]"></div>
             </div>
-            <div>
-              <h2 className="text-lg font-bold text-[#d4b96e]">{userData.username}</h2>
-              <p className="text-sm text-islamic-cream/70">VIP {userData.vipLevel} · Verified</p>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-[#d4b96e]">{displayData.username}</h2>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={logout}
+                  className="ml-auto border-[#d4b96e] text-[#d4b96e] hover:bg-[#d4b96e] hover:text-[#0a3d2b]"
+                >
+                  Logout
+                </Button>
+              </div>
+              <p className="text-xs text-islamic-cream/70 mt-1">{displayData.email}</p>
+              <p className="text-sm text-islamic-cream/70 mt-1">
+                VIP {displayData.vipLevel} · {displayData.isVerified ? "Verified" : "Unverified"}
+              </p>
             </div>
           </div>
 
@@ -43,15 +61,15 @@ export default function ProfilePage() {
           <div className="mt-6 grid grid-cols-3 gap-3">
             <div className="bg-[#1a1f2c] p-3 rounded-lg text-center">
               <p className="text-xs text-islamic-cream/70 mb-1">Total Donations</p>
-              <p className="text-lg font-bold text-[#d4b96e]">{userData.totalDonation} U</p>
+              <p className="text-lg font-bold text-[#d4b96e]">{displayData.totalDonation} U</p>
             </div>
             <div className="bg-[#1a1f2c] p-3 rounded-lg text-center">
               <p className="text-xs text-islamic-cream/70 mb-1">Relief Funds</p>
-              <p className="text-lg font-bold text-[#8dc63f]">{donationData.totalAccumulated} U</p>
+              <p className="text-lg font-bold text-[#8dc63f]">{donationData?.totalAccumulated || 0} U</p>
             </div>
             <div className="bg-[#1a1f2c] p-3 rounded-lg text-center">
               <p className="text-xs text-islamic-cream/70 mb-1">Referrals</p>
-              <p className="text-lg font-bold text-[#d4b96e]">{userData.referrals}</p>
+              <p className="text-lg font-bold text-[#d4b96e]">{displayData.referrals}</p>
             </div>
           </div>
         </CardContent>
@@ -68,15 +86,15 @@ export default function ProfilePage() {
             <div className="mt-3 grid grid-cols-2 gap-4">
               <div>
                 <p className="text-xs text-islamic-cream/70">Total Donation Amount</p>
-                <p className="text-lg font-bold text-[#d4b96e]">{donationData.totalDonation} U</p>
-                <p className="text-xs text-islamic-cream/70 mt-1">VIP Level {donationData.vipLevel}</p>
+                <p className="text-lg font-bold text-[#d4b96e]">{donationData?.totalDonation || 0} U</p>
+                <p className="text-xs text-islamic-cream/70 mt-1">VIP Level {donationData?.vipLevel || 1}</p>
               </div>
               <div>
                 <p className="text-xs text-islamic-cream/70">Daily Relief Funds</p>
                 <p className="text-lg font-bold text-[#8dc63f]">
-                  {donationData.dailyFunds.current}-{donationData.dailyFunds.max} U
+                  {donationData?.dailyFunds?.current || 0}-{donationData?.dailyFunds?.max || 0} U
                 </p>
-                <p className="text-xs text-islamic-cream/70 mt-1">{donationData.referrals} referrals</p>
+                <p className="text-xs text-islamic-cream/70 mt-1">{donationData?.referrals || 0} referrals</p>
               </div>
             </div>
           </CardContent>
@@ -91,7 +109,7 @@ export default function ProfilePage() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-sm">Direct Referrals</span>
-                <span className="text-sm font-medium">{userData.referrals} people</span>
+                <span className="text-sm font-medium">{displayData.referrals} people</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Total Team Size</span>
@@ -122,11 +140,11 @@ export default function ProfilePage() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-sm">Today's Relief Funds</span>
-                <span className="text-sm font-medium text-[#8dc63f]">{donationData.dailyFunds.current} U</span>
+                <span className="text-sm font-medium text-[#8dc63f]">{donationData?.dailyFunds?.current || 0} U</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Accumulated Relief Funds</span>
-                <span className="text-sm font-medium text-[#8dc63f]">{donationData.totalAccumulated} U</span>
+                <span className="text-sm font-medium text-[#8dc63f]">{donationData?.totalAccumulated || 0} U</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Team Rewards</span>
@@ -134,7 +152,7 @@ export default function ProfilePage() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Available to Withdraw</span>
-                <span className="text-sm font-medium text-[#8dc63f]">{donationData.withdrawableAmount} U</span>
+                <span className="text-sm font-medium text-[#8dc63f]">{donationData?.withdrawableAmount || 0} U</span>
               </div>
             </div>
           </CardContent>
@@ -144,7 +162,7 @@ export default function ProfilePage() {
       <WithdrawDialog
         open={withdrawOpen}
         onOpenChange={setWithdrawOpen}
-        availableAmount={donationData.withdrawableAmount}
+        availableAmount={donationData?.withdrawableAmount || 0}
       />
     </MainLayout>
   )
