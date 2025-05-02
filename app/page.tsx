@@ -152,48 +152,7 @@ export default function HomePage() {
       {/* Main Content */}
       <main className="flex-1 px-4 pb-20 mt-6">
         <div className="max-w-lg mx-auto">
-          {/* About Us - Carousel Mode */}
-          <HorizontalScrollSection
-            title="About Us"
-            subtitle="Learn about Barkat Foundation's charity philosophy"
-            carouselMode={true}
-          >
-            <EventCard
-              imageUrl={IMAGES.knowledge1}
-              title="Participation & Returns"
-              description={
-                'We advocate the principle of "Give first, benefit later." The impoverished need to donate to qualify for poverty relief, encouraging active participation in charity, achieving self-relief and helping others.'
-              }
-              className="snap-center"
-              fullWidth={true}
-            />
-            <EventCard
-              imageUrl={IMAGES.knowledge2}
-              title="Donor Benefits"
-              description={
-                "Referral Rewards: To promote poverty relief, inviting others to donate earns a 15% direct referral reward. Building your own charity community can receive more support from the foundation. Poverty Relief Funds: After personal donation, you can receive poverty relief funds proportional to your donation amount."
-              }
-              className="snap-center"
-              fullWidth={true}
-            />
-            <EventCard
-              imageUrl={IMAGES.knowledge3}
-              title="Continuous Support"
-              description={
-                "Through the Waqf system, we provide continuous poverty relief support, motivating participants to create a better future for impoverished Muslim populations worldwide, contributing to Islamic charity. Join us to make a difference!"
-              }
-              className="snap-center"
-              fullWidth={true}
-            />
-            <EventCard
-              imageUrl={IMAGES.knowledge4}
-              title="Fund Allocation"
-              description={"All funds received will be used for self-relief, helping others in need, and social good."}
-              className="snap-center"
-              fullWidth={true}
-            />
-          </HorizontalScrollSection>
-
+ 
           {/* Add news and announcements section after HorizontalScrollSection and before DonationOverview */}
           <NewsAnnouncementsSection
             news={NEWS_ANNOUNCEMENTS.news}
