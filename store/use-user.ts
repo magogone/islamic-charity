@@ -2,25 +2,34 @@
 
 import { useStore } from "./store-context"
 import { useAuth } from "./use-auth"
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 export function useUser() {
   const { state, dispatch } = useStore()
   const { user, isAuthenticated } = useAuth()
-
-  // Sync auth user data with user data when authenticated
+  const [mounted, setMounted] = useState(false)
+  
+  // 检测客户端挂载
   useEffect(() => {
-    if (isAuthenticated && user) {
+    setMounted(true)
+  }, [])
+
+  // Sync auth user data with user data when authenticated (only on client)
+  useEffect(() => {
+    if (mounted && isAuthenticated && user) {
       // Update user data based on auth user when authenticated
       dispatch({
         type: "UPDATE_USER",
         payload: {
+          id: user.id,
           username: user.username,
-          // Keep other user data like vipLevel, totalDonation, etc.
+          vipLevel: user.vipLevel || 0,
+          totalDonation: user.donateAmount ? parseFloat(user.donateAmount) : 0,
+          referrals: user.referrals || 0,
         },
       })
     }
-  }, [isAuthenticated, user, dispatch])
+  }, [mounted, isAuthenticated, user, dispatch])
 
   const updateUser = useCallback(
     (userData: Partial<typeof state.user>) => {

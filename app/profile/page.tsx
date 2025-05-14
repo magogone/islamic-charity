@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { User, ArrowRight, Wallet } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -9,23 +9,90 @@ import { MainLayout } from "@/components/main-layout"
 import { useUser } from "@/store/use-user"
 import { useDonation } from "@/store/use-donation"
 import { useAuth } from "@/store/use-auth"
+import { useTeam } from "@/store/use-team"
 import Link from "next/link"
+import { getUserProfit } from "@/lib/api"
 
 export default function ProfilePage() {
   const [withdrawOpen, setWithdrawOpen] = useState(false)
   const { userData } = useUser()
-  const { donationData } = useDonation()
+  const { donationData, updateDonation } = useDonation()
   const { user, logout } = useAuth()
-
-  // Prioritize auth user data over store user data
-  const displayData = {
-    username: user?.username || userData?.username || "User",
-    email: user?.email || "user@example.com",
-    vipLevel: userData?.vipLevel || 1,
-    totalDonation: userData?.totalDonation || 0,
-    referrals: userData?.referrals || 0,
-    isVerified: user?.isVerified || false,
-  }
+  const { teamData, refreshTeamInfo } = useTeam()
+  
+  // 客户端渲染状态
+  const [mounted, setMounted] = useState(false)
+  
+  // 初始数据，避免水合不匹配
+  const [displayData, setDisplayData] = useState({
+    username: "User",
+    email: "user@example.com",
+    vipLevel: 0,
+    totalDonation: 0,
+    referrals: 0,
+    isVerified: false,
+    reliefFunds: 0,
+    withdrawable: 0,
+  })
+  
+  // 客户端挂载后更新数据
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+  
+  // 获取收益数据
+  useEffect(() => {
+    if (mounted && user) {
+      // 获取最新的收益数据
+      getUserProfit().then(res => {
+        if (res.success && res.data) {
+          // 更新 donation 数据中的 dailyFunds
+          updateDonation({
+            dailyFunds: {
+              current: res.data.today_profit,
+              max: res.data.max_profit
+            }
+          });
+        } else if (res.error) {
+          console.error('[ProfilePage] Failed to get profit data:', res.error);
+        }
+      }).catch(err => {
+        console.error('[ProfilePage] Error fetching profit data:', err);
+      });
+    }
+  }, [mounted, user]);
+  
+  // 确保在组件挂载后获取团队数据
+  useEffect(() => {
+    const fetchTeamData = async () => {
+      if (mounted && user) {
+        try {
+          // 刷新团队数据
+          await refreshTeamInfo();
+        } catch (error) {
+          console.error('[ProfilePage] 获取团队数据失败:', error);
+        }
+      }
+    };
+    
+    fetchTeamData();
+  }, [mounted, user, refreshTeamInfo]);
+  
+  // 用户数据变更时更新显示数据
+  useEffect(() => {
+    if (mounted) {
+      setDisplayData({
+        username: user?.username || userData?.username || "User",
+        email: user?.email || "user@example.com",
+        vipLevel: userData?.vipLevel || 0,
+        totalDonation: userData?.totalDonation || 0,
+        referrals: userData?.referrals || 0,
+        isVerified: user?.isVerified || false,
+        reliefFunds: (donationData?.totalAccumulated || 0),
+        withdrawable: donationData?.withdrawableAmount || 0,
+      })
+    }
+  }, [mounted, userData, user, donationData])
 
   return (
     <MainLayout title="Profile" currentPath="/profile">
@@ -76,7 +143,7 @@ export default function ProfilePage() {
       </Card>
 
       {/* My Donation Overview Card */}
-      <Link href="/profile/donation-overview">
+      <Link href="/donation">
         <Card className="border-[#d4b96e]/20 bg-[#131b29]/80 backdrop-blur-sm overflow-hidden mb-4">
           <CardContent className="p-4">
             <div className="flex justify-between items-center">
@@ -86,15 +153,15 @@ export default function ProfilePage() {
             <div className="mt-3 grid grid-cols-2 gap-4">
               <div>
                 <p className="text-xs text-islamic-cream/70">Total Donation Amount</p>
-                <p className="text-lg font-bold text-[#d4b96e]">{donationData?.totalDonation || 0} U</p>
-                <p className="text-xs text-islamic-cream/70 mt-1">VIP Level {donationData?.vipLevel || 1}</p>
+                <p className="text-lg font-bold text-[#d4b96e]">{userData?.totalDonation || 0} U</p>
+                <p className="text-xs text-islamic-cream/70 mt-1">VIP Level {userData?.vipLevel || 0}</p>
               </div>
               <div>
                 <p className="text-xs text-islamic-cream/70">Daily Relief Funds</p>
                 <p className="text-lg font-bold text-[#8dc63f]">
                   {donationData?.dailyFunds?.current || 0}-{donationData?.dailyFunds?.max || 0} U
                 </p>
-                <p className="text-xs text-islamic-cream/70 mt-1">{donationData?.referrals || 0} referrals</p>
+                <p className="text-xs text-islamic-cream/70 mt-1">{userData?.referrals || 0} referrals</p>
               </div>
             </div>
           </CardContent>
@@ -109,15 +176,15 @@ export default function ProfilePage() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-sm">Direct Referrals</span>
-                <span className="text-sm font-medium">{displayData.referrals} people</span>
+                <span className="text-sm font-medium">{teamData.directReferrals || 0} people</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Total Team Size</span>
-                <span className="text-sm font-medium">5 people</span>
+                <span className="text-sm font-medium">{teamData.totalReferrals || 0} people</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Team Total Donations</span>
-                <span className="text-sm font-medium">500 U</span>
+                <span className="text-sm font-medium">{teamData.totalRewards || 0} U</span>
               </div>
             </div>
           </CardContent>
@@ -148,11 +215,11 @@ export default function ProfilePage() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Team Rewards</span>
-                <span className="text-sm font-medium text-[#8dc63f]">25 U</span>
+                <span className="text-sm font-medium text-[#8dc63f]">{teamData.totalRewards || 0} U</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Available to Withdraw</span>
-                <span className="text-sm font-medium text-[#8dc63f]">{donationData?.withdrawableAmount || 0} U</span>
+                <span className="text-sm font-medium text-[#8dc63f]">{displayData.withdrawable} U</span>
               </div>
             </div>
           </CardContent>
@@ -162,7 +229,7 @@ export default function ProfilePage() {
       <WithdrawDialog
         open={withdrawOpen}
         onOpenChange={setWithdrawOpen}
-        availableAmount={donationData?.withdrawableAmount || 0}
+        availableAmount={displayData.withdrawable}
       />
     </MainLayout>
   )

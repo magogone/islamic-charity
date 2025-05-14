@@ -17,20 +17,40 @@ export function RewardSummaryChart({ data, onWithdraw }: RewardSummaryChartProps
   // Calculate additional potential = maximum - expected
   const additionalPotential = data.maxReward - data.expectedReward > 0 ? data.maxReward - data.expectedReward : 0
 
+  // 检查是否只有一个值为0的情况
+  const hasOneZeroWithdrawn = (data.withdrawnAmount === 0 && data.withdrawableAmount > 0) || 
+                              (data.withdrawnAmount > 0 && data.withdrawableAmount === 0);
+  
+  const hasOneZeroExpected = (data.expectedReward === 0 && additionalPotential > 0) || 
+                             (data.expectedReward > 0 && additionalPotential === 0);
+
   // Prepare data for stacked bars
   const withdrawnData = [
     {
       name: "Withdrawn/Withdrawable",
-      withdrawn: data.withdrawnAmount,
-      withdrawable: data.withdrawableAmount,
+      // 当只有一个值为0时，使用固定的50/50比例
+      withdrawn: hasOneZeroWithdrawn ? 1 : (data.withdrawnAmount || 0.001),
+      withdrawable: hasOneZeroWithdrawn ? 1 : (data.withdrawableAmount || 0.001),
+      // 添加标记字段表示是否为零值
+      isWithdrawnZero: data.withdrawnAmount === 0,
+      isWithdrawableZero: data.withdrawableAmount === 0,
+      // 添加原始值用于显示
+      originalWithdrawn: data.withdrawnAmount,
+      originalWithdrawable: data.withdrawableAmount
     },
   ]
 
   const expectedData = [
     {
       name: "Expected/Maximum",
-      expected: data.expectedReward,
-      maxPotential: additionalPotential,
+      // 当只有一个值为0时，使用固定的50/50比例
+      expected: hasOneZeroExpected ? 1 : (data.expectedReward || 0.001),
+      maxPotential: hasOneZeroExpected ? 1 : (additionalPotential || 0.001),
+      isExpectedZero: data.expectedReward === 0,
+      isMaxPotentialZero: additionalPotential === 0,
+      // 添加原始值用于显示
+      originalExpected: data.expectedReward,
+      originalMaxPotential: additionalPotential
     },
   ]
 
@@ -78,88 +98,249 @@ export function RewardSummaryChart({ data, onWithdraw }: RewardSummaryChartProps
     return null
   }
 
-  // Custom label renderer
-  const renderCustomizedLabel = (props: any) => {
-    const { x, y, width, height, value } = props
-
-    // Only show label if value is greater than 0
-    if (!value || value <= 0) return null
-
-    const labelText = `${value} USDT`
-    const labelX = x + width / 2
-    const labelY = y + height / 2
-
-    return (
-      <text
-        x={labelX}
-        y={labelY}
-        fill="#fff"
-        textAnchor="middle"
-        dominantBaseline="middle"
-        className="text-xs font-medium"
-      >
-        {labelText}
-      </text>
-    )
-  }
-
   return (
     <TooltipProvider>
       <div className="w-full">
-        {/* Row 1: Withdrawn/Withdrawable labels */}
-        <div className="flex mb-1">
-          <div className="w-[100px] text-sm text-islamic-cream/80">Withdrawn</div>
-          <div className="w-[100px] text-sm text-islamic-cream/80">Withdrawable</div>
+        {/* 采用统一的布局容器来确保对齐 */}
+        <div className="grid grid-cols-2 mb-1">
+          <div className="text-sm text-islamic-cream/80 text-left pl-2">Withdrawn</div>
+          <div className="text-sm text-islamic-cream/80 text-right pr-2">Withdrawable</div>
         </div>
 
         {/* Row 2: Withdrawn/Withdrawable stacked bar */}
-        <div className="mb-6 h-[40px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={withdrawnData}
-              layout="vertical"
-              margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
-              barSize={40}
-            >
-              <XAxis type="number" hide />
-              <YAxis type="category" hide />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255, 255, 255, 0.1)" }} />
-              <Bar dataKey="withdrawn" stackId="a" fill="#d4b96e" radius={[4, 0, 0, 4]} name="Withdrawn">
-                <LabelList dataKey="withdrawn" content={renderCustomizedLabel} />
-              </Bar>
-              <Bar dataKey="withdrawable" stackId="a" fill="#d4b96e80" radius={[0, 4, 4, 0]} name="Withdrawable">
-                <LabelList dataKey="withdrawable" content={renderCustomizedLabel} />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="mb-6 h-[40px] relative">
+          {/* 确保背景容器始终可见 */}
+          <div className="absolute inset-0 bg-islamic-dark/50 rounded-md"></div>
+          
+          {/* 当都为0时直接显示固定内容 */}
+          {data.withdrawnAmount === 0 && data.withdrawableAmount === 0 ? (
+            <div className="absolute inset-0 grid grid-cols-2 divide-x divide-islamic-cream/30">
+              <div className="flex items-center justify-center">
+                <span className="text-xs font-medium text-white">0 USDT</span>
+              </div>
+              <div className="flex items-center justify-center">
+                <span className="text-xs font-medium text-white">0 USDT</span>
+              </div>
+            </div>
+          ) : hasOneZeroWithdrawn ? (
+            // 当只有一个值为0时使用固定布局
+            <div className="absolute inset-0 grid grid-cols-2 divide-x divide-islamic-cream/30">
+              <div className="flex items-center justify-center" style={{ backgroundColor: data.withdrawnAmount === 0 ? 'transparent' : 'rgba(212, 185, 110, 0.8)' }}>
+                <span className="text-xs font-medium text-white">{data.withdrawnAmount} USDT</span>
+              </div>
+              <div className="flex items-center justify-center" style={{ backgroundColor: data.withdrawableAmount === 0 ? 'transparent' : 'rgba(212, 185, 110, 0.5)' }}>
+                <span className="text-xs font-medium text-white">{data.withdrawableAmount} USDT</span>
+              </div>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={withdrawnData}
+                layout="vertical"
+                margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+                barSize={40}
+              >
+                <XAxis 
+                  type="number" 
+                  hide 
+                  domain={[0, 'dataMax']} 
+                />
+                <YAxis type="category" hide />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255, 255, 255, 0.1)" }} />
+                <Bar 
+                  dataKey="withdrawn" 
+                  stackId="a" 
+                  fill={data.withdrawnAmount === 0 ? (hasOneZeroWithdrawn ? "#d4b96e30" : "#d4b96e30") : "#d4b96e"}
+                  radius={[4, 0, 0, 4]} 
+                  name="Withdrawn"
+                  minPointSize={1}
+                >
+                  <LabelList 
+                    dataKey="withdrawn" 
+                    position="center"
+                    content={(props: any) => {
+                      const { x, y, width, height, value, index } = props;
+                      // 计算中心点位置
+                      const centerX = x + (width || 0) / 2;
+                      const centerY = y + (height || 0) / 2;
+                      
+                      // 使用原始值来显示
+                      const displayValue = withdrawnData[index].originalWithdrawn;
+                      
+                      return (
+                        <text
+                          x={centerX}
+                          y={centerY}
+                          fill="#fff"
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                          className="text-xs font-medium"
+                        >
+                          {`${displayValue} USDT`}
+                        </text>
+                      );
+                    }} 
+                  />
+                </Bar>
+                <Bar 
+                  dataKey="withdrawable" 
+                  stackId="a" 
+                  fill={data.withdrawableAmount === 0 ? (hasOneZeroWithdrawn ? "#d4b96e30" : "#d4b96e30") : "#d4b96e80"}
+                  radius={[0, 4, 4, 0]} 
+                  name="Withdrawable"
+                  minPointSize={1}
+                >
+                  <LabelList 
+                    dataKey="withdrawable" 
+                    position="center"
+                    content={(props: any) => {
+                      const { x, y, width, height, value, index } = props;
+                      // 计算中心点位置
+                      const centerX = x + (width || 0) / 2;
+                      const centerY = y + (height || 0) / 2;
+                      
+                      // 使用原始值来显示
+                      const displayValue = withdrawnData[index].originalWithdrawable;
+                      
+                      return (
+                        <text
+                          x={centerX}
+                          y={centerY}
+                          fill="#fff"
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                          className="text-xs font-medium"
+                        >
+                          {`${displayValue} USDT`}
+                        </text>
+                      );
+                    }} 
+                  />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          )}
         </div>
 
-        {/* Row 3: Expected/Maximum labels */}
-        <div className="flex mb-1">
-          <div className="w-[100px] text-sm text-islamic-cream/80">Expected</div>
-          <div className="w-[100px] text-sm text-islamic-cream/80">Maximum</div>
+        {/* 同样对期望/最大值区域应用相同的对齐方式 */}
+        <div className="grid grid-cols-2 mb-1">
+          <div className="text-sm text-islamic-cream/80 text-left pl-2">Expected</div>
+          <div className="text-sm text-islamic-cream/80 text-right pr-2">Maximum</div>
         </div>
 
         {/* Row 4: Expected/Maximum stacked bar */}
-        <div className="h-[40px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={expectedData}
-              layout="vertical"
-              margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
-              barSize={40}
-            >
-              <XAxis type="number" hide />
-              <YAxis type="category" hide />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255, 255, 255, 0.1)" }} />
-              <Bar dataKey="expected" stackId="b" fill="#8dc63f" radius={[4, 0, 0, 4]} name="Expected">
-                <LabelList dataKey="expected" content={renderCustomizedLabel} />
-              </Bar>
-              <Bar dataKey="maxPotential" stackId="b" fill="#8dc63f80" radius={[0, 4, 4, 0]} name="Maximum">
-                <LabelList dataKey="maxPotential" content={renderCustomizedLabel} />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="h-[40px] relative">
+          {/* 确保背景容器始终可见 */}
+          <div className="absolute inset-0 bg-islamic-dark/50 rounded-md"></div>
+          
+          {/* 当都为0时直接显示固定内容 */}
+          {data.expectedReward === 0 && additionalPotential === 0 ? (
+            <div className="absolute inset-0 grid grid-cols-2 divide-x divide-islamic-cream/30">
+              <div className="flex items-center justify-center">
+                <span className="text-xs font-medium text-white">0 USDT</span>
+              </div>
+              <div className="flex items-center justify-center">
+                <span className="text-xs font-medium text-white">0 USDT</span>
+              </div>
+            </div>
+          ) : hasOneZeroExpected ? (
+            // 当只有一个值为0时使用固定布局
+            <div className="absolute inset-0 grid grid-cols-2 divide-x divide-islamic-cream/30">
+              <div className="flex items-center justify-center" style={{ backgroundColor: data.expectedReward === 0 ? 'transparent' : 'rgba(141, 198, 63, 0.8)' }}>
+                <span className="text-xs font-medium text-white">{data.expectedReward} USDT</span>
+              </div>
+              <div className="flex items-center justify-center" style={{ backgroundColor: additionalPotential === 0 ? 'transparent' : 'rgba(141, 198, 63, 0.5)' }}>
+                <span className="text-xs font-medium text-white">{additionalPotential} USDT</span>
+              </div>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={expectedData}
+                layout="vertical"
+                margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+                barSize={40}
+              >
+                <XAxis 
+                  type="number" 
+                  hide 
+                  domain={[0, 'dataMax']} 
+                />
+                <YAxis type="category" hide />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255, 255, 255, 0.1)" }} />
+                <Bar 
+                  dataKey="expected" 
+                  stackId="b" 
+                  fill={data.expectedReward === 0 ? (hasOneZeroExpected ? "#8dc63f30" : "#8dc63f30") : "#8dc63f"} 
+                  radius={[4, 0, 0, 4]} 
+                  name="Expected"
+                  minPointSize={1}
+                >
+                  <LabelList 
+                    dataKey="expected" 
+                    position="center"
+                    content={(props: any) => {
+                      const { x, y, width, height, value, index } = props;
+                      // 计算中心点位置
+                      const centerX = x + (width || 0) / 2;
+                      const centerY = y + (height || 0) / 2;
+                      
+                      // 使用原始值来显示
+                      const displayValue = expectedData[index].originalExpected;
+                      
+                      return (
+                        <text
+                          x={centerX}
+                          y={centerY}
+                          fill="#fff"
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                          className="text-xs font-medium"
+                        >
+                          {`${displayValue} USDT`}
+                        </text>
+                      );
+                    }} 
+                  />
+                </Bar>
+                <Bar 
+                  dataKey="maxPotential" 
+                  stackId="b" 
+                  fill={additionalPotential === 0 ? (hasOneZeroExpected ? "#8dc63f30" : "#8dc63f30") : "#8dc63f80"} 
+                  radius={[0, 4, 4, 0]} 
+                  name="Maximum"
+                  minPointSize={1}
+                >
+                  <LabelList 
+                    dataKey="maxPotential" 
+                    position="center"
+                    content={(props: any) => {
+                      const { x, y, width, height, value, index } = props;
+                      // 计算中心点位置
+                      const centerX = x + (width || 0) / 2;
+                      const centerY = y + (height || 0) / 2;
+                      
+                      // 使用原始值来显示
+                      const displayValue = expectedData[index].originalMaxPotential;
+                      
+                      return (
+                        <text
+                          x={centerX}
+                          y={centerY}
+                          fill="#fff"
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                          className="text-xs font-medium"
+                        >
+                          {`${displayValue} USDT`}
+                        </text>
+                      );
+                    }} 
+                  />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
     </TooltipProvider>

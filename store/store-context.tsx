@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { createContext, useContext, useReducer, useEffect, type ReactNode } from "react"
+import { createContext, useContext, useReducer, useEffect, type ReactNode, useState } from "react"
 import type { NewsAnnouncementItemProps } from "@/components/news-announcement-item"
 import type { AuthState, AuthUser } from "./auth-types"
 
@@ -58,13 +58,10 @@ export interface StoreState {
 
   // Donation data
   donation: {
-    totalDonation: number
-    vipLevel: number
     dailyFunds: {
       current: number
       max: number
     }
-    referrals: number
     periodProgress: number
     startDate: string
     remainingDays: number
@@ -76,6 +73,9 @@ export interface StoreState {
     totalMaxReward: number
     withdrawnAmount: number
     withdrawableAmount: number
+    referrals?: number
+    totalDonation?: number
+    vipLevel?: number
     dailyRewards?: Array<{
       date: string
       actual: number
@@ -89,6 +89,7 @@ export interface StoreState {
     totalReferrals: number
     directReferrals: number
     indirectReferrals: number
+    teamTotalDonations: number
     totalRewards: number
     rewardRate: {
       level1: number
@@ -151,10 +152,12 @@ type ActionType =
   | { type: "UPDATE_DONATION"; payload: Partial<StoreState["donation"]> }
   | { type: "UPDATE_INVITATION"; payload: Partial<StoreState["invitation"]> }
   | { type: "UPDATE_NEWS"; payload: NewsAnnouncementItemProps[] }
+  | { type: "UPDATE_VIP_INFO"; payload: Partial<StoreState["vipInfo"]> }
+  | { type: "UPDATE_TEAM"; payload: { directReferrals: number; totalReferrals: number; teamTotalDonations: number; totalRewards: number } }
   | { type: "AUTH_LOGIN_START" }
   | { type: "AUTH_LOGIN_SUCCESS"; payload: AuthUser }
   | { type: "AUTH_REGISTER_START" }
-  | { type: "AUTH_REGISTER_SUCCESS"; payload: AuthUser }
+  | { type: "AUTH_REGISTER_SUCCESS"; payload: AuthUser | null }
   | { type: "AUTH_LOGIN_FAILURE"; payload: string }
   | { type: "AUTH_REGISTER_FAILURE"; payload: string }
   | { type: "AUTH_LOGOUT" }
@@ -162,14 +165,16 @@ type ActionType =
 
 // Get saved auth user from storage
 const getSavedAuthUser = (): AuthUser | null => {
+  if (typeof window === 'undefined') {
+    return null; // 服务器端渲染时返回null
+  }
   return getFromStorage<AuthUser>(STORAGE_KEYS.AUTH_USER)
 }
 
 // Initial auth state with persisted user if available
-const savedUser = typeof window !== "undefined" ? getSavedAuthUser() : null
 const initialAuthState: AuthState = {
-  user: savedUser,
-  isAuthenticated: !!savedUser,
+  user: null, // 初始为null，客户端会在挂载后恢复
+  isAuthenticated: false,
   isLoading: false,
   error: null,
 }
@@ -184,13 +189,10 @@ const initialState: StoreState = {
     referrals: 2,
   },
   donation: {
-    totalDonation: 100,
-    vipLevel: 1,
     dailyFunds: {
       current: 3,
       max: 6,
     },
-    referrals: 2,
     periodProgress: 65,
     startDate: "2023-04-01",
     remainingDays: 14,
@@ -202,6 +204,9 @@ const initialState: StoreState = {
     totalMaxReward: 180,
     withdrawnAmount: 50,
     withdrawableAmount: 30,
+    referrals: 2,
+    totalDonation: 100,
+    vipLevel: 1,
     dailyRewards: [
       {
         date: "2023-04-01",
@@ -221,6 +226,7 @@ const initialState: StoreState = {
     totalReferrals: 5,
     directReferrals: 2,
     indirectReferrals: 3,
+    teamTotalDonations: 100,
     totalRewards: 15,
     rewardRate: {
       level1: 10,
@@ -394,10 +400,29 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
           ...action.payload,
         },
       }
+    case "UPDATE_TEAM":
+      return {
+        ...state,
+        invitation: {
+          ...state.invitation,
+          directReferrals: action.payload.directReferrals,
+          totalReferrals: action.payload.totalReferrals,
+          teamTotalDonations: action.payload.teamTotalDonations,
+          totalRewards: action.payload.totalRewards,
+        },
+      }
     case "UPDATE_NEWS":
       return {
         ...state,
         news: action.payload,
+      }
+    case "UPDATE_VIP_INFO":
+      return {
+        ...state,
+        vipInfo: {
+          ...state.vipInfo,
+          ...action.payload,
+        },
       }
     case "AUTH_LOGIN_START":
     case "AUTH_REGISTER_START":
@@ -410,7 +435,6 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
         },
       }
     case "AUTH_LOGIN_SUCCESS":
-    case "AUTH_REGISTER_SUCCESS":
     case "AUTH_RESTORE_SESSION":
       // Save user to localStorage
       saveToStorage(STORAGE_KEYS.AUTH_USER, action.payload)
@@ -447,6 +471,30 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
           error: null,
         },
       }
+    case "AUTH_REGISTER_SUCCESS":
+      // If the payload is null, just update loading state without setting user
+      if (action.payload === null) {
+        return {
+          ...state,
+          auth: {
+            ...state.auth,
+            isLoading: false,
+            error: null,
+          }
+        }
+      }
+      
+      // Otherwise update with user data like before
+      saveToStorage(STORAGE_KEYS.AUTH_USER, action.payload)
+      return {
+        ...state,
+        auth: {
+          user: action.payload,
+          isAuthenticated: true,
+          isLoading: false,
+          error: null,
+        }
+      }
     default:
       return state
   }
@@ -463,16 +511,22 @@ const StoreContext = createContext<StoreContextType | undefined>(undefined)
 // Create provider component
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState)
+  const [mounted, setMounted] = useState(false)
 
-  // Check for saved session on initial load
+  // 检测客户端挂载
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    setMounted(true)
+  }, [])
+
+  // Check for saved session on initial load (only on client)
+  useEffect(() => {
+    if (mounted) {
       const savedUser = getSavedAuthUser()
       if (savedUser && !state.auth.isAuthenticated) {
         dispatch({ type: "AUTH_RESTORE_SESSION", payload: savedUser })
       }
     }
-  }, [state.auth.isAuthenticated])
+  }, [mounted, state.auth.isAuthenticated])
 
   return <StoreContext.Provider value={{ state, dispatch }}>{children}</StoreContext.Provider>
 }

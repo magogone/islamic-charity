@@ -4,22 +4,29 @@ import { Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { InvitationCard } from "@/components/invitation-card"
 import { MainLayout } from "@/components/main-layout"
-import { useInvitation } from "@/store/use-invitation"
+import { useTeamInfo } from "@/hooks/use-team-info"
+import { useEffect } from "react"
+import { useAuth } from "@/store/use-auth"
 
 export default function PromotionPage() {
-  const { invitationData } = useInvitation()
+  const { teamInfo, loading, refresh } = useTeamInfo()
+  const { isAuthenticated } = useAuth()
 
-  const rightIcon = (
-    <Button variant="ghost" size="icon" className="rounded-full bg-islamic-medium/70">
-      <Share2 className="h-5 w-5 text-islamic-gold" />
-      <span className="sr-only">Invitations</span>
-    </Button>
-  )
+  // Refresh team info when the page loads or authentication state changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      refresh()
+    }
+  }, [refresh, isAuthenticated])
 
   return (
-    <MainLayout title="Invite Friends" currentPath="/promotion" rightIcon={rightIcon}>
+    <MainLayout title="Invite Friends" currentPath="/promotion">
       {/* Invitation Card */}
-      <InvitationCard data={invitationData} />
+      <InvitationCard 
+        data={teamInfo} 
+        isLoading={loading} 
+        refresh={refresh}
+      />
     </MainLayout>
   )
 }

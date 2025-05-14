@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   ArrowUp,
   Users2,
@@ -20,10 +20,12 @@ import { PaymentDialog } from "./payment-dialog"
 import { VipLevelProgress } from "./vip-level-progress"
 import { ReferralInfoDialog } from "./referral-info-dialog"
 import { RewardSummaryChart } from "./reward-summary-chart"
-import { TooltipProvider, TooltipTrigger, TooltipContent, Tooltip as UITooltip } from "@/components/ui/tooltip"
+import { TooltipProvider, TooltipTrigger, TooltipContent, Tooltip } from "@/components/ui/tooltip"
 import { useVipInfo } from "@/store/use-vip-info"
 import { useAuth } from "@/store/use-auth"
 import { useAuthContext } from "@/store/auth-context"
+import { useDailyRewardRates } from "@/hooks/use-daily-reward-rates"
+import { useRouter } from "next/navigation"
 
 export interface DonationOverviewProps {
   data?: {
@@ -69,7 +71,7 @@ const defaultData = {
   startDate: "2023-01-01",
   remainingDays: 30,
   endDate: "2023-02-01",
-  currentRate: 1.5,
+  currentRate: 1,
   totalAccumulated: 15,
   maxRate: 2.5,
   totalExpectedReward: 120,
@@ -80,22 +82,56 @@ const defaultData = {
 }
 
 export function DonationOverview({ data, showButtons = true, className = "" }: DonationOverviewProps) {
+  // 初始化组件
   const [paymentOpen, setPaymentOpen] = useState(false)
   const [referralInfoOpen, setReferralInfoOpen] = useState(false)
-  const [withdrawOpen, setWithdrawOpen] = useState(false)
   const { getVipLevelDonationAmount } = useVipInfo()
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
   const { openLoginModal } = useAuthContext()
+  const { getCurrentRate, rateConfigs, loading: ratesLoading } = useDailyRewardRates()
+  const [mounted, setMounted] = useState(false)
+  const router = useRouter()
+  
+  // Handle client-side mounting
+  useEffect(() => {
+    setMounted(true)
+    // 组件挂载完成
+  }, [data])
 
-  // Merge provided data with default data to ensure all properties exist
+  // 使用用户真实的捐款金额和VIP等级（如果存在）
+  const userDonation = user?.donateAmount ? parseFloat(user.donateAmount) : 0
+  const userVipLevel = user?.vipLevel || 0
+  const userReferrals = user?.referrals || 0
+
+  // Calculate current rate based on user referrals - only when rates are loaded
+  const calculatedCurrentRate = mounted && !ratesLoading ? getCurrentRate(userReferrals) : defaultData.currentRate
+  
+  // Maximum rate is always the highest rate from configs
+  const calculatedMaxRate = mounted && !ratesLoading ? rateConfigs.referral5 : defaultData.maxRate
+  
+  // Calculate daily funds based on donation amount and rates
+  const calculatedDailyFunds = {
+    current: parseFloat(((userDonation * calculatedCurrentRate) / 100).toFixed(2)),
+    max: parseFloat(((userDonation * calculatedMaxRate) / 100).toFixed(2))
+  }
+
+  // Merge provided data with default data and user data
   const safeData = {
     ...defaultData,
     ...data,
-    dailyFunds: {
-      ...defaultData.dailyFunds,
-      ...(data?.dailyFunds || {}),
+    // 优先使用用户真实数据
+    totalDonation: userDonation,
+    vipLevel: userVipLevel,
+    currentRate: calculatedCurrentRate,
+    maxRate: calculatedMaxRate,
+    dailyFunds: data?.dailyFunds || {
+      // Override with dynamically calculated funds based on donation amount and rate
+      current: calculatedDailyFunds.current,
+      max: calculatedDailyFunds.max
     },
   }
+  
+  // 数据处理完成
 
   // 获取下一级VIP的全额费用
   const nextVipLevel = safeData.vipLevel < 5 ? safeData.vipLevel + 1 : 5
@@ -112,9 +148,8 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
   // Handle withdrawal
   const handleWithdraw = () => {
     if (isAuthenticated) {
-      // 如果用户已登录，打开提款对话框
-      setWithdrawOpen(true)
-      console.log("Withdraw earnings", summaryData.withdrawableAmount)
+      // 直接跳转到提现页面
+      router.push('/profile/withdraw')
     } else {
       // 如果用户未登录，打开登录对话框
       openLoginModal("/profile/withdraw")
@@ -225,7 +260,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
               </div>
 
               <TooltipProvider>
-                <UITooltip>
+                <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
                       onClick={handleWithdraw}
@@ -242,7 +277,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                   <TooltipContent>
                     <p>Withdraw Earnings</p>
                   </TooltipContent>
-                </UITooltip>
+                </Tooltip>
               </TooltipProvider>
             </div>
 

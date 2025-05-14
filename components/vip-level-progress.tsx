@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useMemo, memo } from "react"
 import { Crown, Info } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -13,26 +13,50 @@ interface VipLevelProgressProps {
   className?: string
 }
 
-export function VipLevelProgress({ currentLevel, currentDonation, onUpgrade, className }: VipLevelProgressProps) {
-  const [animationState, setAnimationState] = useState(0)
-  const { getVipLevelDonationAmount } = useVipInfo()
+// 内部实现组件
+function VipLevelProgressImpl({ currentLevel, currentDonation, onUpgrade, className }: VipLevelProgressProps) {
+  // 始终在顶层调用hook
+  const { getVipLevelDonationAmount } = useVipInfo();
+  
+  // 引用
+  const renderCountRef = useRef(0);
+  renderCountRef.current++;
+  
+  // 防止过度调用API
+  const initializedRef = useRef(false);
+  
+  // DOM引用，用于动画
+  const nextLevelButtonRef = useRef<HTMLButtonElement | null>(null);
+  
+  // 使用useMemo缓存计算结果
+  const nextLevelData = useMemo(() => {
+    const nextLevel = currentLevel < 5 ? currentLevel + 1 : null;
+    const nextLevelAmount = nextLevel ? getVipLevelDonationAmount(nextLevel) : null;
+    
+    initializedRef.current = true;
+    
+    return { nextLevel, nextLevelAmount };
+  }, [currentLevel, getVipLevelDonationAmount]);
+  
+  // 解构nextLevelData以便在组件中使用
+  const { nextLevel, nextLevelAmount } = nextLevelData;
 
-  // 下一个VIP等级
-  const nextLevel = currentLevel < 5 ? currentLevel + 1 : null
-
-  // 获取下一级VIP的全额费用
-  const nextLevelAmount = nextLevel ? getVipLevelDonationAmount(nextLevel) : null
-
-  // 动画效果
+  // 使用CSS动画替代React状态动画
   useEffect(() => {
-    if (!nextLevel) return
-
-    const interval = setInterval(() => {
-      setAnimationState((prev) => (prev + 1) % 3)
-    }, 800)
-
-    return () => clearInterval(interval)
-  }, [nextLevel])
+    // 如果没有下一级或者元素不存在，不执行动画
+    if (!nextLevel || !nextLevelButtonRef.current) return;
+    
+    // 在组件挂载后设置CSS类
+    const element = nextLevelButtonRef.current;
+    element.classList.add('vip-level-next-animate');
+    
+    return () => {
+      // 清理
+      if (element) {
+        element.classList.remove('vip-level-next-animate');
+      }
+    };
+  }, [nextLevel]);
 
   // 获取等级样式
   const getLevelStyle = (level: number) => {
@@ -42,13 +66,7 @@ export function VipLevelProgress({ currentLevel, currentDonation, onUpgrade, cla
     }
     // 下一等级（带动画）
     else if (level === nextLevel) {
-      return `relative cursor-pointer ${
-        animationState === 0
-          ? "bg-islamic-medium border-2 border-islamic-gold"
-          : animationState === 1
-            ? "bg-islamic-medium border-2 border-islamic-gold shadow-[0_0_10px_3px_rgba(212,185,110,0.5)]"
-            : "bg-islamic-medium border-2 border-islamic-gold shadow-[0_0_6px_2px_rgba(212,185,110,0.3)]"
-      }`
+      return "relative cursor-pointer bg-islamic-medium border-2 border-islamic-gold"
     }
     // 其他等级
     else {
@@ -73,6 +91,26 @@ export function VipLevelProgress({ currentLevel, currentDonation, onUpgrade, cla
 
   return (
     <div className={cn("mt-3 w-full", className)}>
+      {/* 添加必要的CSS */}
+      <style jsx global>{`
+        @keyframes vipLevelPulse {
+          0% { box-shadow: 0 0 0px 0px rgba(212,185,110,0.2); }
+          50% { box-shadow: 0 0 10px 3px rgba(212,185,110,0.5); }
+          100% { box-shadow: 0 0 6px 2px rgba(212,185,110,0.3); }
+        }
+        .vip-level-next-animate {
+          animation: vipLevelPulse 1.6s infinite;
+        }
+        .vip-level-next-animate:hover {
+          transform: scale(1.1);
+          transition: transform 0.3s;
+        }
+        .vip-level-next-animate:active {
+          transform: scale(0.95);
+          transition: transform 0.1s;
+        }
+      `}</style>
+      
       <div className="flex justify-between mb-2">
         <span className="text-sm text-islamic-cream/80">Current VIP{currentLevel}</span>
         {nextLevel && nextLevelAmount && (
@@ -103,27 +141,23 @@ export function VipLevelProgress({ currentLevel, currentDonation, onUpgrade, cla
         <div
           className="absolute top-1/2 left-0 h-0.5 bg-islamic-gold/70 -translate-y-1/2 z-0"
           style={{
-            width: `${Math.min(
-              ((currentLevel - 1) / (5 - 1)) * 100 +
-                (nextLevel ? (1 / (5 - 1)) * (animationState === 1 ? 0.3 : animationState === 2 ? 0.2 : 0.1) : 0),
-              100,
-            )}%`,
+            width: `${Math.min(((currentLevel - 1) / (5 - 1)) * 100, 100)}%`,
           }}
         ></div>
 
         {[1, 2, 3, 4, 5].map((level) => (
           <div key={level} className="flex flex-col items-center z-10">
             <button
+              ref={level === nextLevel ? nextLevelButtonRef : null}
               onClick={() => handleLevelClick(level)}
               disabled={level !== nextLevel}
               className={cn(
                 "w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-300 relative",
                 getLevelStyle(level),
-                level === nextLevel && "hover:scale-110 active:scale-95",
               )}
             >
               {level === nextLevel && (
-                <div className="absolute inset-0 rounded-full bg-islamic-gold/20 animate-pulse"></div>
+                <div className="absolute inset-0 rounded-full bg-islamic-gold/20"></div>
               )}
 
               {level === 5 ? (
@@ -159,19 +193,9 @@ export function VipLevelProgress({ currentLevel, currentDonation, onUpgrade, cla
 
               {/* Next level upgrade icon */}
               {level === nextLevel && (
-                <div
-                  className={cn(
-                    "absolute -top-2 -right-1 sm:-top-3 sm:-right-1",
-                    animationState === 1 && "scale-110",
-                    animationState === 2 && "scale-105",
-                  )}
-                >
+                <div className="absolute -top-2 -right-1 sm:-top-3 sm:-right-1">
                   <StarUpgradeIcon
-                    className={cn(
-                      "w-4 h-4 sm:w-5 sm:h-5 text-islamic-gold drop-shadow-[0_0_2px_rgba(0,0,0,0.5)]",
-                      animationState === 1 && "text-islamic-gold/90",
-                      animationState === 2 && "text-islamic-gold/80",
-                    )}
+                    className="w-4 h-4 sm:w-5 sm:h-5 text-islamic-gold drop-shadow-[0_0_2px_rgba(0,0,0,0.5)]"
                   />
                 </div>
               )}
@@ -182,3 +206,6 @@ export function VipLevelProgress({ currentLevel, currentDonation, onUpgrade, cla
     </div>
   )
 }
+
+// 使用memo包装组件，确保只有当props真正改变时才重新渲染
+export const VipLevelProgress = memo(VipLevelProgressImpl);

@@ -11,9 +11,20 @@ export function FallbackImage({
   src,
   alt,
   fallbackSrc = "/intricate-islamic-geometric-pattern.png",
+  onLoad,
   ...props
 }: FallbackImageProps) {
   const [error, setError] = useState(false)
 
-  return <Image {...props} src={error ? fallbackSrc : src} alt={alt} onError={() => setError(true)} />
+  const handleError = () => {
+    setError(true)
+  }
+
+  const handleLoad = (event: any) => {
+    if (onLoad) {
+      onLoad(event)
+    }
+  }
+
+  return <Image {...props} src={error ? fallbackSrc : src} alt={alt} onError={handleError} onLoad={handleLoad} />
 }

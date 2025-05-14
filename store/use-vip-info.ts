@@ -1,188 +1,155 @@
 "use client"
 
 import { useStore } from "./store-context"
+import { useCallback, useRef } from "react"
+import { useVipSettings } from "@/hooks/use-vip-settings"
 
 export function useVipInfo() {
   const { state } = useStore()
+  const { loading, error } = useVipSettings()
+  const renderCountRef = useRef(0);
 
-  // 确保 vipInfo 存在，如果不存在则提供默认值
-  const vipInfo = state.vipInfo || {
-    levels: {
-      1: {
-        rewardRates: {
-          level1: 10,
-          level2: 4,
-          level3: 2,
-          level4: 2,
-          level5: 2,
-          total: 20,
-        },
-        dailyFundRange: "1.2-3 U",
-      },
-      2: {
-        rewardRates: {
-          level1: 12,
-          level2: 4,
-          level3: 2,
-          level4: 2,
-          level5: 2,
-          total: 22,
-        },
-        dailyFundRange: "3.6-9 U",
-      },
-      3: {
-        rewardRates: {
-          level1: 14,
-          level2: 4,
-          level3: 2,
-          level4: 2,
-          level5: 2,
-          total: 24,
-        },
-        dailyFundRange: "6-15 U",
-      },
-      4: {
-        rewardRates: {
-          level1: 16,
-          level2: 4,
-          level3: 2,
-          level4: 2,
-          level5: 2,
-          total: 26,
-        },
-        dailyFundRange: "9.6-24 U",
-      },
-      5: {
-        rewardRates: {
-          level1: 20,
-          level2: 4,
-          level3: 2,
-          level4: 2,
-          level5: 2,
-          total: 30,
-        },
-        dailyFundRange: "14.4-36 U",
-      },
-    },
-    reliefFundRates: {
-      noReferral: 1,
-      referral1: 1.5,
-      referral3: 2,
-      referral5: 2.5,
-    },
-  }
+  // VIP info from store
+  const vipInfo = state.vipInfo
+  
+  // 监控渲染次数
+  renderCountRef.current++;
 
-  // 获取指定 VIP 等级的奖励比例
-  const getRewardRatesForLevel = (level: number) => {
-    const safeLevel = Math.min(Math.max(1, level), 5) // 确保等级在 1-5 之间
+  /**
+   * 获取指定VIP等级的捐款金额
+   * @param level VIP等级
+   * @returns 对应等级的捐款金额，如果等级不存在则返回0
+   */
+  const getVipLevelDonationAmount = useCallback((level: number): number => {
+    const amount = vipInfo.levels[level]?.donationAmount || 0;
+    return amount;
+  }, [vipInfo.levels]);
 
-    // 添加安全检查，确保 levels 和对应的 level 存在
-    if (!vipInfo.levels || !vipInfo.levels[safeLevel]) {
-      // 返回默认值
-      return {
-        level1: 10,
-        level2: 4,
-        level3: 2,
-        level4: 2,
-        level5: 2,
-        total: 20,
+  /**
+   * 获取指定VIP等级的奖励率
+   * @param level VIP等级
+   * @returns 对应等级的奖励率对象，如果等级不存在则返回默认值
+   */
+  const getVipLevelRewardRates = useCallback((level: number) => {
+    return (
+      vipInfo.levels[level]?.rewardRates || {
+        level1: 0,
+        level2: 0,
+        level3: 0,
+        level4: 0,
+        level5: 0,
+        total: 0,
+      }
+    )
+  }, [vipInfo.levels]);
+
+  /**
+   * 获取指定捐款金额对应的VIP等级
+   * @param donationAmount 捐款金额
+   * @returns 对应的VIP等级
+   */
+  const getVipLevelByDonation = (donationAmount: number): number => {
+    // 获取所有VIP等级的列表
+    const levels = Object.keys(vipInfo.levels).map(Number).sort((a, b) => a - b)
+    
+    // 从高到低检查，找出最高满足的等级
+    for (let i = levels.length - 1; i >= 0; i--) {
+      const level = levels[i]
+      if (donationAmount >= vipInfo.levels[level].donationAmount) {
+        return level
       }
     }
-
-    return vipInfo.levels[safeLevel].rewardRates
+    
+    // 默认返回1级
+    return 1
   }
 
-  // 获取指定 VIP 等级的每日基金范围
-  const getDailyFundRangeForLevel = (level: number) => {
-    const safeLevel = Math.min(Math.max(1, level), 5) // 确保等级在 1-5 之间
-
-    // 添加安全检查，确保 levels 和对应的 level 存在
-    if (!vipInfo.levels || !vipInfo.levels[safeLevel]) {
-      // 返回默认值
-      return `${safeLevel * 1.2}-${safeLevel * 3} U`
+  /**
+   * 获取升级到下一VIP等级所需的捐款金额
+   * @param currentLevel 当前VIP等级
+   * @returns 需要的额外捐款金额
+   */
+  const getAmountForNextLevel = (currentLevel: number, currentDonation: number): number => {
+    const nextLevel = currentLevel + 1
+    
+    // 如果已经是最高级别，返回0
+    if (!vipInfo.levels[nextLevel]) {
+      return 0
     }
-
-    return vipInfo.levels[safeLevel].dailyFundRange
+    
+    const nextLevelThreshold = vipInfo.levels[nextLevel].donationAmount
+    const amountNeeded = Math.max(0, nextLevelThreshold - currentDonation)
+    
+    return amountNeeded
   }
 
-  // 根据推荐人数获取扶贫基金比例
-  const getReliefFundRateByReferrals = (referrals: number) => {
-    // 添加安全检查，确保 reliefFundRates 存在
-    if (!vipInfo.reliefFundRates) {
-      // 返回默认值
-      return referrals >= 5 ? 2.5 : referrals >= 3 ? 2 : referrals >= 1 ? 1.5 : 1
-    }
+  // 兼容旧版API，保持向后兼容性
 
-    if (referrals >= 5) return vipInfo.reliefFundRates.referral5
-    if (referrals >= 3) return vipInfo.reliefFundRates.referral3
-    if (referrals >= 1) return vipInfo.reliefFundRates.referral1
-    return vipInfo.reliefFundRates.noReferral
+  /**
+   * 获取指定VIP等级的每日基金范围（兼容旧版API）
+   */
+  const getDailyFundRangeForLevel = (level: number): string => {
+    const safeLevel = Math.min(Math.max(1, level), 5) // 确保等级在1-5之间
+    return vipInfo.levels[safeLevel]?.dailyFundRange || `${safeLevel * 1.2}-${safeLevel * 3} U`
   }
 
-  // 获取所有 VIP 等级信息
-  const getAllVipLevels = () => {
-    return vipInfo.levels || {}
+  /**
+   * 获取指定VIP等级的奖励比例（兼容旧版API）
+   */
+  const getRewardRatesForLevel = (level: number) => {
+    return getVipLevelRewardRates(level)
   }
 
-  // 获取所有扶贫基金比例
+  /**
+   * 获取所有扶贫基金比例（兼容旧版API）
+   */
   const getAllReliefFundRates = () => {
-    return (
-      vipInfo.reliefFundRates || {
+    return vipInfo.reliefFundRates || {
         noReferral: 1,
         referral1: 1.5,
         referral3: 2,
         referral5: 2.5,
       }
-    )
   }
 
-  // 添加新的方法来获取VIP等级的捐赠金额和总回报
-  const getVipLevelDonationAmount = (level: number) => {
-    const safeLevel = Math.min(Math.max(1, level), 5) // 确保等级在 1-5 之间
-
-    // 添加安全检查，确保 levels 和对应的 level 存在
-    if (!vipInfo.levels || !vipInfo.levels[safeLevel]) {
-      // 返回默认值
-      return safeLevel * 100
+  /**
+   * 获取指定VIP等级的总回报（兼容旧版API）
+   */
+  const getVipLevelTotalReturn = (level: number): number => {
+    const safeLevel = Math.min(Math.max(1, level), 5) // 确保等级在1-5之间
+    return vipInfo.levels[safeLevel]?.totalReturn || safeLevel * 120
     }
 
-    return vipInfo.levels[safeLevel].donationAmount
+  /**
+   * 获取指定VIP等级的期间（兼容旧版API）
+   */
+  const getVipLevelPeriod = (level: number): number => {
+    const safeLevel = Math.min(Math.max(1, level), 5) // 确保等级在1-5之间
+    return vipInfo.levels[safeLevel]?.period || 40
   }
 
-  const getVipLevelTotalReturn = (level: number) => {
-    const safeLevel = Math.min(Math.max(1, level), 5) // 确保等级在 1-5 之间
-
-    // 添加安全检查，确保 levels 和对应的 level 存在
-    if (!vipInfo.levels || !vipInfo.levels[safeLevel]) {
-      // 返回默认值
-      return safeLevel * 120
-    }
-
-    return vipInfo.levels[safeLevel].totalReturn
+  /**
+   * 获取所有VIP等级信息（兼容旧版API）
+   */
+  const getAllVipLevels = () => {
+    return vipInfo.levels || {}
   }
 
-  const getVipLevelPeriod = (level: number) => {
-    const safeLevel = Math.min(Math.max(1, level), 5) // 确保等级在 1-5 之间
-
-    // 添加安全检查，确保 levels 和对应的 level 存在
-    if (!vipInfo.levels || !vipInfo.levels[safeLevel]) {
-      // 返回默认值
-      return 40
-    }
-
-    return vipInfo.levels[safeLevel].period
-  }
-
-  // 在 return 语句中添加这些新方法
   return {
-    getRewardRatesForLevel,
-    getDailyFundRangeForLevel,
-    getReliefFundRateByReferrals,
-    getAllVipLevels,
-    getAllReliefFundRates,
+    vipInfo,
+    loadingVipInfo: loading,
+    vipInfoError: error,
+    // 新API
     getVipLevelDonationAmount,
+    getVipLevelRewardRates,
+    getVipLevelByDonation,
+    getAmountForNextLevel,
+    // 兼容旧API
+    getDailyFundRangeForLevel,
+    getRewardRatesForLevel,
+    getAllReliefFundRates,
     getVipLevelTotalReturn,
     getVipLevelPeriod,
-    vipInfo,
+    getAllVipLevels,
   }
 }

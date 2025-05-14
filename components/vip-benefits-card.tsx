@@ -20,28 +20,30 @@ export function VipBenefitsCard({ vipLevel, className }: VipBenefitsCardProps) {
     getVipLevelPeriod,
   } = useVipInfo()
 
-  // 获取当前 VIP 等级的每日扶贫资金范围
-  const dailyFundRange = getDailyFundRangeForLevel(vipLevel || 1)
-
-  // 获取当前 VIP 等级的奖励比例
-  const rewardRates = getRewardRatesForLevel(vipLevel || 1)
-
-  // 获取扶贫基金比例
+  // Always display VIP level 1 information
+  const displayLevel = vipLevel || 1
+  
+  // Whether to show current level badge (only for VIP level >= 1)
+  const showCurrentLevelBadge = vipLevel > 0
+  
+  // Get displayed VIP level info
+  const dailyFundRange = getDailyFundRangeForLevel(displayLevel)
+  const rewardRates = getRewardRatesForLevel(displayLevel)
   const reliefFundRates = getAllReliefFundRates()
-
-  // 获取捐赠金额和总回报
-  const donationAmount = getVipLevelDonationAmount(vipLevel || 1)
-  const totalReturn = getVipLevelTotalReturn(vipLevel || 1)
-  const period = getVipLevelPeriod(vipLevel || 1)
+  const donationAmount = getVipLevelDonationAmount(displayLevel)
+  const totalReturn = getVipLevelTotalReturn(displayLevel)
+  const period = getVipLevelPeriod(displayLevel)
 
   return (
     <Card className={cn("border-none shadow-xl bg-islamic-cardBg/90 backdrop-blur-lg text-white", className)}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg text-islamic-gold">VIP {vipLevel || 1} Privileges</CardTitle>
-          <Badge variant="outline" className="border-islamic-gold text-islamic-gold">
-            Current Level
-          </Badge>
+          <CardTitle className="text-lg text-islamic-gold">VIP {displayLevel} Privileges</CardTitle>
+          {showCurrentLevelBadge && (
+            <Badge variant="outline" className="border-islamic-gold text-islamic-gold">
+              Current Level
+            </Badge>
+          )}
         </div>
       </CardHeader>
       <CardContent>

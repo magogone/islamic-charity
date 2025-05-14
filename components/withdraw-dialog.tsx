@@ -109,13 +109,13 @@ export function WithdrawDialog({ open, onOpenChange, availableAmount }: Withdraw
 
               <div className="space-y-2">
                 <Label htmlFor="wallet" className="text-islamic-cream">
-                  USDT Wallet Address (TRC20)
+                  USDT Wallet Address
                 </Label>
                 <Input
                   id="wallet"
                   value={walletAddress}
                   onChange={(e) => setWalletAddress(e.target.value)}
-                  placeholder="Enter your TRC20 wallet address"
+                  placeholder="Enter your wallet address"
                   className="bg-islamic-medium/30 border-islamic-medium text-islamic-cream"
                 />
               </div>

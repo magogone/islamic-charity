@@ -9,19 +9,22 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { BackgroundWrapper } from "@/components/background-wrapper"
 import { BarkatLogo } from "@/components/barkat-logo"
+import { useToast } from "@/components/ui/toast"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const { login, isLoading, error } = useAuth()
+  const { login, isLoading } = useAuth()
+  const { success, ToastContainer } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
       await login({ email, password })
+      success("Login successful!")
       // The redirection is handled in the useAuth hook
     } catch (err) {
-      // Error is handled by the useAuth hook
+      // Error is handled by the global API error handler
       console.error(err)
     }
   }
@@ -74,12 +77,6 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {error && (
-              <div className="rounded-md bg-red-900/20 p-3">
-                <p className="text-sm text-red-400">{error}</p>
-              </div>
-            )}
-
             <div>
               <button
                 type="submit"
@@ -92,6 +89,9 @@ export default function LoginPage() {
           </form>
         </div>
       </div>
+      
+      {/* Toast notifications */}
+      <ToastContainer />
     </BackgroundWrapper>
   )
 }

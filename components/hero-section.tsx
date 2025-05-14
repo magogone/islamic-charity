@@ -26,18 +26,17 @@ export function HeroSection({
   const { isAuthenticated } = useAuth()
   const { openLoginModal } = useAuthContext()
 
-  const primaryImage = "/grand-mosque.png" // Change back to mosque image
-  const fallbackImage =
-    "https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=1200" // Mosque backup image
+  // 使用可靠的备用图片，避免404错误
+  const primaryImage = "https://images.pexels.com/photos/6508083/pexels-photo-6508083.jpeg?auto=compress&cs=tinysrgb&w=1200"
+  const fallbackImage = "https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=1200"
 
   const handleDonateClick = () => {
     if (isAuthenticated) {
-      // 如果用户已登录，打开支付对话框
-      setPaymentOpen(true)
-      if (onButtonClick) onButtonClick()
+      // 如果用户已登录，直接跳转到捐赠页面，不打开本地弹窗
+      if (onButtonClick) onButtonClick();
     } else {
       // 如果用户未登录，打开登录对话框，并传递目标路径
-      openLoginModal("/donation")
+      openLoginModal("/donation");
     }
   }
 
@@ -60,7 +59,7 @@ export function HeroSection({
             fill
             className="object-cover object-center"
             priority
-            onLoadingComplete={() => setIsLoading(false)}
+            onLoad={() => setIsLoading(false)}
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-islamic-dark/40 via-islamic-dark/30 to-islamic-dark/70"></div>
