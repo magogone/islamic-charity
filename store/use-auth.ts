@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useStore } from "./store-context"
 import type { LoginCredentials, RegisterCredentials, AuthUser } from "./auth-types"
 import { registerUser, loginUser, logoutUser, ApiUser, getUserInfo } from "@/lib/api"
+import { useWallet } from "@/hooks/use-wallet"
 
 // Storage keys for local storage
 const STORAGE_KEYS = {
@@ -352,11 +353,18 @@ export function useAuth() {
     [dispatch, router, getUserInfo],
   )
 
+  // 在调用useAuth时创建一个全局事件，这样可以在其他地方监听此事件
+  const triggerLogoutEvent = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      // 触发一个自定义事件，钱包组件可以监听这个事件
+      window.dispatchEvent(new CustomEvent('user-logout'));
+    }
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       // Immediately dispatch logout action BEFORE making the API call
-      // This ensures auth state is cleared immediately and no more /auth/me calls will be made
-    dispatch({ type: "AUTH_LOGOUT" })
+      dispatch({ type: "AUTH_LOGOUT" })
       
       // Clear user data from localStorage
       if (typeof window !== 'undefined') {
@@ -367,23 +375,24 @@ export function useAuth() {
       if (typeof window !== 'undefined') {
         // This will reset the flag in the AuthSessionChecker component
         window.dispatchEvent(new CustomEvent('reset-session-check'));
+        
+        // 触发自定义的注销事件，钱包组件会监听这个事件
+        triggerLogoutEvent();
       }
       
       // Call the real logout API after cleaning up local state
-      // We don't need to wait for this to complete
       logoutUser().catch(() => {
         // Silently ignore errors in logout API call
         // User is already logged out locally
       });
       
-    // Redirect to home page after logout
-    router.push("/")
+      // Redirect to home page after logout
+      router.push("/")
     } catch (error) {
       // Error handling is not needed here since we already dispatched logout
-      // and redirected the user
       router.push("/")
     }
-  }, [dispatch, router])
+  }, [dispatch, router, triggerLogoutEvent])
 
   return {
     user: authState.user,

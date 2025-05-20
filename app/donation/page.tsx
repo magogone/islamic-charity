@@ -12,17 +12,68 @@ import { PaymentDialog } from "@/components/payment-dialog"
 import { useAuth } from "@/store/use-auth"
 import { useAuthContext } from "@/store/auth-context"
 import { getUserProfit, getUserInfo } from "@/lib/api"
+import { useIsMounted } from "@/components/client-providers"
+
+// ERC20 代币 ABI
+const erc20Abi = [
+  {
+    "inputs": [
+      {"internalType": "address", "name": "recipient", "type": "address"},
+      {"internalType": "uint256", "name": "amount", "type": "uint256"}
+    ],
+    "name": "transfer",
+    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "address", "name": "account", "type": "address"}
+    ],
+    "name": "balanceOf",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "decimals",
+    "outputs": [{"internalType": "uint8", "name": "", "type": "uint8"}],
+    "stateMutability": "view",
+    "type": "function"
+  }
+] as const;
+
+// 根据链ID获取代币精度的简化函数
+// 大多数ERC20代币使用18位小数，但USDT通常使用6位小数
+function getTokenDecimalsByChain(chainId: number, tokenSymbol: string): number {
+  // 对于USDT特殊处理
+  if (tokenSymbol === 'USDT') {
+    // 以太坊主网和测试网上的USDT使用6位小数
+    if (chainId === 1 || chainId === 11155111) {
+      return 6;
+    }
+    // BSC上的USDT使用18位小数
+    if (chainId === 56 || chainId === 97) {
+      return 18;
+    }
+  }
+  
+  // 其他代币默认使用18位小数
+  return 18;
+}
 
 /**
  * 捐赠页面组件
  */
 export default function DonationPage() {
-  const { donationData, updateDonation } = useDonation()
-  const { userData } = useUser()
-  const { getVipLevelDonationAmount } = useVipInfo()
   const contentRef = useRef<HTMLDivElement>(null);
+  const { userData } = useUser()
+  const { donationData, updateDonation } = useDonation()
+  const { getVipLevelDonationAmount } = useVipInfo()
   const { isAuthenticated, user, getCurrentUser } = useAuth()
   const { openLoginModal } = useAuthContext()
+  const isMounted = useIsMounted()
   
   // 使用ref跟踪数据获取状态
   const fetchedUserDataRef = useRef(false);
@@ -30,6 +81,9 @@ export default function DonationPage() {
   
   // 添加profit状态
   const [profitData, setProfitData] = useState({ today_profit: 0, max_profit: 0 })
+  
+  // 添加读取代币精度状态
+  const [usdtDecimals, setUsdtDecimals] = useState(6); // 默认USDT精度
   
   // 检查用户认证状态
   useEffect(() => {

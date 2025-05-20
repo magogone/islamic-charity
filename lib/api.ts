@@ -224,12 +224,12 @@ export async function logoutUser(): Promise<ApiResponse<LogoutResponse>> {
 /**
  * User donate
  */
-export async function donateAmount(amount: string, tokenType: string = "USDT"): Promise<ApiResponse<DonateResponse>> {
+export async function donateAmount(amount: string, tokenType: string = "USDT", paymentMethod: string = "", remark: string = ""): Promise<ApiResponse<DonateResponse>> {
   const donateData: DonateRequest = {
     amount,
     token_type: tokenType,
-    payment_method: "", // 设置为空
-    remark: ""  // 设置为空
+    payment_method: paymentMethod,
+    remark
   };
   
   return apiRequest<DonateResponse>("/user/donate", "POST", donateData);
