@@ -75,6 +75,8 @@ export function PaymentDialog({
   const [transactionHash, setTransactionHash] = useState<string | null>(null)
   const [isNetworkSupported, setIsNetworkSupported] = useState(false)
   const [decimals, setDecimals] = useState<number>(6) // 默认 USDT 精度
+  const [isSubmitting, setIsSubmitting] = useState(false) // 防止重复提交
+  const [donationId, setDonationId] = useState<string | null>(null) // 存储API返回的捐赠ID
   const isMounted = useIsMounted()
   const { getVipLevelDonationAmount } = useVipInfo()
   const { success, error, ToastContainer } = useToast()
@@ -170,6 +172,8 @@ export function PaymentDialog({
       setIsComplete(false);
       setPaymentStep('initial');
       setTransactionHash(null);
+      setIsSubmitting(false); // 重置提交状态
+      setDonationId(null); // 重置捐赠ID
     }
   }, [open]);
   
@@ -239,7 +243,15 @@ export function PaymentDialog({
       error("Contract addresses not available");
       return;
     }
+    
+    // 防止重复提交
+    if (isSubmitting || isProcessing) {
+      error("A payment is already in progress");
+      return;
+    }
 
+    // 设置状态防止重复点击
+    setIsSubmitting(true);
     setIsProcessing(true);
     setPaymentStep('donating');
     
@@ -248,18 +260,32 @@ export function PaymentDialog({
         throw new Error("Wallet address not available");
       }
 
+      if (!chainId) {
+        throw new Error("Chain ID not available");
+      }
+
       // 处理API部分
       try {
-        // 调用后端捐赠API
-        const response = await donateAmount(
-          amount,
-          "USDT",
-          "",  // 支付方式为空
-          address // 钱包地址作为备注
-        );
-        
-        if (!response.success) {
-          throw new Error("Donation API call failed");
+        // 检查是否已经有捐赠ID，避免重复调用API
+        if (donationId) {
+          console.log("Using existing donation ID:", donationId);
+        } else {
+          // 调用后端捐赠API
+          const response = await donateAmount(
+            chainId.toString(),
+            amount,
+            "USDT",
+            "",  // 支付方式为空
+            address // 钱包地址作为备注
+          );
+          
+          if (!response.success) {
+            throw new Error("Donation API call failed");
+          }
+          
+          // 使用响应中的任何唯一标识符作为捐赠ID
+          // 这里使用时间戳作为简单的唯一标识符
+          setDonationId(Date.now().toString());
         }
       } catch (apiError) {
         console.error("API call failed:", apiError);
@@ -323,9 +349,10 @@ export function PaymentDialog({
         }
       }
       
-    } catch (err) {
+          } catch (err) {
       console.error("Payment flow error:", err);
       setIsProcessing(false);
+      setIsSubmitting(false); // 重置提交状态
       setPaymentStep('initial');
       
       // 检查是否为用户取消交易的错误
@@ -459,10 +486,11 @@ export function PaymentDialog({
                 type="button"
                 className="bg-islamic-gold text-islamic-dark hover:bg-islamic-gold/90 w-full"
                 onClick={handlePayment}
-                disabled={!isConnected || !isNetworkSupported}
+                disabled={!isConnected || !isNetworkSupported || isSubmitting}
               >
                 {!isConnected ? "Connect Wallet to Donate" : 
                  !isNetworkSupported ? "Switch to Supported Network" : 
+                 isSubmitting ? "Processing..." :
                  "Donate Now!"}
               </Button>
             </DialogFooter>
@@ -490,20 +518,21 @@ export function PaymentDialog({
             )}
             
             {/* 添加取消按钮 */}
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-4 text-islamic-cream/70 border-islamic-cream/20 hover:bg-islamic-medium"
-              onClick={() => {
-                // 设置状态回到初始状态
-                setIsProcessing(false);
-                setPaymentStep('initial');
-                
-                // 如果处于区块链交易等待中，提示用户交易仍在进行
-                if (paymentStep === 'transferring' && transactionHash) {
-                  error("Dialog closed, but your transaction is still being processed");
-                }
-              }}
+                          <Button
+                variant="outline"
+                size="sm"
+                className="mt-4 text-islamic-cream/70 border-islamic-cream/20 hover:bg-islamic-medium"
+                onClick={() => {
+                  // 设置状态回到初始状态
+                  setIsProcessing(false);
+                  setIsSubmitting(false); // 重置提交状态，允许重新提交
+                  setPaymentStep('initial');
+                  
+                  // 如果处于区块链交易等待中，提示用户交易仍在进行
+                  if (paymentStep === 'transferring' && transactionHash) {
+                    error("Dialog closed, but your transaction is still being processed");
+                  }
+                }}
             >
               Cancel
             </Button>

@@ -56,6 +56,18 @@ export interface LogoutResponse {
  * Donate request data
  */
 export interface DonateRequest {
+  chain_id: string;
+  amount: string;
+  token_type: string;
+  payment_method: string;
+  remark: string;
+}
+
+/**
+ * Withdraw request data
+ */
+export interface WithdrawRequest {
+  chain_id: string;
   amount: string;
   token_type: string;
   payment_method: string;
@@ -67,6 +79,18 @@ export interface DonateRequest {
  */
 export interface DonateResponse {
   order_id: string;
+  status: string;
+  created_at: string;
+}
+
+/**
+ * Withdraw response data
+ */
+export interface WithdrawResponse {
+  transaction_id: string;
+  amount: string;
+  wallet_address: string;
+  network: string;
   status: string;
   created_at: string;
 }
@@ -224,8 +248,9 @@ export async function logoutUser(): Promise<ApiResponse<LogoutResponse>> {
 /**
  * User donate
  */
-export async function donateAmount(amount: string, tokenType: string = "USDT", paymentMethod: string = "", remark: string = ""): Promise<ApiResponse<DonateResponse>> {
+export async function donateAmount(chainId: string, amount: string, tokenType: string = "USDT", paymentMethod: string = "", remark: string = ""): Promise<ApiResponse<DonateResponse>> {
   const donateData: DonateRequest = {
+    chain_id: chainId,
     amount,
     token_type: tokenType,
     payment_method: paymentMethod,
@@ -233,6 +258,21 @@ export async function donateAmount(amount: string, tokenType: string = "USDT", p
   };
   
   return apiRequest<DonateResponse>("/user/donate", "POST", donateData);
+}
+
+/**
+ * User withdraw
+ */
+export async function withdrawAmount(chainId: string, amount: string, walletAddress: string): Promise<ApiResponse<WithdrawResponse>> {
+  const withdrawData: WithdrawRequest = {
+    chain_id: chainId,
+    amount,
+    token_type: "USDT",
+    payment_method: "",
+    remark: walletAddress,
+  };
+  
+  return apiRequest<WithdrawResponse>("/user/withdraw", "POST", withdrawData);
 }
 
 /**

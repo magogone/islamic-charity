@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,27 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Wallet, Check, Copy, AlertCircle } from "lucide-react"
+import { 
+  Wallet, 
+  Check, 
+  Copy, 
+  AlertCircle,
+  Globe
+} from "lucide-react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { 
+  NETWORK_CONFIG,
+  NetworkConfig,
+  SUPPORTED_NETWORK_NAMES
+} from "@/config/networks"
+import { withdrawAmount } from "@/lib/api"
+import { useToast } from "@/components/ui/toast"
 
 interface WithdrawDialogProps {
   open: boolean
@@ -23,15 +43,29 @@ interface WithdrawDialogProps {
 export function WithdrawDialog({ open, onOpenChange, availableAmount }: WithdrawDialogProps) {
   const [amount, setAmount] = useState<number>(availableAmount)
   const [walletAddress, setWalletAddress] = useState<string>("")
+  const [selectedNetwork, setSelectedNetwork] = useState<string>("")
+  const [supportedNetworks, setSupportedNetworks] = useState<NetworkConfig[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
   const [isComplete, setIsComplete] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const [transactionId, setTransactionId] = useState<string>("") // actual transaction ID from API
+  const { success, error: showError, ToastContainer } = useToast()
 
-  // Example transaction ID
-  const transactionId = "0x3a8d7f6e9b2c1d5e8f7a6b5c4d3e2f1a0b9c8d7e"
+  // Load supported networks on component mount
+  useEffect(() => {
+    const networks = Object.values(NETWORK_CONFIG).filter(
+      (network) => network.isSupported
+    );
+    setSupportedNetworks(networks);
+    
+    // Default to the first supported network if available
+    if (networks.length > 0 && !selectedNetwork) {
+      setSelectedNetwork(networks[0].key);
+    }
+  }, [selectedNetwork]);
 
-  const handleWithdraw = () => {
+  const handleWithdraw = async () => {
     // Validate inputs
     if (!walletAddress) {
       setError("Please enter a valid wallet address")
@@ -43,25 +77,67 @@ export function WithdrawDialog({ open, onOpenChange, availableAmount }: Withdraw
       return
     }
 
+    if (!selectedNetwork) {
+      setError("Please select a blockchain network")
+      return
+    }
+
+    // Find the selected network config to get the chain ID
+    const selectedNetworkConfig = supportedNetworks.find(network => network.key === selectedNetwork);
+    if (!selectedNetworkConfig) {
+      setError("Invalid network selected")
+      return
+    }
+
     // Clear any previous errors
     setError(null)
 
     // Start processing
     setIsProcessing(true)
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      // Call the withdraw API with chain ID
+      const response = await withdrawAmount(
+        selectedNetworkConfig.id.toString(),
+        amount.toString(),
+        walletAddress
+      )
+
+      if (!response.success) {
+        throw new Error(response.error?.message || "Withdrawal failed")
+      }
+
+      // Set the transaction ID from the response
+      if (response.data?.transaction_id) {
+        setTransactionId(response.data.transaction_id)
+      } else {
+        // Use a placeholder if not provided
+        setTransactionId("Transaction pending...")
+      }
+
       setIsProcessing(false)
       setIsComplete(true)
+      success("Withdrawal request submitted successfully")
 
       // Reset dialog after showing success
       setTimeout(() => {
         setIsComplete(false)
         setAmount(availableAmount)
         setWalletAddress("")
+        setSelectedNetwork("")
         onOpenChange(false)
       }, 5000)
-    }, 2000)
+
+    } catch (err) {
+      setIsProcessing(false)
+      if (err instanceof Error) {
+        setError(err.message)
+        showError(err.message)
+      } else {
+        setError("An unexpected error occurred")
+        showError("An unexpected error occurred")
+      }
+    }
   }
 
   const copyToClipboard = () => {
@@ -108,6 +184,39 @@ export function WithdrawDialog({ open, onOpenChange, availableAmount }: Withdraw
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="network" className="text-islamic-cream">
+                  Blockchain Network
+                </Label>
+                <Select
+                  value={selectedNetwork}
+                  onValueChange={setSelectedNetwork}
+                >
+                  <SelectTrigger
+                    id="network"
+                    className="bg-islamic-medium/30 border-islamic-medium text-islamic-cream"
+                  >
+                    <SelectValue placeholder="Select network" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-islamic-dark border-islamic-medium text-islamic-cream">
+                    {supportedNetworks.map((network) => (
+                      <SelectItem 
+                        key={network.key} 
+                        value={network.key}
+                        className="text-islamic-cream hover:text-islamic-gold hover:bg-islamic-medium/50"
+                      >
+                        <div className="flex items-center">
+                          {network.name} {network.testnet && "(Testnet)"}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-islamic-cream/60 mt-1">
+                  Make sure your wallet is on the same network
+                </p>
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="wallet" className="text-islamic-cream">
                   USDT Wallet Address
                 </Label>
@@ -118,6 +227,17 @@ export function WithdrawDialog({ open, onOpenChange, availableAmount }: Withdraw
                   placeholder="Enter your wallet address"
                   className="bg-islamic-medium/30 border-islamic-medium text-islamic-cream"
                 />
+              </div>
+
+              <div className="flex items-start space-x-2 rounded-md border border-islamic-gold/20 p-3 bg-islamic-gold/10">
+                <Globe className="h-5 w-5 text-islamic-gold mt-0.5 flex-shrink-0" />
+                <div className="text-xs text-islamic-cream/90">
+                  <p className="font-medium text-islamic-gold mb-1">Network Information</p>
+                  <p>
+                    Supported networks: {SUPPORTED_NETWORK_NAMES}. Make sure your wallet address is on the
+                    selected network.
+                  </p>
+                </div>
               </div>
 
               {error && (
@@ -150,7 +270,7 @@ export function WithdrawDialog({ open, onOpenChange, availableAmount }: Withdraw
             </div>
             <p className="text-islamic-cream text-center font-medium">Withdrawal Successful!</p>
             <p className="text-islamic-cream/70 text-center text-sm mt-1 mb-4">
-              {amount} USDT has been sent to your wallet
+              {amount} USDT has been sent to your wallet on {supportedNetworks.find(n => n.key === selectedNetwork)?.name || selectedNetwork}
             </p>
 
             <div className="w-full p-3 bg-islamic-medium/30 rounded-md flex items-center justify-between mb-2">
@@ -174,6 +294,7 @@ export function WithdrawDialog({ open, onOpenChange, availableAmount }: Withdraw
           </div>
         )}
       </DialogContent>
+      <ToastContainer />
     </Dialog>
   )
 }
