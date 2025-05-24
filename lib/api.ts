@@ -136,6 +136,33 @@ export interface UserProfitResponse {
 }
 
 /**
+ * 发出认证失败事件，用于在特定页面显示登录提示
+ */
+export function emitAuthFailure(endpoint: string, statusCode: number) {
+  if (typeof window !== 'undefined') {
+    // 检查当前路径是否在需要认证的页面
+    const pathname = window.location.pathname;
+    const isProtectedRoute = pathname === '/donation' || 
+                            pathname.startsWith('/donation/') ||
+                            pathname === '/promotion' || 
+                            pathname.startsWith('/promotion/') ||
+                            pathname === '/profile' || 
+                            pathname.startsWith('/profile/');
+    
+    if (isProtectedRoute) {
+      const event = new CustomEvent('auth-failure', {
+        detail: { 
+          endpoint, 
+          statusCode, 
+          currentPath: pathname 
+        }
+      });
+      window.dispatchEvent(event);
+    }
+  }
+}
+
+/**
  * Base function to make API requests
  */
 async function apiRequest<T>(
@@ -182,8 +209,12 @@ async function apiRequest<T>(
   try {
     const response = await fetch(url, options);
     
-    // All API responses return 200 status code
+    // 特殊处理 /auth/me 接口的非200响应
     if (response.status !== 200) {
+      // 检查是否是 /auth/me 接口
+      if (endpoint.includes('/auth/me')) {
+        emitAuthFailure(endpoint, response.status);
+      }
       throw new Error(`Network error: ${response.status}`);
     }
     
@@ -191,6 +222,10 @@ async function apiRequest<T>(
     
     // Automatically handle errors emitting them to the global error handler
     if (!result.success && result.error) {
+      // 对于 /auth/me 接口的业务错误，也需要特殊处理
+      if (endpoint.includes('/auth/me')) {
+        emitAuthFailure(endpoint, result.error.code);
+      }
       emitApiError(result.error.code, result.error.message);
     }
     
@@ -205,6 +240,11 @@ async function apiRequest<T>(
         message: error instanceof Error ? error.message : "Unknown error occurred"
       }
     };
+    
+    // 对于网络错误，如果是 /auth/me 接口，也需要特殊处理
+    if (endpoint.includes('/auth/me')) {
+      emitAuthFailure(endpoint, 5000);
+    }
     
     // Emit the error to the global error handler
     if (errorResponse.error) {

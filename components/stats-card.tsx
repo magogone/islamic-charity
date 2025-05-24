@@ -35,7 +35,7 @@ export function StatsCard({
           iconColor="text-islamic-gold"
           value={`${currentEarnings}`}
           unit="USDT"
-          description="当前获得"
+          description="Currently Obtained"
           valueClassName="text-xl font-bold text-islamic-gold"
           unitClassName="text-xs text-islamic-gold/80"
           descriptionClassName="text-[10px] text-islamic-cream/60"
@@ -47,7 +47,7 @@ export function StatsCard({
           iconColor="text-islamic-gold"
           value={`${maxEarnings}`}
           unit="USDT"
-          description="最大可得"
+          description="Maximum Available"
           valueClassName="text-xl font-bold text-islamic-gold"
           unitClassName="text-xs text-islamic-gold/80"
           descriptionClassName="text-[10px] text-islamic-cream/60"
@@ -58,7 +58,7 @@ export function StatsCard({
           iconBgColor="bg-islamic-gold/20"
           iconColor="text-islamic-gold"
           value={`${currentPercentage}%`}
-          description="当前比例"
+          description="Current Rate"
           valueClassName="text-xl font-bold text-islamic-gold"
           descriptionClassName="text-[10px] text-islamic-cream/60"
         />
@@ -68,7 +68,7 @@ export function StatsCard({
           iconBgColor="bg-islamic-gold/20"
           iconColor="text-islamic-gold"
           value={`${maxPercentage}%`}
-          description="最高比例"
+          description="Highest Rate"
           valueClassName="text-xl font-bold text-islamic-gold"
           descriptionClassName="text-[10px] text-islamic-cream/60"
         />

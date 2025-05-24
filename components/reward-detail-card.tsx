@@ -12,7 +12,7 @@ interface RewardDetailCardProps {
     actualReward: number
     maxReward: number
     completionRate: number
-    status: "已发放" | "将发放" | "潜在"
+    status: "Distributed" | "Pending" | "Potential"
   }>
 }
 
@@ -28,12 +28,12 @@ export function RewardDetailCard({ startDate, endDate, completionPercentage, dai
   // 获取状态对应的颜色
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "已发放":
-        return "text-[#8dc63f]"
-      case "将发放":
-        return "text-[#d4b96e]"
-      case "潜在":
-        return "text-gray-400"
+      case "Distributed":
+        return "bg-[#8dc63f] text-black"
+      case "Pending":
+        return "bg-[#d4b96e] text-black"
+      case "Potential":
+        return "bg-gray-600 text-white"
       default:
         return "text-gray-400"
     }
@@ -41,7 +41,7 @@ export function RewardDetailCard({ startDate, endDate, completionPercentage, dai
 
   // 准备图表数据
   const chartData = dailyRewards.map((reward) => {
-    const barColor = reward.status === "已发放" ? "#8dc63f" : reward.status === "将发放" ? "#d4b96e" : "#555555"
+    const barColor = reward.status === "Distributed" ? "#8dc63f" : reward.status === "Pending" ? "#d4b96e" : "#555555"
 
     return {
       date: reward.date,
@@ -70,15 +70,15 @@ export function RewardDetailCard({ startDate, endDate, completionPercentage, dai
         <div className="flex gap-4 text-xs">
           <div className="flex items-center">
             <div className="w-3 h-3 mr-1 bg-[#8dc63f] rounded-sm"></div>
-            <span>已发放</span>
+            <span>Distributed</span>
           </div>
           <div className="flex items-center">
             <div className="w-3 h-3 mr-1 bg-[#d4b96e] rounded-sm"></div>
-            <span>将发放</span>
+            <span>Pending</span>
           </div>
           <div className="flex items-center">
             <div className="w-3 h-3 mr-1 bg-[#555555] rounded-sm"></div>
-            <span>潜在奖励</span>
+            <span>Potential</span>
           </div>
         </div>
       </div>

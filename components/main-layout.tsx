@@ -107,8 +107,10 @@ export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
       if (donateButton) {
         donateButton.addEventListener('click', (e) => {
           e.stopPropagation(); // 阻止事件冒泡
-          if (currentPath !== "/donation") {
+          if (isAuthenticated) {
             router.push("/donation");
+          } else {
+            openLoginModal("/donation");
           }
         });
       }

@@ -52,17 +52,17 @@ export function RewardPeriodChart({ data, startDate, endDate }: RewardPeriodChar
         <div className="bg-islamic-medium border border-islamic-gold/30 p-2 rounded-md shadow-md text-xs">
           <p className="text-islamic-gold font-medium mb-1">{formatDate(label)}</p>
           <p className="text-islamic-cream flex justify-between">
-            <span>{distributed ? "实际奖励: " : "预期奖励: "}</span>
+            <span>{distributed ? "Actual Reward: " : "Expected Reward: "}</span>
             <span className="font-medium" style={{ color: distributed ? "#8dc63f" : "#4caf50" }}>
               {actual} USDT
             </span>
           </p>
           <p className="text-islamic-cream/80 flex justify-between">
-            <span>最大奖励: </span>
+            <span>Maximum Reward: </span>
             <span className="font-medium">{maximum} USDT</span>
           </p>
           <p className="text-islamic-cream/80 flex justify-between text-[10px] mt-1">
-            <span>完成率: </span>
+            <span>Completion Rate: </span>
             <span>{Math.round((actual / maximum) * 100)}%</span>
           </p>
         </div>
@@ -171,29 +171,29 @@ export function RewardPeriodChart({ data, startDate, endDate }: RewardPeriodChar
       }
     }
   } catch (e) {
-    console.error("日期计算错误:", e)
+    console.error("Date calculation error:", e)
   }
 
   return (
     <div className="relative">
       {/* 标题和图例 */}
       <div className="flex justify-between items-center text-xs mb-2">
-        <div className="text-islamic-cream/80">开始: {formatDate(periodStartDate)}</div>
+        <div className="text-islamic-cream/80">Start: {formatDate(periodStartDate)}</div>
         <div className="flex space-x-3">
           <div className="flex items-center">
             <div className="w-3 h-3 mr-1" style={{ backgroundColor: colors.distributed }}></div>
-            <span className="text-islamic-cream/80">已发放</span>
+            <span className="text-islamic-cream/80">Distributed</span>
           </div>
           <div className="flex items-center">
             <div className="w-3 h-3 mr-1" style={{ backgroundColor: colors.future }}></div>
-            <span className="text-islamic-cream/80">将发放</span>
+            <span className="text-islamic-cream/80">Pending</span>
           </div>
           <div className="flex items-center">
             <div className="w-3 h-3 mr-1" style={{ backgroundColor: colors.potential }}></div>
-            <span className="text-islamic-cream/80">潜在奖励</span>
+            <span className="text-islamic-cream/80">Potential Reward</span>
           </div>
         </div>
-        <div className="text-islamic-cream/80">结束: {formatDate(periodEndDate)}</div>
+        <div className="text-islamic-cream/80">End: {formatDate(periodEndDate)}</div>
       </div>
 
       {/* 图表容器 */}
@@ -250,11 +250,11 @@ export function RewardPeriodChart({ data, startDate, endDate }: RewardPeriodChar
               </div>
               <CardContent className="p-4">
                 <div className="text-base font-medium text-islamic-gold mb-3">
-                  {formatDate(activePoint.date)} 奖励详情
+                  {formatDate(activePoint.date)} Reward Details
                 </div>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between items-center">
-                    <span className="text-islamic-cream/80">{activePoint.distributed ? "实际奖励:" : "预期奖励:"}</span>
+                    <span className="text-islamic-cream/80">{activePoint.distributed ? "Actual Reward:" : "Expected Reward:"}</span>
                     <span
                       className="font-medium text-lg"
                       style={{ color: activePoint.distributed ? colors.distributed : colors.future }}
@@ -263,28 +263,28 @@ export function RewardPeriodChart({ data, startDate, endDate }: RewardPeriodChar
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-islamic-cream/80">最大奖励:</span>
+                    <span className="text-islamic-cream/80">Maximum Reward:</span>
                     <span className="font-medium text-lg text-islamic-cream">{activePoint.maximum} USDT</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-islamic-cream/80">完成率:</span>
+                    <span className="text-islamic-cream/80">Completion Rate:</span>
                     <span className="font-medium text-lg text-islamic-cream">
                       {Math.round((activePoint.actual / activePoint.maximum) * 100)}%
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-islamic-cream/80">差额:</span>
+                    <span className="text-islamic-cream/80">Difference:</span>
                     <span className="font-medium text-islamic-cream/80">
                       {(activePoint.maximum - activePoint.actual).toFixed(2)} USDT
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-islamic-cream/80">状态:</span>
+                    <span className="text-islamic-cream/80">Status:</span>
                     <span
                       className="font-medium"
                       style={{ color: activePoint.distributed ? colors.distributed : colors.future }}
                     >
-                      {activePoint.distributed ? "已发放" : "未发放"}
+                      {activePoint.distributed ? "Distributed" : "Pending"}
                     </span>
                   </div>
                 </div>

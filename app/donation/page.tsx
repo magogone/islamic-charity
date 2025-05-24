@@ -85,14 +85,6 @@ export default function DonationPage() {
   // 添加读取代币精度状态
   const [usdtDecimals, setUsdtDecimals] = useState(6); // 默认USDT精度
   
-  // 检查用户认证状态
-  useEffect(() => {
-    // 如果用户未登录，显示登录框
-    if (!isAuthenticated || !user) {
-      openLoginModal('/donation')
-    }
-  }, [isAuthenticated, user, openLoginModal])
-  
   // 获取用户提现和奖励数据
   useEffect(() => {
     const fetchUserData = async () => {

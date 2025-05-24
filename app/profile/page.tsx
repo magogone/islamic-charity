@@ -70,7 +70,7 @@ export default function ProfilePage() {
           // 刷新团队数据
           await refreshTeamInfo();
         } catch (error) {
-          console.error('[ProfilePage] 获取团队数据失败:', error);
+          console.error('[ProfilePage] Failed to fetch team data:', error);
         }
       }
     };

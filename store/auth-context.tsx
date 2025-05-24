@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useCallback, useEffect, type React
 import { useAuth } from "@/store/use-auth"
 import { LoginModal } from "@/components/login-modal"
 import { usePathname, useRouter } from "next/navigation"
+import { useToast } from "@/components/ui/toast"
 
 interface AuthContextType {
   openLoginModal: (targetPath?: string) => void
@@ -36,6 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const router = useRouter()
   const pathname = usePathname()
+  const { info, ToastContainer } = useToast()
 
   // 设置初始化状态，确保 SSR 时不进行检查
   useEffect(() => {
@@ -48,6 +50,59 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
   }, [])
+
+  // 监听认证失败事件
+  useEffect(() => {
+    if (!isInitialized || typeof window === 'undefined') {
+      return;
+    }
+
+    const handleAuthFailure = (event: CustomEvent<{endpoint: string, statusCode: number, currentPath: string}>) => {
+      const { endpoint, statusCode, currentPath } = event.detail;
+      
+      // 如果登录模态框已经打开，不重复打开
+      if (isLoginModalOpen) {
+        return;
+      }
+      
+      // 对于 /auth/me 接口的失败，说明服务器端认证已失效
+      // 无论本地状态如何，都应该提示用户重新登录
+      if (endpoint.includes('/auth/me')) {
+        // 清除本地认证状态，确保状态同步
+        if (isAuthenticated) {
+          logout();
+        }
+        
+        // 显示认证失败的提示信息
+        info("Your login session has expired, please log in again to continue");
+        
+        // 打开登录模态框，并设置目标路径为当前路径
+        setTargetPath(currentPath);
+        setIsLoginModalOpen(true);
+        return;
+      }
+      
+      // 对于其他接口的认证失败，只有在用户确实未认证时才显示登录提示
+      if (isAuthenticated && user) {
+        return;
+      }
+      
+      // 显示认证失败的提示信息
+      info("Your login session has expired, please log in again to continue");
+      
+      // 打开登录模态框，并设置目标路径为当前路径
+      setTargetPath(currentPath);
+      setIsLoginModalOpen(true);
+    };
+
+    // 添加事件监听器
+    window.addEventListener('auth-failure' as any, handleAuthFailure as EventListener);
+    
+    return () => {
+      // 清理事件监听器
+      window.removeEventListener('auth-failure' as any, handleAuthFailure as EventListener);
+    };
+  }, [isInitialized, isAuthenticated, user, isLoginModalOpen, info, logout]);
 
   const openLoginModal = useCallback((path?: string) => {
     // 如果用户已认证，不要显示登录框
@@ -170,6 +225,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider value={{ openLoginModal, closeLoginModal }}>
       {children}
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} targetPath={targetPath} />
+      <ToastContainer />
     </AuthContext.Provider>
   )
 }
