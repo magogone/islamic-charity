@@ -172,7 +172,7 @@ async function apiRequest<T>(
   forceNoCache: boolean = false
 ): Promise<ApiResponse<T>> {
   // 使用相对路径直接发送请求到/v1路径
-  let url = endpoint.startsWith('http') ? endpoint : `/v1${endpoint}`;
+  let url = endpoint.startsWith('http') ? endpoint : `${ENV.SITE_URL}${endpoint}`;
   
   const options: RequestInit = {
     method,
