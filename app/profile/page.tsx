@@ -11,6 +11,7 @@ import { useDonation } from "@/store/use-donation"
 import { useAuth } from "@/store/use-auth"
 import { useTeam } from "@/store/use-team"
 import { useToast } from "@/components/ui/toast"
+import { useTranslation } from "@/lib/i18n"
 import Link from "next/link"
 import { getUserProfit, getUserInfo } from "@/lib/api"
 
@@ -21,6 +22,7 @@ export default function ProfilePage() {
   const { user, logout } = useAuth()
   const { teamData, refreshTeamInfo } = useTeam()
   const { success } = useToast()
+  const { t } = useTranslation()
   
   // 客户端渲染状态
   const [mounted, setMounted] = useState(false)
@@ -56,7 +58,6 @@ export default function ProfilePage() {
   const refreshData = useCallback(async () => {
     if (!mounted || !user) return
     
-    console.log('[ProfilePage] Manual refresh triggered')
     setLoadingStates({
       userLoading: true,
       donationLoading: true,
@@ -82,12 +83,6 @@ export default function ProfilePage() {
           totalExpectedReward: totalAccumulated,
           totalMaxReward: Math.round(totalAccumulated * 1.5)
         })
-        
-        console.log('[ProfilePage] Updated withdrawal data:', {
-          withdrawnAmount,
-          withdrawableAmount,
-          totalAccumulated
-        })
       }
       
       // 2. 获取最新的收益数据
@@ -99,8 +94,6 @@ export default function ProfilePage() {
             max: profitResponse.data.max_profit
           }
         })
-        
-        console.log('[ProfilePage] Updated profit data:', profitResponse.data)
       }
       
       // 3. 刷新团队数据
@@ -110,7 +103,7 @@ export default function ProfilePage() {
       setForceRefresh(prev => prev + 1)
       
       // 显示成功提示
-      success("Data refreshed successfully")
+      success(t('profile.dataRefreshedSuccessfully'))
       
     } catch (error) {
       console.error('[ProfilePage] Refresh error:', error)
@@ -121,7 +114,7 @@ export default function ProfilePage() {
         teamLoading: false,
       })
     }
-  }, [mounted, user, updateDonation, refreshTeamInfo, success])
+  }, [mounted, user, updateDonation, refreshTeamInfo, success, t])
   
   // 监听用户认证状态变化
   useEffect(() => {
@@ -181,12 +174,6 @@ export default function ProfilePage() {
             totalExpectedReward: totalAccumulated,
             totalMaxReward: Math.round(totalAccumulated * 1.5)
           })
-          
-          console.log('[ProfilePage] Initial withdrawal data loaded:', {
-            withdrawnAmount,
-            withdrawableAmount,
-            totalAccumulated
-          })
         }
       }).catch(err => {
         console.error('[ProfilePage] Error fetching user info:', err);
@@ -234,12 +221,6 @@ export default function ProfilePage() {
           prevData[key as keyof typeof prevData] !== newDisplayData[key as keyof typeof newDisplayData]
         )
         
-        if (hasChanged) {
-          console.log('[ProfilePage] Display data updated:', newDisplayData)
-          console.log('[ProfilePage] Donation data lastUpdated:', donationData?.lastUpdated)
-          console.log('[ProfilePage] Full donationData:', donationData)
-        }
-        
         return hasChanged ? newDisplayData : prevData
       })
     }
@@ -251,7 +232,6 @@ export default function ProfilePage() {
     
     const handleVisibilityChange = () => {
       if (!document.hidden && user) {
-        console.log('[ProfilePage] Page became visible, refreshing data')
         // 延迟一下再刷新，避免太频繁
         setTimeout(() => {
           refreshData()
@@ -270,7 +250,7 @@ export default function ProfilePage() {
   const isDataLoading = loadingStates.userLoading || loadingStates.donationLoading
 
   return (
-    <MainLayout title="Profile" currentPath="/profile">
+    <MainLayout title={t('profile.title')} currentPath="/profile">
       {/* User Profile Card */}
       <Card className="border-[#d4b96e]/20 bg-[#131b29]/80 backdrop-blur-sm mb-6 overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0a3d2b] to-[#d4b96e]"></div>
@@ -283,7 +263,7 @@ export default function ProfilePage() {
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-bold text-[#d4b96e]">
-                  {isDataLoading ? "Loading..." : displayData.username}
+                  {isDataLoading ? t('common.loading') : displayData.username}
                 </h2>
                 <div className="flex items-center gap-2">
                   <Button
@@ -301,13 +281,13 @@ export default function ProfilePage() {
                     onClick={logout}
                     className="border-[#d4b96e] text-[#d4b96e] hover:bg-[#d4b96e] hover:text-[#0a3d2b]"
                   >
-                    Logout
+                    {t('common.logout')}
                   </Button>
                 </div>
               </div>
               <p className="text-xs text-islamic-cream/70 mt-1">{displayData.email}</p>
               <p className="text-sm text-islamic-cream/70 mt-1">
-                VIP {isDataLoading ? "..." : displayData.vipLevel} · {displayData.isVerified ? "Verified" : "Unverified"}
+                {t('profile.vipLevel')} {isDataLoading ? "..." : displayData.vipLevel} · {displayData.isVerified ? t('profile.verified') : t('profile.unverified')}
               </p>
             </div>
           </div>
@@ -315,19 +295,19 @@ export default function ProfilePage() {
           {/* User profile content */}
           <div className="mt-6 grid grid-cols-3 gap-3">
             <div className="bg-[#1a1f2c] p-3 rounded-lg text-center">
-              <p className="text-xs text-islamic-cream/70 mb-1">Total Donations</p>
+              <p className="text-xs text-islamic-cream/70 mb-1">{t('profile.totalDonations')}</p>
               <p className="text-lg font-bold text-[#d4b96e]">
-                {isDataLoading ? "..." : displayData.totalDonation} U
+                {isDataLoading ? "..." : displayData.totalDonation} {t('units.u')}
               </p>
             </div>
             <div className="bg-[#1a1f2c] p-3 rounded-lg text-center">
-              <p className="text-xs text-islamic-cream/70 mb-1">Relief Funds</p>
+              <p className="text-xs text-islamic-cream/70 mb-1">{t('profile.reliefFunds')}</p>
               <p className="text-lg font-bold text-[#8dc63f]">
-                {isDataLoading ? "..." : displayData.reliefFunds} U
+                {isDataLoading ? "..." : displayData.reliefFunds} {t('units.u')}
               </p>
             </div>
             <div className="bg-[#1a1f2c] p-3 rounded-lg text-center">
-              <p className="text-xs text-islamic-cream/70 mb-1">Referrals</p>
+              <p className="text-xs text-islamic-cream/70 mb-1">{t('profile.referrals')}</p>
               <p className="text-lg font-bold text-[#d4b96e]">
                 {isDataLoading ? "..." : displayData.referrals}
               </p>
@@ -341,21 +321,21 @@ export default function ProfilePage() {
         <Card className="border-[#d4b96e]/20 bg-[#131b29]/80 backdrop-blur-sm overflow-hidden mb-4">
           <CardContent className="p-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-base font-medium text-[#d4b96e]">My Donation Overview</h3>
+              <h3 className="text-base font-medium text-[#d4b96e]">{t('profile.myDonationOverview')}</h3>
               <ArrowRight className="h-4 w-4 text-islamic-cream/70" />
             </div>
             <div className="mt-3 grid grid-cols-2 gap-4">
               <div>
-                <p className="text-xs text-islamic-cream/70">Total Donation Amount</p>
-                <p className="text-lg font-bold text-[#d4b96e]">{displayData.totalDonation} U</p>
-                <p className="text-xs text-islamic-cream/70 mt-1">VIP Level {displayData.vipLevel}</p>
+                <p className="text-xs text-islamic-cream/70">{t('donation.totalDonationAmount')}</p>
+                <p className="text-lg font-bold text-[#d4b96e]">{displayData.totalDonation} {t('units.u')}</p>
+                <p className="text-xs text-islamic-cream/70 mt-1">{t('profile.vipLevel')} {displayData.vipLevel}</p>
               </div>
               <div>
-                <p className="text-xs text-islamic-cream/70">Daily Relief Funds</p>
+                <p className="text-xs text-islamic-cream/70">{t('donation.dailyReliefFunds')}</p>
                 <p className="text-lg font-bold text-[#8dc63f]">
-                  {donationData?.dailyFunds?.current || 0}-{donationData?.dailyFunds?.max || 0} U
+                  {donationData?.dailyFunds?.current || 0}-{donationData?.dailyFunds?.max || 0} {t('units.u')}
                 </p>
-                <p className="text-xs text-islamic-cream/70 mt-1">{displayData.referrals} referrals</p>
+                <p className="text-xs text-islamic-cream/70 mt-1">{displayData.referrals} {t('profile.referrals')}</p>
               </div>
             </div>
           </CardContent>
@@ -366,19 +346,19 @@ export default function ProfilePage() {
       <div className="space-y-4">
         <Card className="border-[#d4b96e]/20 bg-[#131b29]/80 backdrop-blur-sm overflow-hidden">
           <CardContent className="p-4">
-            <h3 className="text-base font-medium text-[#d4b96e] mb-3">My Team</h3>
+            <h3 className="text-base font-medium text-[#d4b96e] mb-3">{t('profile.myTeam')}</h3>
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <span className="text-sm">Direct Referrals</span>
-                <span className="text-sm font-medium">{teamData.directReferrals || 0} people</span>
+                <span className="text-sm">{t('profile.directReferrals')}</span>
+                <span className="text-sm font-medium">{teamData.directReferrals || 0} {t('profile.people')}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm">Total Team Size</span>
-                <span className="text-sm font-medium">{teamData.totalReferrals || 0} people</span>
+                <span className="text-sm">{t('profile.totalTeamSize')}</span>
+                <span className="text-sm font-medium">{teamData.totalReferrals || 0} {t('profile.people')}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm">Team Total Donations</span>
-                <span className="text-sm font-medium">{teamData.totalRewards || 0} U</span>
+                <span className="text-sm">{t('profile.teamTotalDonations')}</span>
+                <span className="text-sm font-medium">{teamData.totalRewards || 0} {t('units.u')}</span>
               </div>
             </div>
           </CardContent>
@@ -387,7 +367,7 @@ export default function ProfilePage() {
         <Card className="border-[#d4b96e]/20 bg-[#131b29]/80 backdrop-blur-sm overflow-hidden">
           <CardContent className="p-4">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-base font-medium text-[#d4b96e]">My Earnings</h3>
+              <h3 className="text-base font-medium text-[#d4b96e]">{t('profile.myEarnings')}</h3>
               <Button
                 variant="outline"
                 size="sm"
@@ -395,25 +375,25 @@ export default function ProfilePage() {
                 onClick={() => setWithdrawOpen(true)}
               >
                 <Wallet className="h-4 w-4 mr-2" />
-                Withdraw
+                {t('withdraw.title')}
               </Button>
             </div>
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <span className="text-sm">Today's Relief Funds</span>
-                <span className="text-sm font-medium text-[#8dc63f]">{donationData?.dailyFunds?.current || 0} U</span>
+                <span className="text-sm">{t('profile.todayReliefFunds')}</span>
+                <span className="text-sm font-medium text-[#8dc63f]">{donationData?.dailyFunds?.current || 0} {t('units.u')}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm">Accumulated Relief Funds</span>
-                <span className="text-sm font-medium text-[#8dc63f]">{displayData.reliefFunds} U</span>
+                <span className="text-sm">{t('profile.accumulatedReliefFunds')}</span>
+                <span className="text-sm font-medium text-[#8dc63f]">{displayData.reliefFunds} {t('units.u')}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm">Team Rewards</span>
-                <span className="text-sm font-medium text-[#8dc63f]">{teamData.totalRewards || 0} U</span>
+                <span className="text-sm">{t('profile.teamRewards')}</span>
+                <span className="text-sm font-medium text-[#8dc63f]">{teamData.totalRewards || 0} {t('units.u')}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm">Available to Withdraw</span>
-                <span className="text-sm font-medium text-[#8dc63f]">{displayData.withdrawable} U</span>
+                <span className="text-sm">{t('profile.availableToWithdraw')}</span>
+                <span className="text-sm font-medium text-[#8dc63f]">{displayData.withdrawable} {t('units.u')}</span>
               </div>
             </div>
           </CardContent>

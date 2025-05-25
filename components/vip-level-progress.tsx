@@ -5,6 +5,7 @@ import { Crown, Info } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useVipInfo } from "@/store/use-vip-info"
+import { useTranslation } from "@/lib/i18n"
 
 interface VipLevelProgressProps {
   currentLevel: number
@@ -17,6 +18,7 @@ interface VipLevelProgressProps {
 function VipLevelProgressImpl({ currentLevel, currentDonation, onUpgrade, className }: VipLevelProgressProps) {
   // 始终在顶层调用hook
   const { getVipLevelDonationAmount } = useVipInfo();
+  const { t } = useTranslation();
   
   // 引用
   const renderCountRef = useRef(0);
@@ -112,20 +114,20 @@ function VipLevelProgressImpl({ currentLevel, currentDonation, onUpgrade, classN
       `}</style>
       
       <div className="flex justify-between mb-2">
-        <span className="text-sm text-islamic-cream/80">Current VIP{currentLevel}</span>
+        <span className="text-sm text-islamic-cream/80">{t('donation.currentVip').replace('{level}', currentLevel.toString())}</span>
         {nextLevel && nextLevelAmount && (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="flex items-center text-sm text-islamic-cream/80 cursor-help">
                   <span>
-                    {nextLevelAmount}U to VIP{nextLevel}
+                    {t('donation.toVip').replace('{amount}', nextLevelAmount.toString()).replace('{level}', nextLevel.toString())}
                   </span>
                   <Info className="ml-1 h-3 w-3 text-islamic-cream/60" />
                 </div>
               </TooltipTrigger>
               <TooltipContent className="bg-islamic-medium border-islamic-gold/30 text-islamic-cream">
-                <p className="text-xs">Full amount required for VIP{nextLevel}, not just the difference</p>
+                <p className="text-xs">{t('donation.fullAmountRequired').replace('{level}', nextLevel.toString())}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

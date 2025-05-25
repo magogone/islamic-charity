@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import { useAuth } from "@/store/use-auth"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useTranslation } from "@/lib/i18n"
 import Link from "next/link"
 import { BarkatLogo } from "@/components/barkat-logo"
 import { useToast } from "@/components/ui/toast"
@@ -19,6 +20,7 @@ export default function RegisterForm() {
   const [inviteCode, setInviteCode] = useState("")
   const { register, isLoading } = useAuth()
   const { error: showError, success, ToastContainer } = useToast()
+  const { t } = useTranslation()
 
   // Get invite code from URL on component mount
   useEffect(() => {
@@ -37,7 +39,7 @@ export default function RegisterForm() {
     
     // Check if passwords match before making API call
     if (password !== repeatPassword) {
-      showError("Passwords do not match")
+      showError(t('auth.passwordsDoNotMatch'))
       return
     }
     
@@ -49,7 +51,7 @@ export default function RegisterForm() {
         confirmPassword: repeatPassword, // Map repeatPassword to confirmPassword for the auth store
         inviteCode // Include invite code with registration
       })
-      success("Registration successful! You can now log in.")
+      success(t('auth.registrationSuccessful'))
     } catch (err) {
       // Error is already handled by global error handler
       console.error(err)
@@ -60,16 +62,16 @@ export default function RegisterForm() {
     <div className="w-full max-w-md space-y-8">
       <div className="flex flex-col items-center justify-center text-center">
         <BarkatLogo className="h-16 w-16" />
-        <h1 className="mt-6 text-3xl font-bold tracking-tight text-white">Create a new account</h1>
+        <h1 className="mt-6 text-3xl font-bold tracking-tight text-white">{t('auth.createNewAccount')}</h1>
         <p className="mt-2 text-sm text-gray-400">
-          Or{" "}
+          {t('auth.or')}{" "}
           <Link href="/login" className="font-medium text-amber-500 hover:text-amber-400">
-            sign in to your account
+            {t('auth.signInToYourAccount')}
           </Link>
         </p>
         {inviteCode && (
           <div className="mt-4 text-sm text-amber-500 bg-amber-500/10 px-4 py-2 rounded-md">
-            You've been invited! Your invite code has been automatically applied.
+            {t('auth.inviteCodeApplied')}
           </div>
         )}
       </div>
@@ -77,7 +79,7 @@ export default function RegisterForm() {
       <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
         <div className="space-y-4 rounded-md">
           <div>
-            <Label htmlFor="email">Email address</Label>
+            <Label htmlFor="email">{t('auth.emailAddress')}</Label>
             <Input
               id="email"
               name="email"
@@ -87,12 +89,12 @@ export default function RegisterForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1"
-              placeholder="Enter your email"
+              placeholder={t('auth.enterEmail')}
             />
           </div>
 
           <div>
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">{t('auth.name')}</Label>
             <Input
               id="name"
               name="name"
@@ -102,12 +104,12 @@ export default function RegisterForm() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="mt-1"
-              placeholder="Enter your name"
+              placeholder={t('auth.enterName')}
             />
           </div>
 
           <div>
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t('auth.password')}</Label>
             <Input
               id="password"
               name="password"
@@ -117,12 +119,12 @@ export default function RegisterForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1"
-              placeholder="Create a password"
+              placeholder={t('auth.createPassword')}
             />
           </div>
 
           <div>
-            <Label htmlFor="repeatPassword">Confirm Password</Label>
+            <Label htmlFor="repeatPassword">{t('auth.confirmPassword')}</Label>
             <Input
               id="repeatPassword"
               name="repeatPassword"
@@ -132,14 +134,14 @@ export default function RegisterForm() {
               value={repeatPassword}
               onChange={(e) => setRepeatPassword(e.target.value)}
               className="mt-1"
-              placeholder="Confirm your password"
+              placeholder={t('auth.confirmNewPassword')}
             />
           </div>
 
           {/* Invitation Code Field - Visible but Read-only */}
           {inviteCode && (
             <div>
-              <Label htmlFor="inviteCode">Invitation Code</Label>
+              <Label htmlFor="inviteCode">{t('auth.invitationCode')}</Label>
               <Input
                 id="inviteCode"
                 name="inviteCode"
@@ -149,7 +151,7 @@ export default function RegisterForm() {
                 className="mt-1 bg-amber-500/5 border-amber-500/30 text-amber-500"
               />
               <p className="mt-1 text-xs text-amber-500/70">
-                This invitation code was automatically applied
+                {t('auth.inviteCodeAutoApplied')}
               </p>
             </div>
           )}
@@ -161,7 +163,7 @@ export default function RegisterForm() {
             disabled={isLoading}
             className="flex w-full justify-center rounded-md border border-amber-500 bg-amber-500/10 px-4 py-2 text-sm font-medium text-amber-500 hover:bg-amber-500/20 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50"
           >
-            {isLoading ? "Creating account..." : "Create account"}
+            {isLoading ? t('auth.creatingAccount') : t('auth.createAccount')}
           </button>
         </div>
       </form>

@@ -7,6 +7,7 @@ import { FallbackImage } from "./fallback-image"
 import { PaymentDialog } from "./payment-dialog"
 import { useAuth } from "@/store/use-auth"
 import { useAuthContext } from "@/store/auth-context"
+import { useTranslation } from "@/lib/i18n"
 
 interface HeroSectionProps {
   title?: string
@@ -16,15 +17,21 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({
-  title = "Barkat Alliance Foundation",
-  description = "Innovative Charity Model: Divine Mission",
-  buttonText = "Donate Now",
+  title,
+  description,
+  buttonText,
   onButtonClick,
 }: HeroSectionProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [paymentOpen, setPaymentOpen] = useState(false)
   const { isAuthenticated } = useAuth()
   const { openLoginModal } = useAuthContext()
+  const { t } = useTranslation()
+
+  // 使用翻译作为默认值
+  const displayTitle = title || t('hero.title')
+  const displayDescription = description || t('hero.description')
+  const displayButtonText = buttonText || t('hero.donateButton')
 
   // 使用可靠的备用图片，避免404错误
   const primaryImage = "https://images.pexels.com/photos/6508083/pexels-photo-6508083.jpeg?auto=compress&cs=tinysrgb&w=1200"
@@ -67,15 +74,15 @@ export function HeroSection({
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 pt-6 text-center max-w-lg mx-auto w-full">
-        <h1 className="mb-4 text-4xl font-serif font-light tracking-wide text-white">{title}</h1>
+        <h1 className="mb-4 text-4xl font-serif font-light tracking-wide text-white">{displayTitle}</h1>
 
-        <p className="max-w-md mb-6 text-base text-islamic-cream/90">{description}</p>
+        <p className="max-w-md mb-6 text-base text-islamic-cream/90">{displayDescription}</p>
 
         <Button
           className="px-6 py-5 text-base bg-islamic-gold hover:bg-islamic-gold/90 text-islamic-dark"
           onClick={handleDonateClick}
         >
-          {buttonText}
+          {displayButtonText}
           <Heart className="w-4 h-4 ml-2" />
         </Button>
       </div>

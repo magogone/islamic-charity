@@ -2,6 +2,7 @@
 
 import { Calendar } from "lucide-react"
 import { useState } from "react"
+import { useTranslation } from "@/lib/i18n"
 
 interface RewardDetailCardProps {
   startDate: string
@@ -17,6 +18,7 @@ interface RewardDetailCardProps {
 }
 
 export function RewardDetailCard({ startDate, endDate, completionPercentage, dailyRewards }: RewardDetailCardProps) {
+  const { t } = useTranslation()
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
 
   // 找到选中日期的奖励数据
@@ -39,6 +41,20 @@ export function RewardDetailCard({ startDate, endDate, completionPercentage, dai
     }
   }
 
+  // 获取状态的翻译文本
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "Distributed":
+        return t('rewardDetail.distributed')
+      case "Pending":
+        return t('rewardDetail.pending')
+      case "Potential":
+        return t('rewardDetail.potential')
+      default:
+        return status
+    }
+  }
+
   // 准备图表数据
   const chartData = dailyRewards.map((reward) => {
     const barColor = reward.status === "Distributed" ? "#8dc63f" : reward.status === "Pending" ? "#d4b96e" : "#555555"
@@ -56,29 +72,29 @@ export function RewardDetailCard({ startDate, endDate, completionPercentage, dai
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Calendar className="h-5 w-5 text-islamic-gold" />
-          <h3 className="text-lg font-semibold text-islamic-gold">奖励详情</h3>
+          <h3 className="text-lg font-semibold text-islamic-gold">{t('rewardDetail.rewardDetails')}</h3>
         </div>
         <div className="text-xl font-bold">{completionPercentage}%</div>
       </div>
 
       <div className="flex justify-between text-xs text-islamic-cream/70 mb-2">
-        <div>开始: {startDate}</div>
-        <div>结束: {endDate}</div>
+        <div>{t('rewardDetail.start')}: {startDate}</div>
+        <div>{t('rewardDetail.end')}: {endDate}</div>
       </div>
 
       <div className="flex items-center mb-2">
         <div className="flex gap-4 text-xs">
           <div className="flex items-center">
             <div className="w-3 h-3 mr-1 bg-[#8dc63f] rounded-sm"></div>
-            <span>Distributed</span>
+            <span>{t('rewardDetail.distributed')}</span>
           </div>
           <div className="flex items-center">
             <div className="w-3 h-3 mr-1 bg-[#d4b96e] rounded-sm"></div>
-            <span>Pending</span>
+            <span>{t('rewardDetail.pending')}</span>
           </div>
           <div className="flex items-center">
             <div className="w-3 h-3 mr-1 bg-[#555555] rounded-sm"></div>
-            <span>Potential</span>
+            <span>{t('rewardDetail.potential')}</span>
           </div>
         </div>
       </div>
@@ -105,7 +121,7 @@ export function RewardDetailCard({ startDate, endDate, completionPercentage, dai
         {selectedReward && (
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-islamic-medium/95 backdrop-blur-sm p-4 rounded-lg border border-islamic-gold/30 w-[80%] max-w-[300px] z-10">
             <div className="flex justify-between items-center mb-2">
-              <h4 className="text-lg font-bold text-islamic-gold">{selectedReward.date} 奖励详情</h4>
+              <h4 className="text-lg font-bold text-islamic-gold">{selectedReward.date} {t('rewardDetail.rewardDetails')}</h4>
               <button className="text-islamic-cream/70 hover:text-islamic-cream" onClick={() => setSelectedDay(null)}>
                 ✕
               </button>
@@ -113,28 +129,28 @@ export function RewardDetailCard({ startDate, endDate, completionPercentage, dai
 
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-islamic-cream/80">实际奖励:</span>
+                <span className="text-islamic-cream/80">{t('rewardDetail.actualReward')}:</span>
                 <span className="font-medium text-islamic-gold">{selectedReward.actualReward.toFixed(1)} USDT</span>
               </div>
 
               <div className="flex justify-between">
-                <span className="text-islamic-cream/80">最大奖励:</span>
+                <span className="text-islamic-cream/80">{t('rewardDetail.maxReward')}:</span>
                 <span className="font-medium text-islamic-gold">{selectedReward.maxReward.toFixed(1)} USDT</span>
               </div>
 
               <div className="flex justify-between">
-                <span className="text-islamic-cream/80">完成率:</span>
+                <span className="text-islamic-cream/80">{t('rewardDetail.completionRate')}:</span>
                 <span className="font-medium text-islamic-gold">{selectedReward.completionRate}%</span>
               </div>
 
               <div className="flex justify-between">
-                <span className="text-islamic-cream/80">差额:</span>
+                <span className="text-islamic-cream/80">{t('rewardDetail.difference')}:</span>
                 <span className="font-medium text-islamic-gold">{difference} USDT</span>
               </div>
 
               <div className="flex justify-between">
-                <span className="text-islamic-cream/80">状态:</span>
-                <span className={`font-medium ${getStatusColor(selectedReward.status)}`}>{selectedReward.status}</span>
+                <span className="text-islamic-cream/80">{t('rewardDetail.status')}:</span>
+                <span className={`font-medium ${getStatusColor(selectedReward.status)}`}>{getStatusText(selectedReward.status)}</span>
               </div>
             </div>
           </div>

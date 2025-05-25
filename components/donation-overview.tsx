@@ -25,6 +25,7 @@ import { useVipInfo } from "@/store/use-vip-info"
 import { useAuth } from "@/store/use-auth"
 import { useAuthContext } from "@/store/auth-context"
 import { useDailyRewardRates } from "@/hooks/use-daily-reward-rates"
+import { useTranslation } from "@/lib/i18n"
 import { useRouter } from "next/navigation"
 
 export interface DonationOverviewProps {
@@ -90,6 +91,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
   const { openLoginModal } = useAuthContext()
   const { getCurrentRate, rateConfigs, loading: ratesLoading } = useDailyRewardRates()
   const [mounted, setMounted] = useState(false)
+  const { t } = useTranslation()
   const router = useRouter()
   
   // Handle client-side mounting
@@ -163,7 +165,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
       >
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-islamic-gold to-islamic-gold/50"></div>
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center text-xl text-islamic-gold">My Donation Overview</CardTitle>
+          <CardTitle className="flex items-center text-xl text-islamic-gold">{t('donation.myDonationOverview')}</CardTitle>
         </CardHeader>
         <CardContent className="pb-2">
           {/* Donation amount and earnings cards */}
@@ -172,7 +174,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center">
                   <Heart className="h-4 w-4 text-islamic-gold mr-2" />
-                  <span className="text-xs text-islamic-cream/70">Total</span>
+                  <span className="text-xs text-islamic-cream/70">{t('donation.total')}</span>
                 </div>
                 <button
                   onClick={() => setPaymentOpen(true)}
@@ -195,7 +197,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
             <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3 flex flex-col h-full">
               <div className="flex items-center mb-3">
                 <TrendingUp className="h-4 w-4 text-islamic-gold mr-2" />
-                <span className="text-sm text-islamic-gold">Rewards</span>
+                <span className="text-sm text-islamic-gold">{t('donation.rewards')}</span>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -205,7 +207,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                   <div className="text-2xl font-bold text-islamic-gold/95">{safeData.dailyFunds.current}</div>
                   <div className="ml-3 flex flex-col">
                     <span className="text-xs text-islamic-gold/90">USDT</span>
-                    <span className="text-[10px] text-islamic-cream/60">Current</span>
+                    <span className="text-[10px] text-islamic-cream/60">{t('donation.current')}</span>
                   </div>
                 </div>
 
@@ -215,7 +217,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                   <div className="text-2xl font-bold text-islamic-gold/95">{safeData.dailyFunds.max}</div>
                   <div className="ml-3 flex flex-col">
                     <span className="text-xs text-islamic-gold/90">USDT</span>
-                    <span className="text-[10px] text-islamic-cream/60">Maximum</span>
+                    <span className="text-[10px] text-islamic-cream/60">{t('donation.maximum')}</span>
                   </div>
                 </div>
 
@@ -224,7 +226,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                   <Percent className="h-5 w-5 text-islamic-gold/90 mr-3" />
                   <div className="text-2xl font-bold text-islamic-gold/95">{safeData.currentRate}%</div>
                   <div className="ml-3 flex flex-col">
-                    <span className="text-[10px] text-islamic-cream/60">Current</span>
+                    <span className="text-[10px] text-islamic-cream/60">{t('donation.current')}</span>
                   </div>
                 </div>
 
@@ -233,14 +235,14 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                   <BarChart className="h-5 w-5 text-islamic-gold/90 mr-3" />
                   <div className="text-2xl font-bold text-islamic-gold/95">{safeData.maxRate}%</div>
                   <div className="ml-3 flex flex-col">
-                    <span className="text-[10px] text-islamic-cream/60">Max</span>
+                    <span className="text-[10px] text-islamic-cream/60">{t('donation.max')}</span>
                   </div>
                 </div>
               </div>
 
               <div className="flex items-center mt-3 justify-end">
                 <Users2 className="h-3.5 w-3.5 text-islamic-cream/70 mr-1.5" />
-                <span className="text-xs text-islamic-cream/70">Referred {safeData.referrals} people</span>
+                <span className="text-xs text-islamic-cream/70">{t('donation.referred')} {safeData.referrals} {t('profile.people')}</span>
                 <button
                   onClick={() => setReferralInfoOpen(true)}
                   className="ml-1 p-0.5 rounded-full hover:bg-islamic-medium/50 transition-colors"
@@ -256,7 +258,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <span className="text-islamic-gold text-2xl mr-2">$</span>
-                <h3 className="text-sm font-medium text-islamic-gold">Earnings Summary</h3>
+                <h3 className="text-sm font-medium text-islamic-gold">{t('donation.earningSummary')}</h3>
               </div>
 
               <TooltipProvider>
@@ -275,7 +277,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Withdraw Earnings</p>
+                    <p>{t('donation.withdrawEarnings')}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -301,7 +303,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
                 <Heart className="mr-1 h-4 w-4" />
                 <PlusCircle className="h-3 w-3 -ml-2 -mt-2" />
               </div>
-              Increase Donation
+              {t('donation.increaseDonation')}
             </Button>
           </CardFooter>
         )}

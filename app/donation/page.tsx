@@ -7,6 +7,7 @@ import { MainLayout } from "@/components/main-layout"
 import { useDonation } from "@/store/use-donation"
 import { useUser } from "@/store/use-user"
 import { useVipInfo } from "@/store/use-vip-info"
+import { useTranslation } from "@/lib/i18n"
 import { useEffect, useState, useRef } from "react"
 import { PaymentDialog } from "@/components/payment-dialog"
 import { useAuth } from "@/store/use-auth"
@@ -73,6 +74,7 @@ export default function DonationPage() {
   const { getVipLevelDonationAmount } = useVipInfo()
   const { isAuthenticated, user, getCurrentUser } = useAuth()
   const { openLoginModal } = useAuthContext()
+  const { t } = useTranslation()
   const isMounted = useIsMounted()
   
   // 使用ref跟踪数据获取状态
@@ -260,7 +262,7 @@ export default function DonationPage() {
   }, []);
 
   return (
-    <MainLayout title="Donate" currentPath="/donation">
+    <MainLayout title={t('donation.title')} currentPath="/donation">
       <div ref={contentRef}>
       <DonationOverview data={{
         ...donationData,
@@ -279,45 +281,44 @@ export default function DonationPage() {
           {/* 添加额外的内容以确保可以滚动 */}
           <div className="space-y-6 mt-8">
             <div className="p-5 bg-islamic-medium/20 rounded-lg border border-islamic-gold/20">
-              <h3 className="text-lg font-medium text-islamic-gold mb-2">Impact of Your Donations</h3>
+              <h3 className="text-lg font-medium text-islamic-gold mb-2">{t('donation.impactOfDonations')}</h3>
               <p className="text-islamic-cream/80 text-sm mb-3">
-                Every contribution you make helps create a better world for those in need. 
-                Your generosity directly impacts communities around the world.
+                {t('donation.impactDescription')}
               </p>
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <p className="text-xl font-bold text-islamic-gold">100+</p>
-                  <p className="text-xs text-islamic-cream/60">Projects</p>
+                  <p className="text-xs text-islamic-cream/60">{t('donation.projects')}</p>
                 </div>
                 <div>
                   <p className="text-xl font-bold text-islamic-gold">10K+</p>
-                  <p className="text-xs text-islamic-cream/60">Beneficiaries</p>
+                  <p className="text-xs text-islamic-cream/60">{t('donation.beneficiaries')}</p>
                 </div>
                 <div>
                   <p className="text-xl font-bold text-islamic-gold">25+</p>
-                  <p className="text-xs text-islamic-cream/60">Countries</p>
+                  <p className="text-xs text-islamic-cream/60">{t('donation.countries')}</p>
                 </div>
               </div>
             </div>
             
             <div className="p-5 bg-islamic-medium/20 rounded-lg border border-islamic-gold/20">
-              <h3 className="text-lg font-medium text-islamic-gold mb-2">How Your Donation Works</h3>
+              <h3 className="text-lg font-medium text-islamic-gold mb-2">{t('donation.howDonationWorks')}</h3>
               <ul className="space-y-2 text-sm text-islamic-cream/80">
                 <li className="flex items-start">
                   <span className="inline-block w-5 h-5 rounded-full bg-islamic-gold/20 text-islamic-gold text-center mr-2 flex-shrink-0">1</span>
-                  <span>You donate through our secure platform</span>
+                  <span>{t('donation.step1')}</span>
                 </li>
                 <li className="flex items-start">
                   <span className="inline-block w-5 h-5 rounded-full bg-islamic-gold/20 text-islamic-gold text-center mr-2 flex-shrink-0">2</span>
-                  <span>Your contribution is distributed to community projects</span>
+                  <span>{t('donation.step2')}</span>
                 </li>
                 <li className="flex items-start">
                   <span className="inline-block w-5 h-5 rounded-full bg-islamic-gold/20 text-islamic-gold text-center mr-2 flex-shrink-0">3</span>
-                  <span>You receive regular updates on project impact</span>
+                  <span>{t('donation.step3')}</span>
                 </li>
                 <li className="flex items-start">
                   <span className="inline-block w-5 h-5 rounded-full bg-islamic-gold/20 text-islamic-gold text-center mr-2 flex-shrink-0">4</span>
-                  <span>Your VIP status grows along with your contributions</span>
+                  <span>{t('donation.step4')}</span>
                 </li>
               </ul>
             </div>
@@ -326,7 +327,7 @@ export default function DonationPage() {
         
         {/* 添加版权信息，减少底部留白 */}
         <div className="h-12 flex items-end justify-center pb-4 mt-4 text-islamic-cream/40 text-xs">
-          © 2023 Barkat Alliance Foundation. All rights reserved.
+          {t('donation.copyright')}
         </div>
       </div>
 

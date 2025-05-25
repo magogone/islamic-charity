@@ -3,6 +3,7 @@ import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { NewsAnnouncementItem, type NewsAnnouncementItemProps } from "./news-announcement-item"
+import { useTranslation } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
 interface NewsSectionProps {
@@ -12,6 +13,7 @@ interface NewsSectionProps {
 
 export function NewsSection({ news, className }: NewsSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const { t } = useTranslation()
 
   const goToNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % news.length)
@@ -24,8 +26,8 @@ export function NewsSection({ news, className }: NewsSectionProps) {
   return (
     <div className={cn("w-full my-6", className)}>
       <div className="mb-4">
-        <h2 className="text-xl font-bold text-islamic-gold">News</h2>
-        <p className="text-sm text-islamic-cream/70">Learn about the latest information</p>
+        <h2 className="text-xl font-bold text-islamic-gold">{t('news.title')}</h2>
+        <p className="text-sm text-islamic-cream/70">{t('news.subtitle')}</p>
       </div>
 
       <div className="relative">
@@ -53,7 +55,7 @@ export function NewsSection({ news, className }: NewsSectionProps) {
           onClick={goToPrevious}
         >
           <ChevronLeft className="h-4 w-4" />
-          <span className="sr-only">Previous</span>
+          <span className="sr-only">{t('news.previous')}</span>
         </Button>
 
         <Button
@@ -63,7 +65,7 @@ export function NewsSection({ news, className }: NewsSectionProps) {
           onClick={goToNext}
         >
           <ChevronRight className="h-4 w-4" />
-          <span className="sr-only">Next</span>
+          <span className="sr-only">{t('news.next')}</span>
         </Button>
 
         {/* Pagination indicators */}
@@ -75,7 +77,7 @@ export function NewsSection({ news, className }: NewsSectionProps) {
                 index === currentIndex ? "bg-islamic-gold w-4" : "bg-islamic-cream/30"
               }`}
               onClick={() => setCurrentIndex(index)}
-              aria-label={`Go to slide ${index + 1}`}
+              aria-label={t('news.goToSlide').replace('{number}', (index + 1).toString())}
             />
           ))}
         </div>

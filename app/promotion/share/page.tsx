@@ -13,8 +13,10 @@ import { useDailyRewardRates } from "@/hooks/use-daily-reward-rates"
 import { generateInviteCode } from "@/lib/api"
 import { ENV } from "@/lib/env-config"
 import { useAuth } from "@/store/use-auth"
+import { useTranslation } from "@/lib/i18n"
 
 export default function SharePage() {
+  const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
   const [activeTab, setActiveTab] = useState("qrcode")
   const { userData } = useUser()
@@ -34,7 +36,7 @@ export default function SharePage() {
   // Fetch invite code when component mounts
   useEffect(() => {
     async function fetchInviteCode() {
-      if (!isAuthenticated || !mounted) return
+      if (!isAuthenticated || !mounted || inviteCode) return // Don't fetch if we already have a code
 
       try {
         setLoading(true)
@@ -45,18 +47,18 @@ export default function SharePage() {
         if (response.success && response.data) {
           setInviteCode(response.data.invite_code)
         } else {
-          setError("Could not generate invite code. Please try again later.")
+          setError(t('share.couldNotGenerateCode'))
         }
       } catch (err) {
         console.error("Error generating invite code:", err)
-        setError("An error occurred while generating your invite code.")
+        setError(t('share.errorGeneratingCode'))
       } finally {
         setLoading(false)
       }
     }
 
     fetchInviteCode()
-  }, [isAuthenticated, mounted])
+  }, [isAuthenticated, mounted, inviteCode]) // Removed 't' from dependencies
 
   const siteUrl = ENV.SITE_URL;
   
@@ -76,8 +78,8 @@ export default function SharePage() {
     
     if (navigator.share) {
       navigator.share({
-        title: "Invitation to Join Barkat Alliance Foundation",
-        text: "Join Barkat Alliance Foundation, participate in Islamic charity, and receive poverty relief fund support!",
+        title: t('share.invitationToJoin'),
+        text: t('share.joinDescription'),
         url: inviteLink,
       })
     } else {
@@ -108,7 +110,7 @@ export default function SharePage() {
                 <path d="m15 18-6-6 6-6" />
               </svg>
             </button>
-            <h1 className="text-xl font-bold text-[#d4b96e]">Invite Friends</h1>
+            <h1 className="text-xl font-bold text-[#d4b96e]">{t('share.inviteFriends')}</h1>
           </div>
         </div>
       </div>
@@ -117,16 +119,15 @@ export default function SharePage() {
       <div className="max-w-lg mx-auto px-4 py-6">
         <Card className="overflow-hidden border-none shadow-xl bg-islamic-cardBg/90 backdrop-blur-lg text-white mb-6">
           <div className="p-6">
-            <h2 className="text-xl font-bold text-center text-[#8dc63f] mb-4">Share Your Invitation Link</h2>
+            <h2 className="text-xl font-bold text-center text-[#8dc63f] mb-4">{t('share.shareYourInvitationLink')}</h2>
             <p className="text-center text-islamic-cream/80 mb-6">
-              Invite friends to join Barkat Alliance Foundation, participate together in Islamic charity, and you'll
-              receive generous referral rewards!
+              {t('share.inviteDescription')}
             </p>
 
             {loading ? (
               <div className="flex flex-col items-center justify-center py-8">
                 <Loader2 className="h-8 w-8 text-islamic-gold animate-spin mb-4" />
-                <p className="text-islamic-cream/80">Generating your invitation link...</p>
+                <p className="text-islamic-cream/80">{t('share.generatingInvitationLink')}</p>
               </div>
             ) : error ? (
               <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4 text-center">
@@ -135,7 +136,7 @@ export default function SharePage() {
                   onClick={() => window.location.reload()} 
                   className="bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c] mt-2"
                 >
-                  Retry
+                  {t('share.retry')}
                 </Button>
               </div>
             ) : (
@@ -146,63 +147,90 @@ export default function SharePage() {
                     className="data-[state=active]:bg-[#8dc63f] data-[state=active]:text-[#1a0d2c]"
                   >
                     <QrCode className="w-4 h-4 mr-2" />
-                    QR Code
+                    {t('share.qrCode')}
                   </TabsTrigger>
                   <TabsTrigger
                     value="link"
                     className="data-[state=active]:bg-[#8dc63f] data-[state=active]:text-[#1a0d2c]"
                   >
                     <LinkIcon className="w-4 h-4 mr-2" />
-                    Invitation Link
+                    {t('share.invitationLink')}
                   </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="qrcode" className="mt-6">
                   <div className="flex flex-col items-center">
-                    <div className="bg-white p-4 rounded-lg mb-4">
-                      <Image
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(inviteLink)}`}
-                        alt="Invitation QR Code"
-                        width={200}
-                        height={200}
-                        className="rounded-md"
-                      />
-                    </div>
-                    <p className="text-sm text-islamic-cream/70 mb-4 text-center">
-                      Scan the QR code above to join Barkat Foundation
-                    </p>
-                    <Button onClick={handleShare} className="bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c] w-full">
-                      <Share className="w-4 h-4 mr-2" />
-                      Share QR Code
-                    </Button>
+                    {inviteLink ? (
+                      <>
+                        <div className="bg-white p-4 rounded-lg mb-4">
+                          <Image
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(inviteLink)}`}
+                            alt="Invitation QR Code"
+                            width={200}
+                            height={200}
+                            className="rounded-md"
+                            onError={(e) => {
+                              console.error('QR Code failed to load:', e)
+                            }}
+                          />
+                        </div>
+                        <p className="text-sm text-islamic-cream/70 mb-4 text-center">
+                          {t('share.scanQrCode')}
+                        </p>
+                        <Button onClick={handleShare} className="bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c] w-full">
+                          <Share className="w-4 h-4 mr-2" />
+                          {t('share.shareQrCode')}
+                        </Button>
+                      </>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-8">
+                        <div className="w-[200px] h-[200px] bg-islamic-medium/30 rounded-lg flex items-center justify-center mb-4">
+                          <QrCode className="h-16 w-16 text-islamic-cream/30" />
+                        </div>
+                        <p className="text-sm text-islamic-cream/70 text-center">
+                          {t('share.generatingInvitationLink')}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </TabsContent>
 
                 <TabsContent value="link" className="mt-6">
                   <div className="flex flex-col">
-                    <div className="flex items-center bg-islamic-medium/30 rounded-lg p-3 mb-4">
-                      <input
-                        type="text"
-                        value={inviteLink}
-                        readOnly
-                        className="flex-1 bg-transparent border-none outline-none text-islamic-cream"
-                      />
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={handleCopy}
-                        className="text-[#8dc63f] hover:text-[#8dc63f]/80 hover:bg-transparent"
-                      >
-                        {copied ? <Check className="h-5 w-5" /> : <Copy className="h-5 w-5" />}
-                      </Button>
-                    </div>
-                    <p className="text-sm text-islamic-cream/70 mb-4 text-center">
-                      Copy the link above and share it with your friends
-                    </p>
-                    <Button onClick={handleShare} className="bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c]">
-                      <Share className="w-4 h-4 mr-2" />
-                      Share Invitation Link
-                    </Button>
+                    {inviteLink ? (
+                      <>
+                        <div className="flex items-center bg-islamic-medium/30 rounded-lg p-3 mb-4">
+                          <input
+                            type="text"
+                            value={inviteLink}
+                            readOnly
+                            className="flex-1 bg-transparent border-none outline-none text-islamic-cream"
+                          />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleCopy}
+                            className="text-[#8dc63f] hover:text-[#8dc63f]/80 hover:bg-transparent"
+                          >
+                            {copied ? <Check className="h-5 w-5" /> : <Copy className="h-5 w-5" />}
+                          </Button>
+                        </div>
+                        <p className="text-sm text-islamic-cream/70 mb-4 text-center">
+                          {t('share.copyLinkAndShare')}
+                        </p>
+                        <Button onClick={handleShare} className="bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c]">
+                          <Share className="w-4 h-4 mr-2" />
+                          {t('share.shareInvitationLink')}
+                        </Button>
+                      </>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-8">
+                        <div className="w-full h-12 bg-islamic-medium/30 rounded-lg flex items-center justify-center mb-4">
+                          <LinkIcon className="h-6 w-6 text-islamic-cream/30 mr-2" />
+                          <span className="text-islamic-cream/50">{t('share.generatingInvitationLink')}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </TabsContent>
               </Tabs>
@@ -213,19 +241,22 @@ export default function SharePage() {
         {/* Referral Reward Program table using VIP config */}
         <Card className="overflow-hidden border-none shadow-xl bg-islamic-cardBg/90 backdrop-blur-lg text-white mb-6">
           <div className="p-6">
-            <h2 className="text-xl font-bold text-[#8dc63f] mb-4">Referral Reward Program</h2>
+            <h2 className="text-xl font-bold text-[#8dc63f] mb-4">{t('share.referralRewardProgram')}</h2>
+            <p className="text-sm text-islamic-cream/80 mb-4">
+              {t('share.earnRewardsDescription')}
+            </p>
 
             {/* Table-based reward explanation */}
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="border-b border-islamic-medium/30">
-                    <th className="p-2 text-left text-xs font-medium text-islamic-cream/70">Level</th>
-                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 1</th>
-                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 2</th>
-                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 3</th>
-                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 4</th>
-                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 5</th>
+                    <th className="p-2 text-left text-xs font-medium text-islamic-cream/70">{t('share.level')}</th>
+                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">{t('share.vipLevel')} 1</th>
+                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">{t('share.vipLevel')} 2</th>
+                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">{t('share.vipLevel')} 3</th>
+                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">{t('share.vipLevel')} 4</th>
+                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">{t('share.vipLevel')} 5</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -234,7 +265,7 @@ export default function SharePage() {
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">Level 1</span>
+                        <span className="text-xs">{t('share.level1')}</span>
                       </div>
                     </td>
                     <td className="p-2 text-center text-xs font-medium text-islamic-gold">
@@ -259,7 +290,7 @@ export default function SharePage() {
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">Level 2</span>
+                        <span className="text-xs">{t('share.level2')}</span>
                       </div>
                     </td>
                     <td className="p-2 text-center text-xs font-medium text-islamic-gold">
@@ -284,7 +315,7 @@ export default function SharePage() {
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">Level 3</span>
+                        <span className="text-xs">{t('share.level3')}</span>
                       </div>
                     </td>
                     <td className="p-2 text-center text-xs font-medium text-islamic-gold">
@@ -309,7 +340,7 @@ export default function SharePage() {
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">Level 4</span>
+                        <span className="text-xs">{t('share.level4')}</span>
                       </div>
                     </td>
                     <td className="p-2 text-center text-xs font-medium text-islamic-gold">
@@ -334,7 +365,7 @@ export default function SharePage() {
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">Level 5</span>
+                        <span className="text-xs">{t('share.level5')}</span>
                       </div>
                     </td>
                     <td className="p-2 text-center text-xs font-medium text-islamic-gold">
@@ -359,7 +390,7 @@ export default function SharePage() {
                     <td className="p-2 text-left font-medium">
                       <div className="flex items-center">
                         <Award className="h-4 w-4 mr-1 text-islamic-gold" />
-                        <span className="text-xs">Total</span>
+                        <span className="text-xs">{t('invitation.total')}</span>
                       </div>
                     </td>
                     <td className="p-2 text-center text-xs font-bold text-islamic-gold">
@@ -389,16 +420,16 @@ export default function SharePage() {
           <div className="p-6">
             <h3 className="text-xl font-bold text-[#8dc63f] mb-4 flex items-center">
               <Users className="h-5 w-5 mr-2" />
-              Relief Fund Increase
+              {t('share.reliefFundIncrease')}
             </h3>
             <p className="text-sm text-islamic-cream/80 mb-3">
-              The more people you invite, the higher your relief fund rate:
+              {t('share.moreInvitesHigherRate')}
             </p>
             <div className="grid grid-cols-2 gap-2 mt-2">
               <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/20">
                 <span className="text-xs flex items-center">
                   <Users className="h-3 w-3 mr-1 opacity-70" />
-                  <span>0 people</span>
+                  <span>0 {t('share.people')}</span>
                 </span>
                 <span className="text-xs font-medium text-islamic-gold">
                   {mounted && !ratesLoading ? `${rateConfigs.noReferral}%` : "1%"}
@@ -407,7 +438,7 @@ export default function SharePage() {
               <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/20">
                 <span className="text-xs flex items-center">
                   <Users className="h-3 w-3 mr-1 opacity-70" />
-                  <span>1 person</span>
+                  <span>1 {t('share.person')}</span>
                 </span>
                 <span className="text-xs font-medium text-islamic-gold">
                   {mounted && !ratesLoading ? `${rateConfigs.referral1}%` : "1.5%"}
@@ -416,7 +447,7 @@ export default function SharePage() {
               <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/20">
                 <span className="text-xs flex items-center">
                   <Users className="h-3 w-3 mr-1 opacity-70" />
-                  <span>2-4 people</span>
+                  <span>2-4 {t('share.people')}</span>
                 </span>
                 <span className="text-xs font-medium text-islamic-gold">
                   {mounted && !ratesLoading ? `${rateConfigs.referral3}%` : "2%"}
@@ -425,16 +456,16 @@ export default function SharePage() {
               <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/20">
                 <span className="text-xs flex items-center">
                   <Users className="h-3 w-3 mr-1 opacity-70" />
-                  <span>5+ people</span>
+                  <span>5+ {t('share.people')}</span>
                 </span>
                 <span className="text-xs font-medium text-islamic-gold">
                   {mounted && !ratesLoading ? `${rateConfigs.referral5}%` : "2.5%"}
                 </span>
               </div>
             </div>
-            <p className="text-xs text-islamic-cream/70 italic mt-3">
-              Note: The relief fund rate applies to your daily charity support amount.
-            </p>
+              <p className="text-xs text-islamic-cream/70 italic mt-3">
+                {t('share.reliefFundNote')}
+              </p>
           </div>
         </Card>
       </div>

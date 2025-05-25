@@ -7,8 +7,10 @@ import { MainLayout } from "@/components/main-layout"
 import { useTeamInfo } from "@/hooks/use-team-info"
 import { useEffect } from "react"
 import { useAuth } from "@/store/use-auth"
+import { useTranslation } from "@/lib/i18n"
 
 export default function PromotionPage() {
+  const { t } = useTranslation()
   const { teamInfo, loading, refresh } = useTeamInfo()
   const { isAuthenticated } = useAuth()
 
@@ -20,7 +22,7 @@ export default function PromotionPage() {
   }, [refresh, isAuthenticated])
 
   return (
-    <MainLayout title="Invite Friends" currentPath="/promotion">
+    <MainLayout title={t('invitation.inviteFriends')} currentPath="/promotion">
       {/* Invitation Card */}
       <InvitationCard 
         data={teamInfo} 

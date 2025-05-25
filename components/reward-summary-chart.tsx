@@ -2,6 +2,7 @@
 
 import { Bar, BarChart, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { useTranslation } from "@/lib/i18n"
 
 interface RewardSummaryChartProps {
   data: {
@@ -14,6 +15,8 @@ interface RewardSummaryChartProps {
 }
 
 export function RewardSummaryChart({ data, onWithdraw }: RewardSummaryChartProps) {
+  const { t } = useTranslation()
+  
   // Calculate additional potential = maximum - expected
   const additionalPotential = data.maxReward - data.expectedReward > 0 ? data.maxReward - data.expectedReward : 0
 
@@ -65,12 +68,12 @@ export function RewardSummaryChart({ data, onWithdraw }: RewardSummaryChartProps
             <div className="mb-1">
               <div className="flex items-center mb-1">
                 <div className="w-3 h-3 rounded-full bg-[#d4b96e] mr-2"></div>
-                <span className="text-xs text-islamic-cream/90">Withdrawn:</span>
+                <span className="text-xs text-islamic-cream/90">{t('rewardSummary.withdrawn')}:</span>
                 <span className="text-sm font-medium text-islamic-gold ml-2">{data.withdrawnAmount} USDT</span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 rounded-full bg-[#d4b96e]/60 mr-2"></div>
-                <span className="text-xs text-islamic-cream/90">Withdrawable:</span>
+                <span className="text-xs text-islamic-cream/90">{t('rewardSummary.withdrawable')}:</span>
                 <span className="text-sm font-medium text-islamic-gold/80 ml-2">{data.withdrawableAmount} USDT</span>
               </div>
             </div>
@@ -82,12 +85,12 @@ export function RewardSummaryChart({ data, onWithdraw }: RewardSummaryChartProps
             <div className="mb-1">
               <div className="flex items-center mb-1">
                 <div className="w-3 h-3 rounded-full bg-[#8dc63f] mr-2"></div>
-                <span className="text-xs text-islamic-cream/90">Expected:</span>
+                <span className="text-xs text-islamic-cream/90">{t('rewardSummary.expected')}:</span>
                 <span className="text-sm font-medium text-[#8dc63f] ml-2">{data.expectedReward} USDT</span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 rounded-full bg-[#8dc63f]/60 mr-2"></div>
-                <span className="text-xs text-islamic-cream/90">Maximum:</span>
+                <span className="text-xs text-islamic-cream/90">{t('rewardSummary.maximum')}:</span>
                 <span className="text-sm font-medium text-[#8dc63f]/80 ml-2">{data.maxReward} USDT</span>
               </div>
             </div>
@@ -103,8 +106,8 @@ export function RewardSummaryChart({ data, onWithdraw }: RewardSummaryChartProps
       <div className="w-full">
         {/* 采用统一的布局容器来确保对齐 */}
         <div className="grid grid-cols-2 mb-1">
-          <div className="text-sm text-islamic-cream/80 text-left pl-2">Withdrawn</div>
-          <div className="text-sm text-islamic-cream/80 text-right pr-2">Withdrawable</div>
+          <div className="text-sm text-islamic-cream/80 text-left pl-2">{t('rewardSummary.withdrawn')}</div>
+          <div className="text-sm text-islamic-cream/80 text-right pr-2">{t('rewardSummary.withdrawable')}</div>
         </div>
 
         {/* Row 2: Withdrawn/Withdrawable stacked bar */}
@@ -224,8 +227,8 @@ export function RewardSummaryChart({ data, onWithdraw }: RewardSummaryChartProps
 
         {/* 同样对期望/最大值区域应用相同的对齐方式 */}
         <div className="grid grid-cols-2 mb-1">
-          <div className="text-sm text-islamic-cream/80 text-left pl-2">Expected</div>
-          <div className="text-sm text-islamic-cream/80 text-right pr-2">Maximum</div>
+          <div className="text-sm text-islamic-cream/80 text-left pl-2">{t('rewardSummary.expected')}</div>
+          <div className="text-sm text-islamic-cream/80 text-right pr-2">{t('rewardSummary.maximum')}</div>
         </div>
 
         {/* Row 4: Expected/Maximum stacked bar */}

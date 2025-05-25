@@ -12,10 +12,6 @@ export function useDonation() {
     }
     
     dispatch({ type: "UPDATE_DONATION", payload: updatedData })
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[useDonation] Data updated:', updatedData)
-    }
   }
 
   return {

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useAuth } from "@/store/use-auth"
+import { useTranslation } from "@/lib/i18n"
 import { useRouter } from "next/navigation"
 
 interface LoginModalProps {
@@ -26,6 +27,7 @@ export function LoginModal({ isOpen, onClose, targetPath }: LoginModalProps) {
   const [confirmPassword, setConfirmPassword] = useState("")
 
   const { login, register } = useAuth()
+  const { t } = useTranslation()
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,7 +58,7 @@ export function LoginModal({ isOpen, onClose, targetPath }: LoginModalProps) {
         router.push(targetPath)
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Authentication failed")
+      setError(err instanceof Error ? err.message : t('auth.authenticationFailed'))
     } finally {
       setIsLoading(false)
     }
@@ -72,10 +74,10 @@ export function LoginModal({ isOpen, onClose, targetPath }: LoginModalProps) {
       <DialogContent className="sm:max-w-[425px] bg-islamic-dark text-white border-islamic-medium">
         <DialogHeader>
           <DialogTitle className="text-islamic-gold text-center text-xl">
-            {isRegisterMode ? "Create Account" : "Login"}
+            {isRegisterMode ? t('auth.createAccount') : t('auth.login')}
           </DialogTitle>
           <DialogDescription className="text-islamic-cream/70 text-center">
-            {isRegisterMode ? "Register to access all features" : "Enter your credentials to access your account"}
+            {isRegisterMode ? t('auth.registerToAccess') : t('auth.enterCredentials')}
           </DialogDescription>
         </DialogHeader>
 
@@ -83,7 +85,7 @@ export function LoginModal({ isOpen, onClose, targetPath }: LoginModalProps) {
           {isRegisterMode && (
             <div className="space-y-2">
               <Label htmlFor="username" className="text-islamic-cream">
-                Username
+                {t('auth.username')}
               </Label>
               <Input
                 id="username"
@@ -97,7 +99,7 @@ export function LoginModal({ isOpen, onClose, targetPath }: LoginModalProps) {
 
           <div className="space-y-2">
             <Label htmlFor="email" className="text-islamic-cream">
-              Email
+              {t('auth.email')}
             </Label>
             <Input
               id="email"
@@ -111,7 +113,7 @@ export function LoginModal({ isOpen, onClose, targetPath }: LoginModalProps) {
 
           <div className="space-y-2">
             <Label htmlFor="password" className="text-islamic-cream">
-              Password
+              {t('auth.password')}
             </Label>
             <Input
               id="password"
@@ -126,7 +128,7 @@ export function LoginModal({ isOpen, onClose, targetPath }: LoginModalProps) {
           {isRegisterMode && (
             <div className="space-y-2">
               <Label htmlFor="confirmPassword" className="text-islamic-cream">
-                Confirm Password
+                {t('auth.confirmPassword')}
               </Label>
               <Input
                 id="confirmPassword"
@@ -148,12 +150,12 @@ export function LoginModal({ isOpen, onClose, targetPath }: LoginModalProps) {
             className="w-full bg-islamic-gold text-islamic-dark hover:bg-islamic-gold/90"
             disabled={isLoading}
           >
-            {isLoading ? "Processing..." : isRegisterMode ? "Create Account" : "Login"}
+            {isLoading ? t('auth.processing') : isRegisterMode ? t('auth.createAccount') : t('auth.login')}
           </Button>
 
           <div className="text-center pt-2">
             <button type="button" onClick={toggleMode} className="text-islamic-gold text-sm hover:underline">
-              {isRegisterMode ? "Already have an account? Login" : "Don't have an account? Register"}
+              {isRegisterMode ? t('auth.loginPrompt') : t('auth.registerPrompt')}
             </button>
           </div>
         </form>

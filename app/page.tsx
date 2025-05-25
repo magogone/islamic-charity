@@ -4,12 +4,14 @@ import { HeroSection } from "@/components/hero-section"
 import { NewsSection } from "@/components/news-section"
 import { MainLayout } from "@/components/main-layout"
 import { useNews } from "@/store/use-news"
+import { useTranslation } from "@/lib/i18n"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 export default function HomePage() {
   // Get data from store
   const { news } = useNews()
+  const { t } = useTranslation()
   const router = useRouter()
   
   // 处理点击 Donate 按钮
@@ -19,17 +21,18 @@ export default function HomePage() {
   }
 
   return (
-    <MainLayout title="Barkat Alliance Foundation" currentPath="/">
+    <MainLayout title={t('home.title')} currentPath="/">
       {/* Hero Section with Large Mosque */}
       <HeroSection
-        buttonText="Donate Now"
-        description="Innovative Charity Model: Divine Mission - Participate in poverty relief through donations"
+        title={t('home.title')}
+        buttonText={t('home.donateButton')}
+        description={t('home.fullDescription')}
         onButtonClick={handleDonateClick}
       />
 
       {/* News section */}
       <div>
-      <NewsSection news={news} className="mb-6" />
+        <NewsSection news={news} className="mb-6" />
       </div>
     </MainLayout>
   )

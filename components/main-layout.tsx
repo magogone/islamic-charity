@@ -7,6 +7,8 @@ import { useAuth } from "@/store/use-auth"
 import { useToast } from "@/components/ui/toast"
 import { Home, Share2, User } from "lucide-react"
 import { HeartPlusIcon } from "@/components/heart-plus-icon"
+import { LanguageSelector } from "@/components/language-selector"
+import { useTranslation } from "@/lib/i18n"
 import { useRouter } from "next/navigation"
 import { useAuthContext } from "@/store/auth-context"
 
@@ -22,6 +24,7 @@ interface MainLayoutProps {
 export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
   const { checkSession, isAuthenticated, user } = useAuth()
   const { ToastContainer } = useToast()
+  const { t } = useTranslation()
   const router = useRouter()
   const { openLoginModal } = useAuthContext()
   const hasCheckedRef = useRef(false);
@@ -205,18 +208,22 @@ export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
     }
     
     return isAuthenticated && user ? (
-      <div className="flex items-center">
+      <div className="flex items-center gap-3">
         <span className="text-sm text-islamic-cream">
           {user.username || user.email.split("@")[0]}
         </span>
+        <LanguageSelector />
       </div>
     ) : (
-      <button
-        onClick={() => openLoginModal()}
-        className="px-3 py-1 border border-islamic-gold text-islamic-gold rounded-md hover:bg-islamic-gold/10 transition-colors"
-      >
-        Login
-      </button>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => openLoginModal()}
+          className="px-3 py-1 text-islamic-gold hover:bg-islamic-gold/10 transition-colors text-sm rounded-md"
+        >
+          {t('common.login')}
+        </button>
+        <LanguageSelector />
+      </div>
     );
   };
 
@@ -229,7 +236,7 @@ export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
             <h1 className="text-xl font-bold text-islamic-gold">{title}</h1>
           </div>
 
-          {/* Username or login button */}
+          {/* Username or login button + Language Selector */}
           <div>
             {renderAuthSection()}
           </div>
@@ -260,7 +267,7 @@ export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
               style={{ touchAction: 'manipulation' }}
             >
               <Home className="h-6 w-6" />
-              <span className="text-xs mt-1">Home</span>
+              <span className="text-xs mt-1">{t('navigation.home')}</span>
             </button>
             <button
               onClick={() => {
@@ -273,7 +280,7 @@ export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
               style={{ touchAction: 'manipulation' }}
             >
               <HeartPlusIcon className="h-6 w-6" />
-              <span className="text-xs mt-1">Donate</span>
+              <span className="text-xs mt-1">{t('navigation.donate')}</span>
             </button>
             <button
               onClick={() => {
@@ -286,7 +293,7 @@ export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
               style={{ touchAction: 'manipulation' }}
             >
               <Share2 className="h-6 w-6" />
-              <span className="text-xs mt-1">Invite</span>
+              <span className="text-xs mt-1">{t('navigation.invite')}</span>
             </button>
             <button
               onClick={() => {
@@ -299,7 +306,7 @@ export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
               style={{ touchAction: 'manipulation' }}
             >
               <User className="h-6 w-6" />
-              <span className="text-xs mt-1">Profile</span>
+              <span className="text-xs mt-1">{t('navigation.profile')}</span>
             </button>
           </div>
         </div>

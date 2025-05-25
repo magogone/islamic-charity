@@ -11,6 +11,7 @@ import { useAuth } from "@/store/use-auth"
 import { useAuthContext } from "@/store/auth-context"
 import { useDailyRewardRates } from "@/hooks/use-daily-reward-rates"
 import { useStore } from "@/store/store-context"
+import { useTranslation } from "@/lib/i18n"
 
 export interface InvitationCardProps {
   data?: {
@@ -52,6 +53,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
   const [mounted, setMounted] = useState(false)
   const { rateConfigs, loading: ratesLoading } = useDailyRewardRates()
   const { state } = useStore()
+  const { t } = useTranslation()
   
   useEffect(() => {
     setMounted(true)
@@ -214,14 +216,14 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center text-xl text-[#8dc63f]">
           <Share2 className="mr-2 h-5 w-5" />
-          Invite Friends
+          {t('invitation.inviteFriends')}
         </CardTitle>
       </CardHeader>
       <CardContent className="pb-2">
         {isLoading ? (
           <div className="flex justify-center items-center py-10">
             <Loader2 className="h-8 w-8 text-islamic-gold animate-spin" />
-            <span className="ml-3 text-islamic-cream">Loading invitation data...</span>
+            <span className="ml-3 text-islamic-cream">{t('invitation.loadingInvitationData')}</span>
           </div>
         ) : (
           <>
@@ -231,21 +233,21 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                 <Users className="h-8 w-8 text-islamic-cream/50 mr-3" />
                 <div className="flex flex-col">
                   <span className="text-3xl font-bold text-[#8dc63f] leading-tight">{safeData.totalReferrals}</span>
-                  <span className="text-xs text-islamic-cream/70">Total</span>
+                  <span className="text-xs text-islamic-cream/70">{t('invitation.total')}</span>
                 </div>
               </div>
               <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-4 flex items-center">
                 <UserPlus className="h-8 w-8 text-islamic-cream/50 mr-3" />
                 <div className="flex flex-col">
                   <span className="text-3xl font-bold text-[#8dc63f] leading-tight">{safeData.directReferrals}</span>
-                  <span className="text-xs text-islamic-cream/70">Direct</span>
+                  <span className="text-xs text-islamic-cream/70">{t('invitation.direct')}</span>
                 </div>
               </div>
               <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-4 flex items-center">
                 <UsersIcon className="h-8 w-8 text-islamic-cream/50 mr-3" />
                 <div className="flex flex-col">
                   <span className="text-3xl font-bold text-[#8dc63f] leading-tight">{safeData.indirectReferrals}</span>
-                  <span className="text-xs text-islamic-cream/70">Indirect</span>
+                  <span className="text-xs text-islamic-cream/70">{t('invitation.indirect')}</span>
                 </div>
               </div>
             </div>
@@ -256,7 +258,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
               <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3">
                 <div className="flex items-center mb-3">
                   <User className="h-4 w-4 text-islamic-gold mr-2" />
-                  <span className="text-sm text-islamic-gold">Basic Rewards</span>
+                  <span className="text-sm text-islamic-gold">{t('invitation.basicRewards')}</span>
                 </div>
 
                 {/* Visual representation of reward range - progress bar */}
@@ -283,7 +285,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Award className="h-4 w-4 text-islamic-gold mr-2" />
-                    <span className="text-xs text-islamic-cream">Current Rewards</span>
+                    <span className="text-xs text-islamic-cream">{t('invitation.currentRewards')}</span>
                   </div>
                   <div className="flex items-center">
                     <span className="text-sm font-medium text-islamic-gold">{getCurrentRateText(user?.referrals || 0)}</span>
@@ -298,7 +300,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                           </button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>View basic reward details</p>
+                          <p>{t('invitation.viewBasicRewardDetails')}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -311,7 +313,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                 <div className="flex items-center mb-3">
                   <UserPlus className="h-4 w-4 text-islamic-gold mr-2" />
                   <span className="text-sm text-islamic-gold">
-                    {userVipLevel === 0 ? "Referral Rewards (Inactive)" : "Referral Rewards"}
+                    {userVipLevel === 0 ? t('invitation.referralRewardsInactive') : t('invitation.referralRewards')}
                   </span>
                 </div>
 
@@ -340,7 +342,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Award className="h-4 w-4 text-islamic-gold mr-2" />
-                    <span className="text-xs text-islamic-cream">Current Rewards</span>
+                    <span className="text-xs text-islamic-cream">{t('invitation.currentRewards')}</span>
                   </div>
                   <div className="flex items-center">
                     <span className="text-sm font-medium text-islamic-gold">{currentRewardRate}%</span>
@@ -355,7 +357,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                           </button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>View referral reward details</p>
+                          <p>{t('invitation.viewReferralRewardDetails')}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -367,12 +369,11 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
             {/* Invitation Tip */}
             <div className="p-3 rounded-lg bg-[#8dc63f]/20 border border-[#8dc63f]/30 text-xs text-islamic-cream/90">
               <p>
-                Invite friends to donate and receive up to {vipLevelData?.rewardRates?.level1 || maxVipReward}% of their donation amount as rewards, while also increasing
-                your daily basic donation reward rate!
+                {t('invitation.inviteTip').replace('{maxRate}', String(vipLevelData?.rewardRates?.level1 || maxVipReward))}
               </p>
               {userVipLevel > 0 && (
                 <p className="mt-2">
-                  <span className="text-islamic-gold">Invitation Level {userInviteLevel || 1}:</span> You currently earn {currentRewardRate}% on direct referrals.
+                  <span className="text-islamic-gold">{t('invitation.invitationLevel').replace('{level}', String(userInviteLevel || 1))}:</span> {t('invitation.currentlyEarn').replace('{rate}', String(currentRewardRate))}
                 </p>
               )}
             </div>
@@ -385,7 +386,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
           // 服务端渲染和客户端挂载前的占位按钮
           <div className="w-full">
             <Button className="w-full bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c] flex items-center justify-center">
-              Invite Now
+              {t('invitation.inviteNow')}
               <Share2 className="ml-2 h-4 w-4" />
             </Button>
           </div>
@@ -393,7 +394,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
           // 已登录用户看到的链接按钮
           <Link href="/promotion/share" className="w-full">
             <Button className="w-full bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c] flex items-center justify-center" disabled={isLoading}>
-              Invite Now
+              {t('invitation.inviteNow')}
               <Share2 className="ml-2 h-4 w-4" />
             </Button>
           </Link>
@@ -404,7 +405,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
             onClick={() => openLoginModal("/promotion/share")}
             disabled={isLoading}
           >
-            Invite Now
+            {t('invitation.inviteNow')}
             <Share2 className="ml-2 h-4 w-4" />
           </Button>
         )}
@@ -417,19 +418,19 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
           <DialogHeader>
             <DialogTitle className="text-islamic-gold flex items-center">
               <User className="mr-2 h-5 w-5" />
-              Basic Reward Details
+              {t('invitation.basicRewardDetails')}
             </DialogTitle>
-            <DialogDescription className="text-islamic-cream/70">Learn more about basic rewards</DialogDescription>
+            <DialogDescription className="text-islamic-cream/70">{t('invitation.learnMoreBasicRewards')}</DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
             <div className="space-y-3">
               <h3 className="text-sm font-medium text-islamic-gold flex items-center">
                 <Percent className="mr-2 h-4 w-4" />
-                Poverty Relief Fund Rate
+                {t('invitation.povertyReliefFundRate')}
               </h3>
               <p className="text-xs text-islamic-cream/80">
-                Based on the number of people you refer, your poverty relief fund rate will increase accordingly:
+                {t('invitation.basedOnReferrals')}
               </p>
 
               <div className="space-y-2">
@@ -467,8 +468,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
               </div>
 
               <p className="text-xs text-islamic-cream/70 italic">
-                You have currently referred {safeData.totalReferrals} people, poverty relief fund rate is{" "}
-                {getCurrentRateText(user?.referrals || 0)}
+                {t('invitation.currentlyReferred').replace('{count}', String(safeData.totalReferrals)).replace('{rate}', getCurrentRateText(user?.referrals || 0))}
               </p>
             </div>
           </div>
@@ -482,12 +482,12 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
           <DialogHeader>
             <DialogTitle className="text-islamic-gold flex items-center">
               <UserPlus className="mr-2 h-5 w-5" />
-              {userVipLevel === 0 ? "Referral Rewards (Inactive)" : "Referral Reward Details"}
+              {userVipLevel === 0 ? t('invitation.referralRewardsInactive') : t('invitation.referralRewardDetails')}
             </DialogTitle>
             <DialogDescription className="text-islamic-cream/70">
               {userVipLevel === 0 ? 
-                "Make a donation to activate referral rewards" : 
-                "Referral rewards by VIP level"
+                t('invitation.makeDonationToActivate') : 
+                t('invitation.referralRewardsByVipLevel')
               }
             </DialogDescription>
           </DialogHeader>
@@ -495,14 +495,14 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
           <div className="grid gap-4 py-2">
             {userVipLevel > 0 && (
               <p className="text-xs text-islamic-cream/80 mb-2">
-                In this reward system, <span className="text-islamic-gold font-medium">Level 1</span> provides the highest reward rate, while <span className="text-islamic-gold font-medium">Level 5</span> provides the lowest. Your current invitation level is <span className="text-islamic-gold font-medium">{userInviteLevel || "not set"}</span>.
+                {t('invitation.rewardSystemExplanation').replace('{level}', String(userInviteLevel || t('invitation.notSet')))}
               </p>
             )}
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="border-b border-islamic-medium/30">
-                    <th className="p-2 text-left text-xs font-medium text-islamic-cream/70">Level</th>
+                    <th className="p-2 text-left text-xs font-medium text-islamic-cream/70">{t('invitation.level')}</th>
                     <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 1</th>
                     <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 2</th>
                     <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 3</th>
@@ -516,9 +516,9 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">Level 1</span>
+                        <span className="text-xs">{t('invitation.level')} 1</span>
                         {userInviteLevel === 1 && (
-                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">Current</span>
+                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">{t('invitation.current')}</span>
                         )}
                       </div>
                     </td>
@@ -544,9 +544,9 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">Level 2</span>
+                        <span className="text-xs">{t('invitation.level')} 2</span>
                         {userInviteLevel === 2 && (
-                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">Current</span>
+                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">{t('invitation.current')}</span>
                         )}
                       </div>
                     </td>
@@ -572,9 +572,9 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">Level 3</span>
+                        <span className="text-xs">{t('invitation.level')} 3</span>
                         {userInviteLevel === 3 && (
-                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">Current</span>
+                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">{t('invitation.current')}</span>
                         )}
                       </div>
                     </td>
@@ -600,9 +600,9 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">Level 4</span>
+                        <span className="text-xs">{t('invitation.level')} 4</span>
                         {userInviteLevel === 4 && (
-                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">Current</span>
+                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">{t('invitation.current')}</span>
                         )}
                       </div>
                     </td>
@@ -628,9 +628,9 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">Level 5</span>
+                        <span className="text-xs">{t('invitation.level')} 5</span>
                         {userInviteLevel === 5 && (
-                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">Current</span>
+                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">{t('invitation.current')}</span>
                         )}
                       </div>
                     </td>
@@ -656,7 +656,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                     <td className="p-2 text-left font-medium">
                       <div className="flex items-center">
                         <Award className="h-4 w-4 mr-1 text-islamic-gold" />
-                        <span className="text-xs">Total</span>
+                        <span className="text-xs">{t('invitation.total')}</span>
                       </div>
                     </td>
                     <td className="p-2 text-center text-xs font-bold text-islamic-gold">
@@ -682,11 +682,10 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
             {userVipLevel > 0 && (
               <div className="mt-4 p-3 rounded-lg bg-islamic-gold/10 border border-islamic-gold/30 text-xs text-islamic-cream/90">
                 <p>
-                  <span className="font-medium text-islamic-gold">Current Invitation Level:</span> {userInviteLevel > 0 ? userInviteLevel : "Not set"}
+                  <span className="font-medium text-islamic-gold">{t('invitation.currentInvitationLevel')}:</span> {userInviteLevel > 0 ? userInviteLevel : t('invitation.notSet')}
                 </p>
                 <p className="mt-2">
-                  Your invitation level determines your referral reward rate. Level 1 offers the highest rewards ({maxVipReward}%) and level 5 offers the lowest ({minVipReward}%).
-                  This level is assigned by the system based on your referral performance and activity.
+                  {t('invitation.invitationLevelExplanation').replace('{maxRate}', String(maxVipReward)).replace('{minRate}', String(minVipReward))}
                 </p>
               </div>
             )}

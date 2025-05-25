@@ -48,7 +48,6 @@ function useWalletClient(): WalletState {
     const handleUserLogout = () => {
       if (account.isConnected) {
         disconnect();
-        console.log("Wallet disconnected due to user logout");
       }
     };
 
