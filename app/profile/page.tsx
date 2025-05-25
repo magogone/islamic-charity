@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { User, ArrowRight, Wallet } from "lucide-react"
+import { useState, useEffect, useCallback } from "react"
+import { User, ArrowRight, Wallet, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { WithdrawDialog } from "@/components/withdraw-dialog"
@@ -10,8 +10,9 @@ import { useUser } from "@/store/use-user"
 import { useDonation } from "@/store/use-donation"
 import { useAuth } from "@/store/use-auth"
 import { useTeam } from "@/store/use-team"
+import { useToast } from "@/components/ui/toast"
 import Link from "next/link"
-import { getUserProfit } from "@/lib/api"
+import { getUserProfit, getUserInfo } from "@/lib/api"
 
 export default function ProfilePage() {
   const [withdrawOpen, setWithdrawOpen] = useState(false)
@@ -19,9 +20,20 @@ export default function ProfilePage() {
   const { donationData, updateDonation } = useDonation()
   const { user, logout } = useAuth()
   const { teamData, refreshTeamInfo } = useTeam()
+  const { success } = useToast()
   
   // 客户端渲染状态
   const [mounted, setMounted] = useState(false)
+  
+  // 加载状态管理
+  const [loadingStates, setLoadingStates] = useState({
+    userLoading: true,
+    donationLoading: true,
+    teamLoading: true,
+  })
+  
+  // 添加强制刷新状态
+  const [forceRefresh, setForceRefresh] = useState(0)
   
   // 初始数据，避免水合不匹配
   const [displayData, setDisplayData] = useState({
@@ -39,6 +51,97 @@ export default function ProfilePage() {
   useEffect(() => {
     setMounted(true)
   }, [])
+  
+  // 手动刷新数据的函数
+  const refreshData = useCallback(async () => {
+    if (!mounted || !user) return
+    
+    console.log('[ProfilePage] Manual refresh triggered')
+    setLoadingStates({
+      userLoading: true,
+      donationLoading: true,
+      teamLoading: true,
+    })
+    
+    try {
+      // 1. 获取最新的用户信息（包含提现数据）
+      const userResponse = await getUserInfo()
+      if (userResponse.success && userResponse.data && userResponse.data.user) {
+        const userData = userResponse.data.user
+        
+        // 计算提现相关数据
+        const withdrawnAmount = userData.withdraw_amount ? parseFloat(userData.withdraw_amount) : 0
+        const withdrawableAmount = userData.reward_amount ? parseFloat(userData.reward_amount) : 0
+        const totalAccumulated = withdrawnAmount + withdrawableAmount
+        
+        // 更新 donation 数据中的提现相关信息
+        updateDonation({
+          withdrawnAmount,
+          withdrawableAmount,
+          totalAccumulated,
+          totalExpectedReward: totalAccumulated,
+          totalMaxReward: Math.round(totalAccumulated * 1.5)
+        })
+        
+        console.log('[ProfilePage] Updated withdrawal data:', {
+          withdrawnAmount,
+          withdrawableAmount,
+          totalAccumulated
+        })
+      }
+      
+      // 2. 获取最新的收益数据
+      const profitResponse = await getUserProfit()
+      if (profitResponse.success && profitResponse.data) {
+        updateDonation({
+          dailyFunds: {
+            current: profitResponse.data.today_profit,
+            max: profitResponse.data.max_profit
+          }
+        })
+        
+        console.log('[ProfilePage] Updated profit data:', profitResponse.data)
+      }
+      
+      // 3. 刷新团队数据
+      await refreshTeamInfo()
+      
+      // 4. 强制触发重新渲染
+      setForceRefresh(prev => prev + 1)
+      
+      // 显示成功提示
+      success("Data refreshed successfully")
+      
+    } catch (error) {
+      console.error('[ProfilePage] Refresh error:', error)
+    } finally {
+      setLoadingStates({
+        userLoading: false,
+        donationLoading: false,
+        teamLoading: false,
+      })
+    }
+  }, [mounted, user, updateDonation, refreshTeamInfo, success])
+  
+  // 监听用户认证状态变化
+  useEffect(() => {
+    if (mounted) {
+      setLoadingStates(prev => ({
+        ...prev,
+        userLoading: !user,
+      }))
+    }
+  }, [mounted, user])
+  
+  // 监听捐赠数据变化 - 添加强制刷新触发器
+  useEffect(() => {
+    if (mounted) {
+      setLoadingStates(prev => ({
+        ...prev,
+        donationLoading: !donationData,
+      }))
+    }
+  }, [mounted, donationData, forceRefresh])
   
   // 获取收益数据
   useEffect(() => {
@@ -59,40 +162,112 @@ export default function ProfilePage() {
       }).catch(err => {
         console.error('[ProfilePage] Error fetching profit data:', err);
       });
+      
+      // 同时获取用户信息以确保有最新的提现数据
+      getUserInfo().then(userResponse => {
+        if (userResponse.success && userResponse.data && userResponse.data.user) {
+          const userData = userResponse.data.user
+          
+          // 计算提现相关数据
+          const withdrawnAmount = userData.withdraw_amount ? parseFloat(userData.withdraw_amount) : 0
+          const withdrawableAmount = userData.reward_amount ? parseFloat(userData.reward_amount) : 0
+          const totalAccumulated = withdrawnAmount + withdrawableAmount
+          
+          // 更新 donation 数据中的提现相关信息
+          updateDonation({
+            withdrawnAmount,
+            withdrawableAmount,
+            totalAccumulated,
+            totalExpectedReward: totalAccumulated,
+            totalMaxReward: Math.round(totalAccumulated * 1.5)
+          })
+          
+          console.log('[ProfilePage] Initial withdrawal data loaded:', {
+            withdrawnAmount,
+            withdrawableAmount,
+            totalAccumulated
+          })
+        }
+      }).catch(err => {
+        console.error('[ProfilePage] Error fetching user info:', err);
+      });
     }
-  }, [mounted, user]);
+  }, [mounted, user, forceRefresh]); // 添加forceRefresh依赖
   
   // 确保在组件挂载后获取团队数据
   useEffect(() => {
     const fetchTeamData = async () => {
       if (mounted && user) {
         try {
+          setLoadingStates(prev => ({ ...prev, teamLoading: true }))
           // 刷新团队数据
           await refreshTeamInfo();
+          setLoadingStates(prev => ({ ...prev, teamLoading: false }))
         } catch (error) {
           console.error('[ProfilePage] Failed to fetch team data:', error);
+          setLoadingStates(prev => ({ ...prev, teamLoading: false }))
         }
       }
     };
     
     fetchTeamData();
-  }, [mounted, user, refreshTeamInfo]);
+  }, [mounted, user, refreshTeamInfo, forceRefresh]); // 添加forceRefresh依赖
   
-  // 用户数据变更时更新显示数据
+  // 只在所有必要数据都加载完成且发生变化时才更新 displayData
   useEffect(() => {
-    if (mounted) {
-      setDisplayData({
+    if (mounted && user && (!loadingStates.userLoading || !loadingStates.donationLoading)) {
+      // 创建新的显示数据
+      const newDisplayData = {
         username: user?.username || userData?.username || "User",
         email: user?.email || "user@example.com",
         vipLevel: userData?.vipLevel || 0,
         totalDonation: userData?.totalDonation || 0,
         referrals: userData?.referrals || 0,
         isVerified: user?.isVerified || false,
-        reliefFunds: (donationData?.totalAccumulated || 0),
+        reliefFunds: donationData?.totalAccumulated || 0,
         withdrawable: donationData?.withdrawableAmount || 0,
+      }
+      
+      // 只有数据真正发生变化时才更新，避免不必要的重渲染
+      setDisplayData(prevData => {
+        const hasChanged = Object.keys(newDisplayData).some(key => 
+          prevData[key as keyof typeof prevData] !== newDisplayData[key as keyof typeof newDisplayData]
+        )
+        
+        if (hasChanged) {
+          console.log('[ProfilePage] Display data updated:', newDisplayData)
+          console.log('[ProfilePage] Donation data lastUpdated:', donationData?.lastUpdated)
+          console.log('[ProfilePage] Full donationData:', donationData)
+        }
+        
+        return hasChanged ? newDisplayData : prevData
       })
     }
-  }, [mounted, userData, user, donationData])
+  }, [mounted, user, userData, donationData, donationData?.lastUpdated, loadingStates.userLoading, loadingStates.donationLoading, forceRefresh]) // 添加lastUpdated依赖
+
+  // 页面可见性变化时自动刷新数据
+  useEffect(() => {
+    if (!mounted) return
+    
+    const handleVisibilityChange = () => {
+      if (!document.hidden && user) {
+        console.log('[ProfilePage] Page became visible, refreshing data')
+        // 延迟一下再刷新，避免太频繁
+        setTimeout(() => {
+          refreshData()
+        }, 1000)
+      }
+    }
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [mounted, user, refreshData])
+  
+  // 计算是否还有数据在加载中
+  const isDataLoading = loadingStates.userLoading || loadingStates.donationLoading
 
   return (
     <MainLayout title="Profile" currentPath="/profile">
@@ -107,19 +282,32 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold text-[#d4b96e]">{displayData.username}</h2>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={logout}
-                  className="ml-auto border-[#d4b96e] text-[#d4b96e] hover:bg-[#d4b96e] hover:text-[#0a3d2b]"
-                >
-                  Logout
-                </Button>
+                <h2 className="text-lg font-bold text-[#d4b96e]">
+                  {isDataLoading ? "Loading..." : displayData.username}
+                </h2>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={refreshData}
+                    disabled={isDataLoading}
+                    className="border-[#d4b96e] text-[#d4b96e] hover:bg-[#d4b96e]/10"
+                  >
+                    <RefreshCw className={`h-4 w-4 ${isDataLoading ? 'animate-spin' : ''}`} />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={logout}
+                    className="border-[#d4b96e] text-[#d4b96e] hover:bg-[#d4b96e] hover:text-[#0a3d2b]"
+                  >
+                    Logout
+                  </Button>
+                </div>
               </div>
               <p className="text-xs text-islamic-cream/70 mt-1">{displayData.email}</p>
               <p className="text-sm text-islamic-cream/70 mt-1">
-                VIP {displayData.vipLevel} · {displayData.isVerified ? "Verified" : "Unverified"}
+                VIP {isDataLoading ? "..." : displayData.vipLevel} · {displayData.isVerified ? "Verified" : "Unverified"}
               </p>
             </div>
           </div>
@@ -128,15 +316,21 @@ export default function ProfilePage() {
           <div className="mt-6 grid grid-cols-3 gap-3">
             <div className="bg-[#1a1f2c] p-3 rounded-lg text-center">
               <p className="text-xs text-islamic-cream/70 mb-1">Total Donations</p>
-              <p className="text-lg font-bold text-[#d4b96e]">{displayData.totalDonation} U</p>
+              <p className="text-lg font-bold text-[#d4b96e]">
+                {isDataLoading ? "..." : displayData.totalDonation} U
+              </p>
             </div>
             <div className="bg-[#1a1f2c] p-3 rounded-lg text-center">
               <p className="text-xs text-islamic-cream/70 mb-1">Relief Funds</p>
-              <p className="text-lg font-bold text-[#8dc63f]">{donationData?.totalAccumulated || 0} U</p>
+              <p className="text-lg font-bold text-[#8dc63f]">
+                {isDataLoading ? "..." : displayData.reliefFunds} U
+              </p>
             </div>
             <div className="bg-[#1a1f2c] p-3 rounded-lg text-center">
               <p className="text-xs text-islamic-cream/70 mb-1">Referrals</p>
-              <p className="text-lg font-bold text-[#d4b96e]">{displayData.referrals}</p>
+              <p className="text-lg font-bold text-[#d4b96e]">
+                {isDataLoading ? "..." : displayData.referrals}
+              </p>
             </div>
           </div>
         </CardContent>
@@ -153,15 +347,15 @@ export default function ProfilePage() {
             <div className="mt-3 grid grid-cols-2 gap-4">
               <div>
                 <p className="text-xs text-islamic-cream/70">Total Donation Amount</p>
-                <p className="text-lg font-bold text-[#d4b96e]">{userData?.totalDonation || 0} U</p>
-                <p className="text-xs text-islamic-cream/70 mt-1">VIP Level {userData?.vipLevel || 0}</p>
+                <p className="text-lg font-bold text-[#d4b96e]">{displayData.totalDonation} U</p>
+                <p className="text-xs text-islamic-cream/70 mt-1">VIP Level {displayData.vipLevel}</p>
               </div>
               <div>
                 <p className="text-xs text-islamic-cream/70">Daily Relief Funds</p>
                 <p className="text-lg font-bold text-[#8dc63f]">
                   {donationData?.dailyFunds?.current || 0}-{donationData?.dailyFunds?.max || 0} U
                 </p>
-                <p className="text-xs text-islamic-cream/70 mt-1">{userData?.referrals || 0} referrals</p>
+                <p className="text-xs text-islamic-cream/70 mt-1">{displayData.referrals} referrals</p>
               </div>
             </div>
           </CardContent>
@@ -211,7 +405,7 @@ export default function ProfilePage() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Accumulated Relief Funds</span>
-                <span className="text-sm font-medium text-[#8dc63f]">{donationData?.totalAccumulated || 0} U</span>
+                <span className="text-sm font-medium text-[#8dc63f]">{displayData.reliefFunds} U</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Team Rewards</span>

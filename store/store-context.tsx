@@ -76,6 +76,7 @@ export interface StoreState {
     referrals?: number
     totalDonation?: number
     vipLevel?: number
+    lastUpdated?: number
     dailyRewards?: Array<{
       date: string
       actual: number

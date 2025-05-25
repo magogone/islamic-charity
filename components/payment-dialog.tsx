@@ -131,7 +131,7 @@ export function PaymentDialog({
       if (chainId && networkConfig.isSupported) {
         try {
           // 从设置获取合约和目标地址
-          const settingResult = await getSetting(networkConfig.key, 'donate-payment', '', true);
+          const settingResult = await getSetting(networkConfig.id.toString(), 'donate-payment', '', true);
           
           if (settingResult) {
             try {
@@ -275,7 +275,6 @@ export function PaymentDialog({
             chainId.toString(),
             amount,
             "USDT",
-            "",  // 支付方式为空
             address // 钱包地址作为备注
           );
           

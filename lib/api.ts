@@ -56,10 +56,9 @@ export interface LogoutResponse {
  * Donate request data
  */
 export interface DonateRequest {
-  chain_id: string;
+  chain: string;
   amount: string;
   token_type: string;
-  payment_method: string;
   remark: string;
 }
 
@@ -67,10 +66,9 @@ export interface DonateRequest {
  * Withdraw request data
  */
 export interface WithdrawRequest {
-  chain_id: string;
+  chain: string;
   amount: string;
   token_type: string;
-  payment_method: string;
   remark: string;
 }
 
@@ -172,7 +170,7 @@ async function apiRequest<T>(
   forceNoCache: boolean = false
 ): Promise<ApiResponse<T>> {
   // 使用相对路径直接发送请求到/v1路径
-  let url = endpoint.startsWith('http') ? endpoint : `${ENV.SITE_URL}${endpoint}`;
+  let url = endpoint.startsWith('http') ? endpoint : `${ENV.API_URL}${endpoint}`;
   
   const options: RequestInit = {
     method,
@@ -288,12 +286,11 @@ export async function logoutUser(): Promise<ApiResponse<LogoutResponse>> {
 /**
  * User donate
  */
-export async function donateAmount(chainId: string, amount: string, tokenType: string = "USDT", paymentMethod: string = "", remark: string = ""): Promise<ApiResponse<DonateResponse>> {
+export async function donateAmount(chain: string, amount: string, tokenType: string = "USDT", remark: string = ""): Promise<ApiResponse<DonateResponse>> {
   const donateData: DonateRequest = {
-    chain_id: chainId,
+    chain,
     amount,
     token_type: tokenType,
-    payment_method: paymentMethod,
     remark
   };
   
@@ -303,12 +300,11 @@ export async function donateAmount(chainId: string, amount: string, tokenType: s
 /**
  * User withdraw
  */
-export async function withdrawAmount(chainId: string, amount: string, walletAddress: string): Promise<ApiResponse<WithdrawResponse>> {
+export async function withdrawAmount(chain: string, amount: string, walletAddress: string): Promise<ApiResponse<WithdrawResponse>> {
   const withdrawData: WithdrawRequest = {
-    chain_id: chainId,
+    chain,
     amount,
     token_type: "USDT",
-    payment_method: "",
     remark: walletAddress,
   };
   
