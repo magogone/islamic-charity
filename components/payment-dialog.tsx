@@ -205,7 +205,7 @@ export function PaymentDialog({
   }, [isTransactionError, paymentStep, error]);
 
   // 获取下一级VIP的全额费用
-  const nextLevel = currentVipLevel + 1
+  const nextLevel = currentVipLevel < 5 ? currentVipLevel + 1 : 5
   const suggestedAmount = nextLevelAmount || getVipLevelDonationAmount(nextLevel)
 
   // 验证输入是否为整数
@@ -273,9 +273,7 @@ export function PaymentDialog({
       // 处理API部分
       try {
         // 检查是否已经有捐赠ID，避免重复调用API
-        if (donationId) {
-          console.log("Using existing donation ID:", donationId);
-        } else {
+        if (!donationId) {
           // 调用后端捐赠API
           const response = await donateAmount(
             chainId.toString(),

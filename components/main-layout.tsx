@@ -253,7 +253,7 @@ export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
       </div>
 
       {/* Bottom navigation - Fixed */}
-      <div className="fixed bottom-0 left-0 right-0 bg-islamic-dark border-t border-islamic-medium/30 py-2 z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-islamic-dark border-t border-islamic-medium/30 py-2 z-50 bottom-nav-container">
         <div className="container max-w-lg mx-auto px-4">
           <div className="flex justify-around">
             <button

@@ -145,21 +145,21 @@ export default function InvestmentPage() {
       </main>
 
       {/* Bottom Navigation - Fixed */}
-      <div className="fixed bottom-0 left-0 right-0 z-20 border-t border-islamic-medium/50 bg-islamic-dark/80 backdrop-blur-sm">
+      <div className="fixed bottom-0 left-0 right-0 z-20 border-t border-islamic-medium/50 bg-islamic-dark/80 backdrop-blur-sm bottom-nav-container">
         <nav className="flex justify-around py-3 mx-auto max-w-lg">
-          <Link href="/" className="flex flex-col items-center py-2 text-islamic-cream/50">
+          <Link href="/" className="flex flex-col items-center py-2 text-islamic-cream/50 bottom-nav-item">
             <Home className="h-5 w-5" />
             <span className="mt-1 text-xs">Home</span>
           </Link>
-          <Link href="/investment" className="flex flex-col items-center py-2 text-islamic-gold">
+          <Link href="/investment" className="flex flex-col items-center py-2 text-islamic-gold bottom-nav-item">
             <PieChart className="h-5 w-5" />
             <span className="mt-1 text-xs">Invest</span>
           </Link>
-          <Link href="/promotion" className="flex flex-col items-center py-2 text-islamic-cream/50">
+          <Link href="/promotion" className="flex flex-col items-center py-2 text-islamic-cream/50 bottom-nav-item">
             <Share2 className="h-5 w-5" />
             <span className="mt-1 text-xs">Promote</span>
           </Link>
-          <Link href="/profile" className="flex flex-col items-center py-2 text-islamic-cream/50">
+          <Link href="/profile" className="flex flex-col items-center py-2 text-islamic-cream/50 bottom-nav-item">
             <User className="h-5 w-5" />
             <span className="mt-1 text-xs">Profile</span>
           </Link>

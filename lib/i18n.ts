@@ -1,5 +1,5 @@
 // 临时的i18n解决方案，直到安装next-intl
-export const locales = ['en', 'zh', 'ar'] as const;
+export const locales = ['en', 'zh', 'ar', 'ur'] as const;
 export type Locale = typeof locales[number];
 export const defaultLocale: Locale = 'en';
 
@@ -7,12 +7,38 @@ export const defaultLocale: Locale = 'en';
 import enMessages from '../messages/en.json';
 import zhMessages from '../messages/zh.json';
 import arMessages from '../messages/ar.json';
+import urMessages from '../messages/ur.json';
 
 const messages = {
   en: enMessages,
   zh: zhMessages,
   ar: arMessages,
+  ur: urMessages,
 };
+
+// 语言名称映射
+export const languageNames = {
+  en: 'English',
+  zh: '中文',
+  ar: 'العربية',
+  ur: 'اردو',
+} as const;
+
+// 语言方向映射
+export const languageDirections = {
+  en: 'ltr',
+  zh: 'ltr',
+  ar: 'rtl',
+  ur: 'rtl',
+} as const;
+
+export type Direction = typeof languageDirections[Locale];
+
+// 获取当前语言方向
+export function getCurrentDirection(locale?: Locale): 'ltr' | 'rtl' {
+  const currentLocale = locale || getCurrentLocale();
+  return languageDirections[currentLocale];
+}
 
 // 客户端存储locale的key
 const LOCALE_STORAGE_KEY = 'preferred-locale';
@@ -80,12 +106,7 @@ export function useTranslation() {
       setLocaleState(newLocale);
     },
     locales,
+    direction: getCurrentDirection(locale),
+    isRTL: getCurrentDirection(locale) === 'rtl',
   };
 }
-
-// 语言名称映射
-export const languageNames = {
-  en: 'English',
-  zh: '中文',
-  ar: 'العربية',
-} as const; 

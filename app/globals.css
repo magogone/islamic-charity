@@ -11,6 +11,390 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* RTL Support */
+  .rtl {
+    direction: rtl;
+  }
+
+  .ltr {
+    direction: ltr;
+  }
+
+  /* RTL-specific utilities */
+  .rtl .text-left {
+    text-align: right;
+  }
+
+  .rtl .text-right {
+    text-align: left;
+  }
+
+  /* RTL Margin utilities */
+  .rtl .ml-auto {
+    margin-left: unset;
+    margin-right: auto;
+  }
+
+  .rtl .mr-auto {
+    margin-right: unset;
+    margin-left: auto;
+  }
+
+  .rtl .ml-1 {
+    margin-left: unset;
+    margin-right: 0.25rem;
+  }
+
+  .rtl .mr-1 {
+    margin-right: unset;
+    margin-left: 0.25rem;
+  }
+
+  .rtl .ml-2 {
+    margin-left: unset;
+    margin-right: 0.5rem;
+  }
+
+  .rtl .mr-2 {
+    margin-right: unset;
+    margin-left: 0.5rem;
+  }
+
+  .rtl .ml-3 {
+    margin-left: unset;
+    margin-right: 0.75rem;
+  }
+
+  .rtl .mr-3 {
+    margin-right: unset;
+    margin-left: 0.75rem;
+  }
+
+  .rtl .ml-4 {
+    margin-left: unset;
+    margin-right: 1rem;
+  }
+
+  .rtl .mr-4 {
+    margin-right: unset;
+    margin-left: 1rem;
+  }
+
+  .rtl .ml-6 {
+    margin-left: unset;
+    margin-right: 1.5rem;
+  }
+
+  .rtl .mr-6 {
+    margin-right: unset;
+    margin-left: 1.5rem;
+  }
+
+  /* RTL Padding utilities */
+  .rtl .pl-1 {
+    padding-left: unset;
+    padding-right: 0.25rem;
+  }
+
+  .rtl .pr-1 {
+    padding-right: unset;
+    padding-left: 0.25rem;
+  }
+
+  .rtl .pl-2 {
+    padding-left: unset;
+    padding-right: 0.5rem;
+  }
+
+  .rtl .pr-2 {
+    padding-right: unset;
+    padding-left: 0.5rem;
+  }
+
+  .rtl .pl-3 {
+    padding-left: unset;
+    padding-right: 0.75rem;
+  }
+
+  .rtl .pr-3 {
+    padding-right: unset;
+    padding-left: 0.75rem;
+  }
+
+  .rtl .pl-4 {
+    padding-left: unset;
+    padding-right: 1rem;
+  }
+
+  .rtl .pr-4 {
+    padding-right: unset;
+    padding-left: 1rem;
+  }
+
+  .rtl .pl-6 {
+    padding-left: unset;
+    padding-right: 1.5rem;
+  }
+
+  .rtl .pr-6 {
+    padding-right: unset;
+    padding-left: 1.5rem;
+  }
+
+  /* RTL Border utilities */
+  .rtl .border-l {
+    border-left: unset;
+    border-right: 1px solid;
+  }
+
+  .rtl .border-r {
+    border-right: unset;
+    border-left: 1px solid;
+  }
+
+  .rtl .border-l-2 {
+    border-left: unset;
+    border-right: 2px solid;
+  }
+
+  .rtl .border-r-2 {
+    border-right: unset;
+    border-left: 2px solid;
+  }
+
+  /* RTL-specific flex adjustments - More targeted to avoid affecting navigation */
+  .rtl .flex-row:not(.bottom-nav-container):not(.bottom-nav-container *) {
+    flex-direction: row-reverse;
+  }
+
+  /* RTL-specific positioning */
+  .rtl .left-0 {
+    left: unset;
+    right: 0;
+  }
+
+  .rtl .right-0 {
+    right: unset;
+    left: 0;
+  }
+
+  .rtl .left-1 {
+    left: unset;
+    right: 0.25rem;
+  }
+
+  .rtl .right-1 {
+    right: unset;
+    left: 0.25rem;
+  }
+
+  .rtl .left-2 {
+    left: unset;
+    right: 0.5rem;
+  }
+
+  .rtl .right-2 {
+    right: unset;
+    left: 0.5rem;
+  }
+
+  .rtl .left-3 {
+    left: unset;
+    right: 0.75rem;
+  }
+
+  .rtl .right-3 {
+    right: unset;
+    left: 0.75rem;
+  }
+
+  .rtl .left-4 {
+    left: unset;
+    right: 1rem;
+  }
+
+  .rtl .right-4 {
+    right: unset;
+    left: 1rem;
+  }
+
+  .rtl .left-6 {
+    left: unset;
+    right: 1.5rem;
+  }
+
+  .rtl .right-6 {
+    right: unset;
+    left: 1.5rem;
+  }
+
+  /* RTL-specific transforms for icons */
+  .rtl .transform-flip {
+    transform: scaleX(-1);
+  }
+
+  /* RTL-specific dropdown and menu positioning */
+  .rtl .origin-top-right {
+    transform-origin: top left;
+  }
+
+  .rtl .origin-top-left {
+    transform-origin: top right;
+  }
+
+  .rtl .origin-bottom-right {
+    transform-origin: bottom left;
+  }
+
+  .rtl .origin-bottom-left {
+    transform-origin: bottom right;
+  }
+
+  /* RTL-specific rounded corners */
+  .rtl .rounded-l {
+    border-top-left-radius: unset;
+    border-bottom-left-radius: unset;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+  }
+
+  .rtl .rounded-r {
+    border-top-right-radius: unset;
+    border-bottom-right-radius: unset;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+  }
+
+  .rtl .rounded-tl {
+    border-top-left-radius: unset;
+    border-top-right-radius: 0.25rem;
+  }
+
+  .rtl .rounded-tr {
+    border-top-right-radius: unset;
+    border-top-left-radius: 0.25rem;
+  }
+
+  .rtl .rounded-bl {
+    border-bottom-left-radius: unset;
+    border-bottom-right-radius: 0.25rem;
+  }
+
+  .rtl .rounded-br {
+    border-bottom-right-radius: unset;
+    border-bottom-left-radius: 0.25rem;
+  }
+
+  /* RTL-specific text alignment for specific components */
+  .rtl .text-start {
+    text-align: right;
+  }
+
+  .rtl .text-end {
+    text-align: left;
+  }
+
+  /* ===== BOTTOM NAVIGATION RTL SUPPORT ===== */
+  /* Force full width and proper positioning for bottom navigation container */
+  .bottom-nav-container {
+    width: 100vw !important;
+    left: 0 !important;
+    right: 0 !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    max-width: none !important;
+    direction: ltr !important;
+  }
+
+  /* Force container children to take full width */
+  .bottom-nav-container > * {
+    width: 100% !important;
+    max-width: none !important;
+    direction: ltr !important;
+  }
+
+  /* Ensure max-width containers don't shrink */
+  .bottom-nav-container .max-w-lg,
+  .bottom-nav-container .container {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  /* Force proper layout for navigation structure */
+  .bottom-nav-container nav,
+  .bottom-nav-container .flex {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  /* Ensure navigation items display correctly */
+  .bottom-nav-container nav > *,
+  .bottom-nav-container .flex > *,
+  .bottom-nav-container .bottom-nav-item {
+    flex: 1 1 0% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  /* RTL specific overrides - ensure navigation remains LTR */
+  .rtl .bottom-nav-container {
+    width: 100vw !important;
+    left: 0 !important;
+    right: 0 !important;
+    max-width: none !important;
+    direction: ltr !important;
+  }
+
+  .rtl .bottom-nav-container > * {
+    width: 100% !important;
+    max-width: none !important;
+    direction: ltr !important;
+  }
+
+  .rtl .bottom-nav-container .max-w-lg,
+  .rtl .bottom-nav-container .container {
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  .rtl .bottom-nav-container nav,
+  .rtl .bottom-nav-container .flex {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-around !important;
+  }
+
+  .rtl .bottom-nav-container nav > *,
+  .rtl .bottom-nav-container .flex > * {
+    flex-direction: column !important;
+  }
+
+  /* Allow text within navigation items to be RTL */
+  .rtl .bottom-nav-container .bottom-nav-item span {
+    direction: rtl !important;
+  }
+
+  /* Prevent any space utilities from affecting navigation */
+  .rtl .bottom-nav-container .space-x-1 > :not([hidden]) ~ :not([hidden]),
+  .rtl .bottom-nav-container .space-x-2 > :not([hidden]) ~ :not([hidden]),
+  .rtl .bottom-nav-container .space-x-3 > :not([hidden]) ~ :not([hidden]),
+  .rtl .bottom-nav-container .space-x-4 > :not([hidden]) ~ :not([hidden]),
+  .rtl .bottom-nav-container .space-x-6 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
 }
 
 @layer base {

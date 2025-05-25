@@ -11,6 +11,7 @@ import { DailyRewardInitializer } from "@/components/daily-reward-initializer"
 import { AuthSessionChecker } from "@/components/auth-session-checker"
 import { SessionRefreshChecker } from "@/components/session-refresh-checker"
 import { ClientProviders } from "@/components/client-providers"
+import { RTLProvider } from "@/components/rtl-provider"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
@@ -31,17 +32,19 @@ export default function RootLayout({
       <body className={`${inter.variable} ${playfair.variable} font-sans`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           <ClientProviders>
-            <StoreProvider>
-              <AuthProvider>
-                <ApiErrorHandler>
-                  <VipSettingsInitializer />
-                  <DailyRewardInitializer />
-                  <AuthSessionChecker />
-                  <SessionRefreshChecker />
-                  {children}
-                </ApiErrorHandler>
-              </AuthProvider>
-            </StoreProvider>
+            <RTLProvider>
+              <StoreProvider>
+                <AuthProvider>
+                  <ApiErrorHandler>
+                    <VipSettingsInitializer />
+                    <DailyRewardInitializer />
+                    <AuthSessionChecker />
+                    <SessionRefreshChecker />
+                    {children}
+                  </ApiErrorHandler>
+                </AuthProvider>
+              </StoreProvider>
+            </RTLProvider>
           </ClientProviders>
         </ThemeProvider>
       </body>
