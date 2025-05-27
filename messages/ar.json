@@ -7,35 +7,19 @@
   },
   "common": {
     "loading": "جاري التحميل...",
-    "error": "خطأ",
-    "success": "نجح",
-    "confirm": "تأكيد",
-    "cancel": "إلغاء",
-    "save": "حفظ",
-    "close": "إغلاق",
-    "refresh": "تحديث",
     "logout": "تسجيل الخروج",
-    "login": "تسجيل الدخول",
-    "register": "تسجيل",
-    "next": "التالي",
-    "previous": "السابق",
-    "submit": "إرسال",
-    "processing": "جاري المعالجة...",
-    "back": "العودة"
+    "login": "تسجيل الدخول"
   },
   "auth": {
     "login": "تسجيل الدخول",
-    "register": "تسجيل",
     "email": "البريد الإلكتروني",
     "emailAddress": "عنوان البريد الإلكتروني",
     "password": "كلمة المرور",
     "confirmPassword": "تأكيد كلمة المرور",
     "username": "اسم المستخدم",
     "name": "الاسم",
-    "loginButton": "تسجيل الدخول",
     "signIn": "تسجيل الدخول",
     "signingIn": "جاري تسجيل الدخول...",
-    "registerButton": "إنشاء حساب",
     "createAccount": "إنشاء حساب",
     "creatingAccount": "جاري إنشاء الحساب...",
     "signInToAccount": "تسجيل الدخول إلى حسابك",
@@ -43,8 +27,6 @@
     "loginPrompt": "هل لديك حساب؟ سجل دخولك",
     "registerPrompt": "ليس لديك حساب؟ سجل الآن",
     "or": "أو",
-    "sessionExpired": "انتهت صلاحية جلسة تسجيل الدخول، يرجى تسجيل الدخول مرة أخرى للمتابعة",
-    "loginRequired": "يرجى تسجيل الدخول للمتابعة",
     "loginSuccessful": "تم تسجيل الدخول بنجاح!",
     "registrationSuccessful": "تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول.",
     "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
@@ -66,9 +48,15 @@
   },
   "home": {
     "title": "مؤسسة تحالف البركات",
-    "description": "نموذج خيري مبتكر: المهمة الإلهية",
     "fullDescription": "نموذج خيري مبتكر: المهمة الإلهية - شارك في مكافحة الفقر من خلال التبرعات",
     "donateButton": "تبرع الآن"
+  },
+  "news": {
+    "title": "الأخبار",
+    "subtitle": "تعرف على أحدث المعلومات",
+    "previous": "السابق",
+    "next": "التالي",
+    "goToSlide": "انتقل إلى الصفحة {number}"
   },
   "profile": {
     "title": "الملف الشخصي",
@@ -93,16 +81,9 @@
   },
   "donation": {
     "title": "التبرع",
-    "donate": "تبرع",
-    "donateNow": "تبرع الآن",
-    "donationAmount": "مبلغ التبرع",
-    "reliefPeriod": "فترة الإغاثة",
     "totalDonationAmount": "إجمالي مبلغ التبرع",
     "dailyReliefFunds": "أموال الإغاثة اليومية",
     "increaseDonation": "زيادة التبرع",
-    "currentlyObtained": "تم الحصول عليه حاليًا",
-    "distributed": "موزع",
-    "pending": "في الانتظار",
     "myDonationOverview": "نظرة عامة على تبرعاتي",
     "total": "الإجمالي",
     "rewards": "المكافآت",
@@ -152,15 +133,18 @@
     "toVip": "{amount}U إلى VIP{level}",
     "fullAmountRequired": "المبلغ الكامل مطلوب لـ VIP{level}، وليس فقط الفرق"
   },
+  "vip": {
+    "level1": "1-المستوى الأول",
+    "level2": "2-المستوى الثاني",
+    "level3": "3-المستوى الثالث",
+    "level4": "4-درجة المعراج",
+    "level5": "5-درجة الإحسان"
+  },
   "payment": {
-    "title": "الدفع",
     "paymentInformation": "معلومات الدفع",
-    "paymentInfoDesc": "كل مستوى VIP يتطلب دفع المبلغ الكامل المعروض أعلاه، وليس فقط الفرق بين المستويات.",
     "connectWallet": "اربط المحفظة للتبرع",
     "switchNetwork": "التبديل إلى شبكة مدعومة",
     "donateNowButton": "تبرع الآن!",
-    "networkInformation": "معلومات الشبكة",
-    "supportedNetworks": "الشبكات المدعومة",
     "donate": "تبرع",
     "donateToUpgrade": "تبرع لترقية مستوى VIP الخاص بك وزيادة مكافآتك.",
     "donationAmount": "مبلغ التبرع",
@@ -194,80 +178,15 @@
     "paymentFailed": "فشل الدفع"
   },
   "withdraw": {
-    "title": "سحب",
-    "withdrawFunds": "سحب الأموال",
-    "description": "اسحب أموالك المتاحة إلى محفظتك",
-    "availableBalance": "الرصيد المتاح",
-    "withdrawalAmount": "مبلغ السحب",
-    "withdrawNow": "اسحب الآن",
-    "withdrawalSuccessful": "تم السحب بنجاح",
-    "transactionId": "معرف المعاملة",
-    "copied": "تم النسخ!",
-    "copy": "نسخ"
-  },
-  "vip": {
-    "privileges": "الامتيازات",
-    "donationReturns": "التبرع والعوائد",
-    "donation": "التبرع",
-    "totalReturn": "إجمالي العائد",
-    "dailyReliefFunds": "أموال الإغاثة اليومية",
-    "referralRewards": "مكافآت الإحالة",
-    "totalRewardRate": "إجمالي معدل المكافأة",
-    "reliefFundRate": "معدل صندوق الإغاثة",
-    "level1": "المستوى الأول",
-    "level2": "المستوى الثاني",
-    "level3": "المستوى الثالث",
-    "noReferral": "بدون إحالة",
-    "referral1": "إحالة واحدة",
-    "referral3": "3 إحالات",
-    "referral5": "5+ إحالات"
+    "title": "سحب"
   },
   "hero": {
     "title": "مؤسسة تحالف البركات",
     "description": "نموذج خيري مبتكر: المهمة الإلهية",
     "donateButton": "تبرع الآن"
   },
-  "team": {
-    "directReferrals": "المدعوون المباشرون",
-    "totalReferrals": "إجمالي المدعوين",
-    "teamTotalDonations": "إجمالي تبرعات الفريق",
-    "totalRewards": "إجمالي المكافآت",
-    "referralInfo": "معلومات الإحالة",
-    "referralInfoDesc": "ادع المزيد من الأصدقاء لزيادة معدل صندوق الإغاثة الخاص بك."
-  },
-  "investment": {
-    "title": "الاستثمار",
-    "description": "فرص الاستثمار"
-  },
-  "promotion": {
-    "title": "الترويج",
-    "share": "مشاركة",
-    "referralLink": "رابط الإحالة",
-    "shareNow": "شارك الآن"
-  },
-  "news": {
-    "title": "الأخبار",
-    "subtitle": "تعرف على أحدث المعلومات",
-    "previous": "السابق",
-    "next": "التالي",
-    "goToSlide": "انتقل إلى الصفحة {number}"
-  },
-  "event": {
-    "time": "الوقت",
-    "location": "الموقع",
-    "language": "اللغة"
-  },
-  "validation": {
-    "required": "هذا الحقل مطلوب",
-    "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح",
-    "passwordTooShort": "كلمة المرور يجب أن تكون على الأقل 6 أحرف",
-    "passwordMismatch": "كلمات المرور غير متطابقة",
-    "invalidAmount": "يرجى إدخال مبلغ صحيح"
-  },
   "units": {
-    "usdt": "USDT",
-    "u": "ي",
-    "percent": "%"
+    "u": "ي"
   },
   "donationOverview": {
     "myDonations": "تبرعاتي",
@@ -286,9 +205,7 @@
   },
   "rewardSummary": {
     "withdrawn": "مسحوب",
-    "withdrawable": "قابل للسحب",
-    "expected": "متوقع",
-    "maximum": "الأقصى"
+    "withdrawable": "قابل للسحب"
   },
   "rewardPeriod": {
     "start": "البداية",
@@ -380,4 +297,4 @@
     "joinDescription": "انضم إلى مؤسسة تحالف البركات، شارك في الأعمال الخيرية الإسلامية، واحصل على دعم صندوق الإغاثة من الفقر!",
     "reliefFundNote": "ملاحظة: معدل صندوق الإغاثة ينطبق على مبلغ الدعم الخيري اليومي الخاص بك."
   }
-} 
+}

@@ -17,25 +17,25 @@ export interface NetworkConfig {
 // 当前支持的所有网络配置
 export const NETWORK_CONFIG: { [chainId: number]: NetworkConfig } = {
   // Ethereum 主网
-  [mainnet.id]: {
-    id: mainnet.id,
-    name: "Ethereum Mainnet",
-    key: "mainnet",
-    explorerUrl: "https://etherscan.io",
-    isSupported: true,
-    testnet: false,
-    reownNetwork: mainnet
-  },
+  // [mainnet.id]: {
+  //   id: mainnet.id,
+  //   name: "Ethereum Mainnet",
+  //   key: "mainnet",
+  //   explorerUrl: "https://etherscan.io",
+  //   isSupported: true,
+  //   testnet: false,
+  //   reownNetwork: mainnet
+  // },
   // Sepolia 测试网
-  [sepolia.id]: {
-    id: sepolia.id,
-    name: "Sepolia Testnet",
-    key: "sepolia",
-    explorerUrl: "https://sepolia.etherscan.io",
-    isSupported: true,
-    testnet: true,
-    reownNetwork: sepolia
-  },
+  // [sepolia.id]: {
+  //   id: sepolia.id,
+  //   name: "Sepolia Testnet",
+  //   key: "sepolia",
+  //   explorerUrl: "https://sepolia.etherscan.io",
+  //   isSupported: true,
+  //   testnet: true,
+  //   reownNetwork: sepolia
+  // },
   // BSC 主网
   [bsc.id]: {
     id: bsc.id,
@@ -47,15 +47,15 @@ export const NETWORK_CONFIG: { [chainId: number]: NetworkConfig } = {
     reownNetwork: bsc
   },
   // BSC 测试网
-  [bscTestnet.id]: {
-    id: bscTestnet.id,
-    name: "BSC Testnet",
-    key: "bscTestnet",
-    explorerUrl: "https://testnet.bscscan.com",
-    isSupported: true,
-    testnet: true,
-    reownNetwork: bscTestnet
-  },
+  // [bscTestnet.id]: {
+  //   id: bscTestnet.id,
+  //   name: "BSC Testnet",
+  //   key: "bscTestnet",
+  //   explorerUrl: "https://testnet.bscscan.com",
+  //   isSupported: true,
+  //   testnet: true,
+  //   reownNetwork: bscTestnet
+  // },
 };
 
 // 获取支持的网络配置

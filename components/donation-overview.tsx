@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { PaymentDialog } from "./payment-dialog"
+import { WithdrawDialog } from "./withdraw-dialog"
 import { VipLevelProgress } from "./vip-level-progress"
 import { ReferralInfoDialog } from "./referral-info-dialog"
 import { RewardSummaryChart } from "./reward-summary-chart"
@@ -26,7 +27,6 @@ import { useAuth } from "@/store/use-auth"
 import { useAuthContext } from "@/store/auth-context"
 import { useDailyRewardRates } from "@/hooks/use-daily-reward-rates"
 import { useTranslation } from "@/lib/i18n"
-import { useRouter } from "next/navigation"
 
 export interface DonationOverviewProps {
   data?: {
@@ -86,13 +86,13 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
   // 初始化组件
   const [paymentOpen, setPaymentOpen] = useState(false)
   const [referralInfoOpen, setReferralInfoOpen] = useState(false)
+  const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false)
   const { getVipLevelDonationAmount } = useVipInfo()
   const { isAuthenticated, user } = useAuth()
   const { openLoginModal } = useAuthContext()
   const { getCurrentRate, rateConfigs, loading: ratesLoading } = useDailyRewardRates()
   const [mounted, setMounted] = useState(false)
   const { t } = useTranslation()
-  const router = useRouter()
   
   // Handle client-side mounting
   useEffect(() => {
@@ -150,8 +150,8 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
   // Handle withdrawal
   const handleWithdraw = () => {
     if (isAuthenticated) {
-      // 直接跳转到提现页面
-      router.push('/profile/withdraw')
+      // 打开提现对话框
+      setWithdrawDialogOpen(true)
     } else {
       // 如果用户未登录，打开登录对话框
       openLoginModal("/profile/withdraw")
@@ -242,7 +242,7 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
 
               <div className="flex items-center mt-3 justify-end">
                 <Users2 className="h-3.5 w-3.5 text-islamic-cream/70 mr-1.5" />
-                <span className="text-xs text-islamic-cream/70">{t('donation.referred')} {safeData.referrals} {t('profile.people')}</span>
+                <span className="text-xs text-islamic-cream/70">{t('donation.referred')} {userReferrals} {t('profile.people')}</span>
                 <button
                   onClick={() => setReferralInfoOpen(true)}
                   className="ml-1 p-0.5 rounded-full hover:bg-islamic-medium/50 transition-colors"
@@ -316,6 +316,11 @@ export function DonationOverview({ data, showButtons = true, className = "" }: D
         nextLevelAmount={nextLevelAmount}
       />
       <ReferralInfoDialog open={referralInfoOpen} onOpenChange={setReferralInfoOpen} />
+      <WithdrawDialog
+        open={withdrawDialogOpen}
+        onOpenChange={setWithdrawDialogOpen}
+        availableAmount={safeData.withdrawableAmount || 0}
+      />
     </>
   )
 }

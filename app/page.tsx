@@ -32,7 +32,7 @@ export default function HomePage() {
 
       {/* News section */}
       <div>
-        <NewsSection news={news} className="mb-6" />
+      <NewsSection news={news} className="mb-6" />
       </div>
     </MainLayout>
   )

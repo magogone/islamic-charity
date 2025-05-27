@@ -38,7 +38,7 @@ export function VipPaymentInfo({ className }: VipPaymentInfoProps) {
 
               {Object.entries(vipLevels).map(([level, data]) => (
                 <React.Fragment key={level}>
-                  <div className="py-2 border-t border-islamic-medium/30">VIP {level}</div>
+                  <div className="py-2 border-t border-islamic-medium/30">VIP {t(`vip.level${level}`)}</div>
                   <div className="py-2 border-t border-islamic-medium/30">{data.donationAmount} U</div>
                   <div className="py-2 border-t border-islamic-medium/30">{data.totalReturn} U</div>
                 </React.Fragment>

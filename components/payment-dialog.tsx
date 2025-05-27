@@ -142,12 +142,10 @@ export function PaymentDialog({
               setTargetAddress(parsed.target as `0x${string}`);
             } catch (e) {
               console.error("Invalid contract addresses format:", e);
-              error("Failed to parse contract addresses");
             }
           }
         } catch (e) {
           console.error("Failed to fetch contract addresses:", e);
-          error("Failed to fetch contract addresses");
         }
       } else {
         // 重置地址
@@ -157,7 +155,7 @@ export function PaymentDialog({
     };
     
     fetchContractAddresses();
-  }, [chainId, networkConfig, error]);
+  }, [chainId, networkConfig]);
   
   // 当弹窗打开或nextLevelAmount更改时更新金额
   useEffect(() => {
@@ -184,7 +182,8 @@ export function PaymentDialog({
     if (isTransactionSuccess && paymentStep === 'transferring') {
       setPaymentStep('complete');
       setIsComplete(true);
-      success("Payment successful!");
+      // 移除success调用，避免循环
+      console.log("Payment successful!");
       
       // 重置状态并关闭对话框
       setTimeout(() => {
@@ -193,16 +192,17 @@ export function PaymentDialog({
         onOpenChange(false);
       }, 3000);
     }
-  }, [isTransactionSuccess, paymentStep, success, onOpenChange]);
+  }, [isTransactionSuccess, paymentStep, onOpenChange]); // 移除success依赖
   
   // 处理交易错误
   useEffect(() => {
     if (isTransactionError && paymentStep === 'transferring') {
       setIsProcessing(false);
       setPaymentStep('initial');
-      error("Transaction failed. Please try again.");
+      // 使用console.error记录错误，避免toast循环
+      console.error("Transaction failed");
     }
-  }, [isTransactionError, paymentStep, error]);
+  }, [isTransactionError, paymentStep]); // 移除error依赖
 
   // 获取下一级VIP的全额费用
   const nextLevel = currentVipLevel < 5 ? currentVipLevel + 1 : 5
@@ -212,7 +212,6 @@ export function PaymentDialog({
   const validateInput = (value: string) => {
     const num = parseFloat(value)
     if (isNaN(num) || num <= 0) {
-      error(t('payment.invalidAmount'));
       return false;
     }
     return true;
@@ -220,9 +219,8 @@ export function PaymentDialog({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (validateInput(value)) {
-      setAmount(value);
-    }
+    // 移除验证调用，只设置值
+    setAmount(value);
   }
 
   const handleDisconnect = () => {
@@ -240,7 +238,8 @@ export function PaymentDialog({
       return;
     }
 
-    if (!amount || parseInt(amount) <= 0) {
+    // 改进的金额验证
+    if (!amount || !validateInput(amount)) {
       error(t('payment.invalidAmount'));
       return;
     }
@@ -319,9 +318,9 @@ export function PaymentDialog({
               errorMessage.includes("user denied") ||
               errorMessage.includes("user cancelled")
             ) {
-              // 用户拒绝交易，提示并重置状态
-              error(t('payment.transactionCancelledByUser'));
+              // 用户拒绝交易，重置状态但不显示error toast
               setIsProcessing(false);
+              setIsSubmitting(false);
               setPaymentStep('initial');
               // 不抛出错误，因为这是用户主动取消，不是真正的错误
               return;
@@ -366,9 +365,11 @@ export function PaymentDialog({
         errString.includes("user cancelled") ||
         errString.includes("transaction cancelled")
       ) {
-        error(t('payment.transactionCancelledByUser'));
+        // 用户取消，不显示错误toast
+        console.log("Transaction cancelled by user");
       } else {
-        error(t('payment.paymentFailed') + ": " + (err instanceof Error ? err.message : "Unknown error"));
+        // 显示简化的错误消息
+        error(t('payment.paymentFailed'));
       }
     }
   }

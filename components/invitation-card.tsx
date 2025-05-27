@@ -131,8 +131,11 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
   const vipLevelData = mounted ? state?.vipInfo?.levels?.[userVipLevel] : null
   
   // Get the min and max values for VIP levels
-  const minVipReward = mounted && state?.vipInfo?.levels?.[userVipLevel]?.rewardRates?.level5 || 0
-  const maxVipReward = mounted && state?.vipInfo?.levels?.[userVipLevel]?.rewardRates?.level1 || 0
+  const minVipReward = mounted && state?.vipInfo?.levels?.[1]?.rewardRates?.total || 20  // VIP1的总奖励作为最小值
+  const maxVipReward = mounted && state?.vipInfo?.levels?.[5]?.rewardRates?.total || 30  // VIP5的总奖励作为最大值
+  
+  // Get current VIP level's total reward
+  const currentVipTotalReward = userVipLevel > 0 ? (vipLevelData?.rewardRates?.total || 0) : 0
   
   // Calculate current reward based on user's invite level (1-5)
   const currentRewardRate = userVipLevel === 0 ? 0 : (
@@ -177,9 +180,9 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
   // Calculate progress percentages for the reward bars
   const basicRewardProgress = ((parseFloat(currentBasicReward) - basicRewardMin) / (basicRewardMax - basicRewardMin)) * 100
   
-  // For VIP 0, progress is 0%, otherwise calculate based on the current reward rate (reversed as level1 is max and level5 is min)
+  // For VIP reward progress: show current VIP level's position in VIP1-VIP5 range
   const referralRewardProgress = userVipLevel === 0 ? 0 : 
-    ((currentRewardRate - minVipReward) / (maxVipReward - minVipReward)) * 100
+    ((currentVipTotalReward - minVipReward) / (maxVipReward - minVipReward)) * 100
 
   // Get reward rate style based on direct referral count
   const getRateClass = (referrals: number) => {
@@ -317,9 +320,8 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                   </span>
                 </div>
 
-                {/* Visual representation of reward range - simplified */}
+                {/* Visual representation of reward range - VIP1 to VIP5 total rewards */}
                 <div className="mb-3">
-                  {/* Progress bar with markers - aligned with percentage icon */}
                   <div className="relative pt-1 pb-3">
                     <div className="flex mb-1 items-center justify-between">
                       <div className="text-xs text-islamic-cream/70">{minVipReward}%</div>
@@ -345,7 +347,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                     <span className="text-xs text-islamic-cream">{t('invitation.currentRewards')}</span>
                   </div>
                   <div className="flex items-center">
-                    <span className="text-sm font-medium text-islamic-gold">{currentRewardRate}%</span>
+                    <span className="text-sm font-medium text-islamic-gold">{currentVipTotalReward}%</span>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -371,11 +373,6 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
               <p>
                 {t('invitation.inviteTip').replace('{maxRate}', String(vipLevelData?.rewardRates?.level1 || maxVipReward))}
               </p>
-              {userVipLevel > 0 && (
-                <p className="mt-2">
-                  <span className="text-islamic-gold">{t('invitation.invitationLevel').replace('{level}', String(userInviteLevel || 1))}:</span> {t('invitation.currentlyEarn').replace('{rate}', String(currentRewardRate))}
-                </p>
-              )}
             </div>
           </>
         )}
@@ -503,150 +500,135 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                 <thead>
                   <tr className="border-b border-islamic-medium/30">
                     <th className="p-2 text-left text-xs font-medium text-islamic-cream/70">{t('invitation.level')}</th>
-                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 1</th>
-                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 2</th>
-                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 3</th>
-                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 4</th>
-                    <th className="p-2 text-center text-xs font-medium text-islamic-cream/70">VIP 5</th>
+                    <th className={`p-2 text-center text-xs font-medium ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-cream/70'}`}>VIP 1</th>
+                    <th className={`p-2 text-center text-xs font-medium ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-cream/70'}`}>VIP 2</th>
+                    <th className={`p-2 text-center text-xs font-medium ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-cream/70'}`}>VIP 3</th>
+                    <th className={`p-2 text-center text-xs font-medium ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-cream/70'}`}>VIP 4</th>
+                    <th className={`p-2 text-center text-xs font-medium ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-cream/70'}`}>VIP 5</th>
                   </tr>
                 </thead>
                 <tbody>
                   {/* Level 1 */}
-                  <tr className={`border-b border-islamic-medium/20 ${userInviteLevel === 1 ? "bg-islamic-gold/10" : ""}`}>
+                  <tr className="border-b border-islamic-medium/20">
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
                         <span className="text-xs">{t('invitation.level')} 1</span>
-                        {userInviteLevel === 1 && (
-                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">{t('invitation.current')}</span>
-                        )}
                       </div>
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[1]?.rewardRates?.level1 || 10}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[2]?.rewardRates?.level1 || 12}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[3]?.rewardRates?.level1 || 15}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[4]?.rewardRates?.level1 || 18}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[5]?.rewardRates?.level1 || 20}%
                     </td>
                   </tr>
 
                   {/* Level 2 */}
-                  <tr className={`border-b border-islamic-medium/20 ${userInviteLevel === 2 ? "bg-islamic-gold/10" : ""}`}>
+                  <tr className="border-b border-islamic-medium/20">
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
                         <span className="text-xs">{t('invitation.level')} 2</span>
-                        {userInviteLevel === 2 && (
-                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">{t('invitation.current')}</span>
-                        )}
                       </div>
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[1]?.rewardRates?.level2 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[2]?.rewardRates?.level2 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[3]?.rewardRates?.level2 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[4]?.rewardRates?.level2 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[5]?.rewardRates?.level2 || 4}%
                     </td>
                   </tr>
 
                   {/* Level 3 */}
-                  <tr className={`border-b border-islamic-medium/20 ${userInviteLevel === 3 ? "bg-islamic-gold/10" : ""}`}>
+                  <tr className="border-b border-islamic-medium/20">
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
                         <span className="text-xs">{t('invitation.level')} 3</span>
-                        {userInviteLevel === 3 && (
-                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">{t('invitation.current')}</span>
-                        )}
                       </div>
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[1]?.rewardRates?.level3 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[2]?.rewardRates?.level3 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[3]?.rewardRates?.level3 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[4]?.rewardRates?.level3 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[5]?.rewardRates?.level3 || 4}%
                     </td>
                   </tr>
 
                   {/* Level 4 */}
-                  <tr className={`border-b border-islamic-medium/20 ${userInviteLevel === 4 ? "bg-islamic-gold/10" : ""}`}>
+                  <tr className="border-b border-islamic-medium/20">
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
                         <span className="text-xs">{t('invitation.level')} 4</span>
-                        {userInviteLevel === 4 && (
-                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">{t('invitation.current')}</span>
-                        )}
                       </div>
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[1]?.rewardRates?.level4 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[2]?.rewardRates?.level4 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[3]?.rewardRates?.level4 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[4]?.rewardRates?.level4 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[5]?.rewardRates?.level4 || 4}%
                     </td>
                   </tr>
 
                   {/* Level 5 */}
-                  <tr className={`border-b border-islamic-medium/20 ${userInviteLevel === 5 ? "bg-islamic-gold/10" : ""}`}>
+                  <tr className="border-b border-islamic-medium/20">
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
                         <span className="text-xs">{t('invitation.level')} 5</span>
-                        {userInviteLevel === 5 && (
-                          <span className="ml-1 text-[10px] px-1 py-0.5 bg-islamic-gold/20 text-islamic-gold rounded-sm">{t('invitation.current')}</span>
-                        )}
                       </div>
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[1]?.rewardRates?.level5 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[2]?.rewardRates?.level5 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[3]?.rewardRates?.level5 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[4]?.rewardRates?.level5 || 4}%
                     </td>
-                    <td className="p-2 text-center text-xs font-medium text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[5]?.rewardRates?.level5 || 4}%
                     </td>
                   </tr>
@@ -659,19 +641,19 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                         <span className="text-xs">{t('invitation.total')}</span>
                       </div>
                     </td>
-                    <td className="p-2 text-center text-xs font-bold text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-bold ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/20' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[1]?.rewardRates?.total || 20}%
                     </td>
-                    <td className="p-2 text-center text-xs font-bold text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-bold ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/20' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[2]?.rewardRates?.total || 22}%
                     </td>
-                    <td className="p-2 text-center text-xs font-bold text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-bold ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/20' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[3]?.rewardRates?.total || 25}%
                     </td>
-                    <td className="p-2 text-center text-xs font-bold text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-bold ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/20' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[4]?.rewardRates?.total || 28}%
                     </td>
-                    <td className="p-2 text-center text-xs font-bold text-islamic-gold">
+                    <td className={`p-2 text-center text-xs font-bold ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/20' : 'text-islamic-gold'}`}>
                       {state?.vipInfo?.levels?.[5]?.rewardRates?.total || 30}%
                     </td>
                   </tr>

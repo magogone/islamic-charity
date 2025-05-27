@@ -7,35 +7,19 @@
   },
   "common": {
     "loading": "加载中...",
-    "error": "错误",
-    "success": "成功",
-    "confirm": "确认",
-    "cancel": "取消",
-    "save": "保存",
-    "close": "关闭",
-    "refresh": "刷新",
     "logout": "退出登录",
-    "login": "登录",
-    "register": "注册",
-    "next": "下一步",
-    "previous": "上一步",
-    "submit": "提交",
-    "processing": "处理中...",
-    "back": "返回"
+    "login": "登录"
   },
   "auth": {
     "login": "登录",
-    "register": "注册",
     "email": "邮箱",
     "emailAddress": "邮箱地址",
     "password": "密码",
     "confirmPassword": "确认密码",
     "username": "用户名",
     "name": "姓名",
-    "loginButton": "登录",
     "signIn": "登录",
     "signingIn": "登录中...",
-    "registerButton": "创建账户",
     "createAccount": "创建账户",
     "creatingAccount": "创建账户中...",
     "signInToAccount": "登录您的账户",
@@ -43,8 +27,6 @@
     "loginPrompt": "已有账户？立即登录",
     "registerPrompt": "没有账户？立即注册",
     "or": "或",
-    "sessionExpired": "您的登录会话已过期，请重新登录以继续",
-    "loginRequired": "请登录后继续",
     "loginSuccessful": "登录成功！",
     "registrationSuccessful": "注册成功！您现在可以登录了。",
     "passwordsDoNotMatch": "密码不匹配",
@@ -66,9 +48,15 @@
   },
   "home": {
     "title": "巴拉卡特联盟基金会",
-    "description": "创新慈善模式：神圣使命",
     "fullDescription": "创新慈善模式：神圣使命 - 通过捐赠参与扶贫事业",
     "donateButton": "立即捐赠"
+  },
+  "news": {
+    "title": "新闻资讯",
+    "subtitle": "了解最新信息",
+    "previous": "上一页",
+    "next": "下一页",
+    "goToSlide": "跳转到第{number}张"
   },
   "profile": {
     "title": "个人中心",
@@ -93,16 +81,9 @@
   },
   "donation": {
     "title": "捐赠",
-    "donate": "捐赠",
-    "donateNow": "立即捐赠",
-    "donationAmount": "捐赠金额",
-    "reliefPeriod": "救济周期",
     "totalDonationAmount": "总捐赠金额",
     "dailyReliefFunds": "每日救济基金",
     "increaseDonation": "增加捐赠",
-    "currentlyObtained": "当前获得",
-    "distributed": "已发放",
-    "pending": "待发放",
     "myDonationOverview": "我的捐赠概览",
     "total": "总计",
     "rewards": "奖励",
@@ -152,15 +133,18 @@
     "toVip": "{amount}U 升级到VIP{level}",
     "fullAmountRequired": "VIP{level}需要全额费用，不仅仅是差额"
   },
+  "vip": {
+    "level1": "1-布拉克等级",
+    "level2": "2-巴达尔等级",
+    "level3": "3-蒙塔哈等级",
+    "level4": "4-米尔贾等级",
+    "level5": "5-至善等级"
+  },
   "payment": {
-    "title": "支付",
     "paymentInformation": "支付信息",
-    "paymentInfoDesc": "每个VIP等级需要支付上述显示的全额，而不仅仅是等级之间的差额。",
     "connectWallet": "连接钱包进行捐赠",
     "switchNetwork": "切换到支持的网络",
     "donateNowButton": "立即捐赠！",
-    "networkInformation": "网络信息",
-    "supportedNetworks": "支持的网络",
     "donate": "捐赠",
     "donateToUpgrade": "捐赠以升级您的VIP等级并增加奖励。",
     "donationAmount": "捐赠金额",
@@ -194,80 +178,15 @@
     "paymentFailed": "支付失败"
   },
   "withdraw": {
-    "title": "提现",
-    "withdrawFunds": "提现资金",
-    "description": "将您的可用资金提现到钱包",
-    "availableBalance": "可用余额",
-    "withdrawalAmount": "提现金额",
-    "withdrawNow": "立即提现",
-    "withdrawalSuccessful": "提现成功",
-    "transactionId": "交易ID",
-    "copied": "已复制！",
-    "copy": "复制"
-  },
-  "vip": {
-    "privileges": "特权",
-    "donationReturns": "捐赠与回报",
-    "donation": "捐赠",
-    "totalReturn": "总回报",
-    "dailyReliefFunds": "每日救济基金",
-    "referralRewards": "推荐奖励",
-    "totalRewardRate": "总奖励率",
-    "reliefFundRate": "救济基金率",
-    "level1": "一级",
-    "level2": "二级",
-    "level3": "三级",
-    "noReferral": "无推荐",
-    "referral1": "1个推荐",
-    "referral3": "3个推荐",
-    "referral5": "5+个推荐"
+    "title": "提现"
   },
   "hero": {
     "title": "巴拉卡特联盟基金会",
     "description": "创新慈善模式：神圣使命",
     "donateButton": "立即捐赠"
   },
-  "team": {
-    "directReferrals": "直接推荐",
-    "totalReferrals": "总推荐数",
-    "teamTotalDonations": "团队总捐赠",
-    "totalRewards": "总奖励",
-    "referralInfo": "推荐信息",
-    "referralInfoDesc": "推荐更多朋友来增加您的救济基金率。"
-  },
-  "investment": {
-    "title": "投资",
-    "description": "投资机会"
-  },
-  "promotion": {
-    "title": "推广",
-    "share": "分享",
-    "referralLink": "推荐链接",
-    "shareNow": "立即分享"
-  },
-  "news": {
-    "title": "新闻资讯",
-    "subtitle": "了解最新信息",
-    "previous": "上一页",
-    "next": "下一页",
-    "goToSlide": "跳转到第{number}页"
-  },
-  "event": {
-    "time": "时间",
-    "location": "地点",
-    "language": "语言"
-  },
-  "validation": {
-    "required": "此字段为必填项",
-    "invalidEmail": "请输入有效的邮箱地址",
-    "passwordTooShort": "密码长度至少6位",
-    "passwordMismatch": "密码不匹配",
-    "invalidAmount": "请输入有效金额"
-  },
   "units": {
-    "usdt": "USDT",
-    "u": "U",
-    "percent": "%"
+    "u": "U"
   },
   "donationOverview": {
     "myDonations": "我的捐赠",
@@ -286,9 +205,7 @@
   },
   "rewardSummary": {
     "withdrawn": "已提现",
-    "withdrawable": "可提现",
-    "expected": "预期",
-    "maximum": "最大"
+    "withdrawable": "可提现"
   },
   "rewardPeriod": {
     "start": "开始",
@@ -380,4 +297,4 @@
     "joinDescription": "加入巴拉卡特联盟基金会，参与伊斯兰慈善事业，获得扶贫基金支持!",
     "reliefFundNote": "注：救济基金率适用于您的每日慈善支持金额。"
   }
-} 
+}

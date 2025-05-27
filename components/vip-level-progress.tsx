@@ -114,7 +114,9 @@ function VipLevelProgressImpl({ currentLevel, currentDonation, onUpgrade, classN
       `}</style>
       
       <div className="flex justify-between mb-2">
-        <span className="text-sm text-islamic-cream/80">{t('donation.currentVip').replace('{level}', currentLevel.toString())}</span>
+        {currentLevel > 0 && (
+          <span className="text-sm text-islamic-cream/80">{t('donation.currentVip').replace('{level}', t(`vip.level${currentLevel}`))}</span>
+        )}
         {nextLevel && nextLevelAmount && (
           <TooltipProvider>
             <Tooltip>

@@ -17,8 +17,8 @@ export function ApiErrorHandler({ children }: ApiErrorHandlerProps) {
   useEffect(() => {
     // Custom event listener for API errors
     const handleApiError = (event: CustomEvent<{code: number, message: string}>) => {
-      const { code, message } = event.detail
-      showError(`Error ${code}: ${message}`)
+      const { message } = event.detail
+      showError(message)
     }
     
     // TypeScript requires this cast since CustomEvent with generics isn't directly supported
