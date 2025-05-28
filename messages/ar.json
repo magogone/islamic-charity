@@ -56,7 +56,17 @@
     "subtitle": "تعرف على أحدث المعلومات",
     "previous": "السابق",
     "next": "التالي",
-    "goToSlide": "انتقل إلى الصفحة {number}"
+    "goToSlide": "انتقل إلى الصفحة {number}",
+    "loading": "جاري تحميل الأخبار...",
+    "retry": "إعادة المحاولة",
+    "noData": "لا توجد أخبار متاحة",
+    "loadError": "فشل في تحميل الأخبار",
+    "loadingDetail": "جاري تحميل تفاصيل الخبر...",
+    "newsDetail": "تفاصيل الخبر",
+    "newsType": "خبر",
+    "announcementType": "إعلان",
+    "newBadge": "جديد",
+    "importantBadge": "مهم"
   },
   "profile": {
     "title": "الملف الشخصي",

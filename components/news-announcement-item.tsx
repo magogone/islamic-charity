@@ -13,6 +13,7 @@ export interface NewsAnnouncementItemProps {
   isImportant?: boolean
   type: "news" | "announcement"
   className?: string
+  onClick?: () => void
 }
 
 export function NewsAnnouncementItem({
@@ -24,13 +25,16 @@ export function NewsAnnouncementItem({
   isImportant = false,
   type,
   className,
+  onClick,
 }: NewsAnnouncementItemProps) {
   return (
     <Card
       className={cn(
         "overflow-hidden border-none shadow-md bg-islamic-dark/80 hover:bg-islamic-dark/90 transition-all w-full",
+        onClick && "cursor-pointer hover:shadow-lg hover:scale-[1.02]",
         className,
       )}
+      onClick={onClick}
     >
       <div className="relative w-full h-48">
         <Image src={imageUrl || "/placeholder.svg"} alt={title} fill className="object-cover" sizes="100vw" />
@@ -55,6 +59,11 @@ export function NewsAnnouncementItem({
         <p className="text-sm text-islamic-cream/80 mb-3 line-clamp-3">{content}</p>
         <div className="flex justify-between items-center">
           <span className="text-xs text-islamic-cream/60">{date}</span>
+          {onClick && (
+            <span className="text-xs text-islamic-gold/80 hover:text-islamic-gold transition-colors">
+              Read more →
+            </span>
+          )}
         </div>
       </CardContent>
     </Card>

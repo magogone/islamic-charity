@@ -56,7 +56,17 @@
     "subtitle": "تازہ ترین معلومات حاصل کریں",
     "previous": "پچھلا",
     "next": "اگلا",
-    "goToSlide": "سلائیڈ {number} پر جائیں"
+    "goToSlide": "سلائیڈ {number} پر جائیں",
+    "loading": "خبریں لوڈ ہو رہی ہیں...",
+    "retry": "دوبارہ کوشش کریں",
+    "noData": "کوئی خبر دستیاب نہیں",
+    "loadError": "خبریں لوڈ کرنے میں ناکامی",
+    "loadingDetail": "خبر کی تفصیلات لوڈ ہو رہی ہیں...",
+    "newsDetail": "خبر کی تفصیلات",
+    "newsType": "خبر",
+    "announcementType": "اعلان",
+    "newBadge": "نیا",
+    "importantBadge": "اہم"
   },
   "profile": {
     "title": "پروفائل",

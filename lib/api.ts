@@ -163,7 +163,7 @@ export function emitAuthFailure(endpoint: string, statusCode: number) {
 /**
  * Base function to make API requests
  */
-async function apiRequest<T>(
+export async function apiRequest<T>(
   endpoint: string,
   method: string = "GET",
   data?: any,

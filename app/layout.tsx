@@ -17,7 +17,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
 
 export const metadata = {
-  title: "Barkat Alliance Foundation - Islamic Charity",
+  title: "Barkat-e-Alliance Foundation - Islamic Charity",
   description: "Innovative Charity Model: Divine Mission",
   generator: "v0.dev",
 }

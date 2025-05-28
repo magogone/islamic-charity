@@ -8,7 +8,8 @@
   "common": {
     "loading": "Loading...",
     "logout": "Logout",
-    "login": "Login"
+    "login": "Login",
+    "close": "Close"
   },
   "auth": {
     "login": "Login",
@@ -47,7 +48,7 @@
     "createANewAccount": "create a new account"
   },
   "home": {
-    "title": "Barkat Alliance Foundation",
+    "title": "Barkat-e-Alliance Foundation",
     "fullDescription": "Innovative Charity Model: Divine Mission - Participate in poverty relief through donations",
     "donateButton": "Donate Now"
   },
@@ -56,7 +57,17 @@
     "subtitle": "Learn about the latest information",
     "previous": "Previous",
     "next": "Next",
-    "goToSlide": "Go to slide {number}"
+    "goToSlide": "Go to slide {number}",
+    "loading": "Loading news...",
+    "retry": "Retry",
+    "noData": "No news available",
+    "loadError": "Failed to load news",
+    "loadingDetail": "Loading news detail...",
+    "newsDetail": "News Detail",
+    "newsType": "News",
+    "announcementType": "Announcement",
+    "newBadge": "New",
+    "importantBadge": "Important"
   },
   "profile": {
     "title": "Profile",
@@ -97,7 +108,7 @@
     "step2": "Your contribution is distributed to community projects",
     "step3": "You receive regular updates on project impact",
     "step4": "Your VIP status grows along with your contributions",
-    "copyright": "© 2023 Barkat Alliance Foundation. All rights reserved.",
+    "copyright": "© 2023 Barkat-e-Alliance Foundation. All rights reserved.",
     "vipPrivileges": "VIP {level} Privileges",
     "currentLevel": "Current Level",
     "donationAndReturns": "Donation & Returns",
@@ -181,7 +192,7 @@
     "title": "Withdraw"
   },
   "hero": {
-    "title": "Barkat Alliance Foundation",
+    "title": "Barkat-e-Alliance Foundation",
     "description": "Innovative Charity Model: Divine Mission",
     "donateButton": "Donate Now"
   },
@@ -269,7 +280,7 @@
   "share": {
     "inviteFriends": "Invite Member",
     "shareYourInvitationLink": "Share Your Invitation Link",
-    "inviteDescription": "Invite members to join Barkat Alliance Foundation, participate together in Islamic charity, and you'll receive generous referral rewards!",
+    "inviteDescription": "Invite members to join Barkat-e-Alliance Foundation, participate together in Islamic charity, and you'll receive generous referral rewards!",
     "generatingInvitationLink": "Generating your invitation link...",
     "couldNotGenerateCode": "Could not generate invite code. Please try again later.",
     "errorGeneratingCode": "An error occurred while generating your invite code.",
@@ -293,8 +304,8 @@
     "moreInvitesHigherRate": "The more people you invite, the higher your relief fund rate:",
     "people": "people",
     "person": "person",
-    "invitationToJoin": "Invitation to Join Barkat Alliance Foundation",
-    "joinDescription": "Join Barkat Alliance Foundation, participate in Islamic charity, and receive poverty relief fund support!",
+    "invitationToJoin": "Invitation to Join Barkat-e-Alliance Foundation",
+    "joinDescription": "Join Barkat-e-Alliance Foundation, participate in Islamic charity, and receive poverty relief fund support!",
     "reliefFundNote": "Note: The relief fund rate applies to your daily charity support amount."
   }
 }
