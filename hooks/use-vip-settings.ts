@@ -61,7 +61,7 @@ function calculateDerivedValues(
   
   // Total return calculation based on the minimum percentage 
   // This represents what users will get over time with no referrals
-  const totalReturn = threshold * minRate;
+  const totalReturn = threshold * 1.2;
   
   return {
     totalReturn,

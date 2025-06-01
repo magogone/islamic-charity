@@ -53,10 +53,10 @@
     "donateButton": "立即捐赠"
   },
   "news": {
-    "title": "新闻资讯",
-    "subtitle": "了解最新信息",
-    "previous": "上一页",
-    "next": "下一页",
+    "title": "新闻",
+    "subtitle": "了解最新资讯",
+    "previous": "上一个",
+    "next": "下一个",
     "goToSlide": "跳转到第{number}张",
     "loading": "正在加载新闻...",
     "retry": "重试",
@@ -67,7 +67,8 @@
     "newsType": "新闻",
     "announcementType": "公告",
     "newBadge": "新",
-    "importantBadge": "重要"
+    "importantBadge": "重要",
+    "readMore": "阅读更多 →"
   },
   "profile": {
     "title": "个人中心",
@@ -109,7 +110,7 @@
     "step3": "您收到项目影响的定期更新",
     "step4": "您的VIP状态随着您的贡献而增长",
     "copyright": "© 2023 巴拉卡特联盟基金会。保留所有权利。",
-    "vipPrivileges": "VIP {level} 级特权",
+    "vipPrivileges": "{level} 特权",
     "currentLevel": "当前等级",
     "donationAndReturns": "捐赠与回报",
     "donation": "捐赠",
@@ -133,23 +134,23 @@
     "referred": "已推荐",
     "earningSummary": "收益摘要",
     "withdrawEarnings": "提现收益",
-    "vipPaymentInformation": "VIP等级支付信息",
-    "fullPaymentNote": "每个VIP等级需要支付下方显示的全额，而不仅仅是等级之间的差额。",
-    "vipLevel": "VIP等级",
+    "vipPaymentInformation": "等级支付信息",
+    "fullPaymentNote": "每个等级需要支付下方显示的全额，而不仅仅是等级之间的差额。",
+    "vipLevel": "等级",
     "fullPayment": "全额支付",
     "importantNote": "重要提示",
-    "upgradeNote": "从一个VIP等级升级到另一个等级时，您需要支付新等级的全额费用，而不仅仅是等级之间的差额。",
-    "upgradeExample": "例如，从VIP 1（100 U）升级到VIP 2（300 U），您需要支付全额300 U，而不是仅仅200 U的差额。",
-    "currentVip": "当前VIP{level}",
-    "toVip": "{amount}U 升级到VIP{level}",
-    "fullAmountRequired": "VIP{level}需要全额费用，不仅仅是差额"
+    "upgradeNote": "从一个等级升级到另一个等级时，您需要支付新等级的全额费用，而不仅仅是等级之间的差额。",
+    "upgradeExample": "例如，从布拉克等级（100 U）升级到巴达尔等级（300 U），您需要支付全额300 U，而不是仅仅200 U的差额。",
+    "currentVip": "{level}",
+    "toVip": "{amount}U 升级到{level}",
+    "fullAmountRequired": "{level}需要全额费用，不仅仅是差额"
   },
   "vip": {
-    "level1": "1-布拉克等级",
-    "level2": "2-巴达尔等级",
-    "level3": "3-蒙塔哈等级",
-    "level4": "4-米尔贾等级",
-    "level5": "5-至善等级"
+    "level1": "布拉克等级",
+    "level2": "巴达尔等级",
+    "level3": "蒙塔哈等级",
+    "level4": "米尔贾等级",
+    "level5": "至善等级"
   },
   "payment": {
     "paymentInformation": "支付信息",

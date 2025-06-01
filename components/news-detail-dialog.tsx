@@ -197,20 +197,26 @@ export function NewsDetailDialog({
                 {/* 新闻元信息 */}
                 <div className="flex flex-wrap items-center gap-3">
                   <Badge className={cn(
-                    newsDetail.type === "news" ? "bg-islamic-teal/80" : "bg-islamic-gold/80",
-                    "text-white"
+                    newsDetail.type === "news" ? "bg-islamic-teal/80 hover:bg-islamic-teal" : "bg-islamic-gold/80 hover:bg-islamic-gold",
+                    "text-white hover:scale-105 transition-all duration-200 cursor-default shadow-lg"
                   )}>
                     {newsDetail.type === "news" ? t('news.newsType') : t('news.announcementType')}
                   </Badge>
                   
                   {newsDetail.isNew && (
-                    <Badge variant="secondary" className="bg-islamic-gold text-islamic-dark">
+                    <Badge 
+                      variant="secondary" 
+                      className="bg-islamic-gold text-islamic-dark hover:bg-islamic-gold/90 hover:scale-105 transition-all duration-200 cursor-default shadow-lg"
+                    >
                       {t('news.newBadge')}
                     </Badge>
                   )}
                   
                   {newsDetail.isImportant && (
-                    <Badge variant="destructive" className="bg-red-500">
+                    <Badge 
+                      variant="destructive" 
+                      className="bg-red-500 text-white hover:bg-red-600 hover:scale-105 transition-all duration-200 cursor-default shadow-lg"
+                    >
                       {t('news.importantBadge')}
                     </Badge>
                   )}

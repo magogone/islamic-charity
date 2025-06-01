@@ -287,7 +287,7 @@ export default function ProfilePage() {
               </div>
               <p className="text-xs text-islamic-cream/70 mt-1">{displayData.email}</p>
               <p className="text-sm text-islamic-cream/70 mt-1">
-                {t('profile.vipLevel')} {isDataLoading ? "..." : displayData.vipLevel} · {displayData.isVerified ? t('profile.verified') : t('profile.unverified')}
+                {isDataLoading ? "..." : t(`vip.level${displayData.vipLevel}`)} · {displayData.isVerified ? t('profile.verified') : t('profile.unverified')}
               </p>
             </div>
           </div>

@@ -45,10 +45,22 @@ export function useNews(): UseNewsReturn {
   const { state, dispatch } = useStore()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [currentLanguage, setCurrentLanguage] = useState<string>('en')
+  const [currentLanguage, setCurrentLanguage] = useState<string>('')
+  const [isRequesting, setIsRequesting] = useState(false)
 
   // 获取首页新闻数据
   const fetchNews = useCallback(async (language: string = 'en') => {
+    // 如果正在请求中，避免重复请求
+    if (isRequesting) {
+      return
+    }
+
+    // 如果语言没有变化且已有数据，跳过重复请求
+    if (language === currentLanguage && state.news.length > 0 && !error) {
+      return
+    }
+
+    setIsRequesting(true)
     setLoading(true)
     setError(null)
     setCurrentLanguage(language)
@@ -71,13 +83,14 @@ export function useNews(): UseNewsReturn {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch news'
       setError(errorMessage)
-      console.error('Error fetching news:', err)
+      console.error(`[useNews] Error fetching news for ${language}:`, err)
       
       // 发生错误时保持现有数据，不清空
     } finally {
       setLoading(false)
+      setIsRequesting(false)
     }
-  }, [dispatch])
+  }, [dispatch, currentLanguage, state.news.length, error, isRequesting])
 
   // 手动更新新闻数据
   const updateNews = useCallback((news: NewsAnnouncementItemProps[]) => {
@@ -86,8 +99,14 @@ export function useNews(): UseNewsReturn {
 
   // 刷新当前语言的新闻
   const refresh = useCallback(async () => {
-    await fetchNews(currentLanguage)
-  }, [fetchNews, currentLanguage])
+    if (currentLanguage && !isRequesting) {
+      // 强制刷新，忽略缓存
+      const originalLanguage = currentLanguage
+      setCurrentLanguage('') // 重置以强制刷新
+      setError(null) // 清除错误状态
+      await fetchNews(originalLanguage)
+    }
+  }, [fetchNews, currentLanguage, isRequesting])
 
   return {
     news: state.news,

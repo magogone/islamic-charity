@@ -118,21 +118,12 @@ function VipLevelProgressImpl({ currentLevel, currentDonation, onUpgrade, classN
           <span className="text-sm text-islamic-cream/80">{t('donation.currentVip').replace('{level}', t(`vip.level${currentLevel}`))}</span>
         )}
         {nextLevel && nextLevelAmount && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-center text-sm text-islamic-cream/80 cursor-help">
-                  <span>
-                    {t('donation.toVip').replace('{amount}', nextLevelAmount.toString()).replace('{level}', nextLevel.toString())}
-                  </span>
-                  <Info className="ml-1 h-3 w-3 text-islamic-cream/60" />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent className="bg-islamic-medium border-islamic-gold/30 text-islamic-cream">
-                <p className="text-xs">{t('donation.fullAmountRequired').replace('{level}', nextLevel.toString())}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <div className="relative group">
+            <Info className="h-4 w-4 text-islamic-cream/60 cursor-help hover:text-islamic-gold transition-colors" />
+            <div className="absolute right-0 top-6 bg-islamic-medium border border-islamic-gold/30 text-islamic-cream px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 pointer-events-none">
+              {t('donation.toVip').replace('{amount}', nextLevelAmount.toString()).replace(`{level}`, t(`vip.level${nextLevel}`))}
+            </div>
+          </div>
         )}
       </div>
 

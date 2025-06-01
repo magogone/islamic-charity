@@ -41,7 +41,7 @@ export function VipBenefitsCard({ vipLevel, className }: VipBenefitsCardProps) {
     <Card className={cn("border-none shadow-xl bg-islamic-cardBg/90 backdrop-blur-lg text-white", className)}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg text-islamic-gold">{t('donation.vipPrivileges').replace('{level}', displayLevel.toString())}</CardTitle>
+          <CardTitle className="text-lg text-islamic-gold">{t('donation.vipPrivileges').replace('{level}', t(`vip.level${displayLevel}`))}</CardTitle>
           {showCurrentLevelBadge && (
             <Badge variant="outline" className="border-islamic-gold text-islamic-gold">
               {t('donation.currentLevel')}

@@ -2,6 +2,7 @@ import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { useTranslation } from "@/lib/i18n"
 
 export interface NewsAnnouncementItemProps {
   id: string
@@ -27,6 +28,8 @@ export function NewsAnnouncementItem({
   className,
   onClick,
 }: NewsAnnouncementItemProps) {
+  const { t } = useTranslation()
+
   return (
     <Card
       className={cn(
@@ -38,19 +41,30 @@ export function NewsAnnouncementItem({
     >
       <div className="relative w-full h-48">
         <Image src={imageUrl || "/placeholder.svg"} alt={title} fill className="object-cover" sizes="100vw" />
-        <div className="absolute top-2 right-2 flex gap-2">
+        <div className="absolute top-2 right-2 flex gap-2 z-10">
           {isNew && (
-            <Badge variant="secondary" className="bg-islamic-gold text-islamic-dark">
-              New
+            <Badge 
+              variant="secondary" 
+              className="bg-islamic-gold text-islamic-dark hover:bg-islamic-gold/90 hover:scale-105 transition-all duration-200 cursor-default shadow-lg"
+            >
+              {t('news.newBadge')}
             </Badge>
           )}
           {isImportant && (
-            <Badge variant="destructive" className="bg-red-500">
-              Important
+            <Badge 
+              variant="destructive" 
+              className="bg-red-500 text-white hover:bg-red-600 hover:scale-105 transition-all duration-200 cursor-default shadow-lg"
+            >
+              {t('news.importantBadge')}
             </Badge>
           )}
-          <Badge className={cn(type === "news" ? "bg-islamic-teal/80" : "bg-islamic-gold/80", "text-white")}>
-            {type === "news" ? "News" : "Announcement"}
+          <Badge 
+            className={cn(
+              type === "news" ? "bg-islamic-teal/80 hover:bg-islamic-teal" : "bg-islamic-gold/80 hover:bg-islamic-gold", 
+              "text-white hover:scale-105 transition-all duration-200 cursor-default shadow-lg"
+            )}
+          >
+            {type === "news" ? t('news.newsType') : t('news.announcementType')}
           </Badge>
         </div>
       </div>
@@ -61,7 +75,7 @@ export function NewsAnnouncementItem({
           <span className="text-xs text-islamic-cream/60">{date}</span>
           {onClick && (
             <span className="text-xs text-islamic-gold/80 hover:text-islamic-gold transition-colors">
-              Read more →
+              {t('news.readMore')}
             </span>
           )}
         </div>

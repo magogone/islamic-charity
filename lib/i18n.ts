@@ -84,9 +84,13 @@ import { useState, useEffect } from 'react';
 
 export function useTranslation() {
   const [locale, setLocaleState] = useState<Locale>(defaultLocale);
+  const [isInitialized, setIsInitialized] = useState(false);
   
   useEffect(() => {
-    setLocaleState(getCurrentLocale());
+    // 客户端初始化时获取正确的语言设置
+    const currentLocale = getCurrentLocale();
+    setLocaleState(currentLocale);
+    setIsInitialized(true);
     
     const handleLocaleChange = () => {
       setLocaleState(getCurrentLocale());
@@ -101,6 +105,7 @@ export function useTranslation() {
   return {
     t: translate,
     locale,
+    isInitialized,
     setLocale: (newLocale: Locale) => {
       setLocale(newLocale);
       setLocaleState(newLocale);
