@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
 /**
  * 环境配置
  */
 export const ENV = {
   // 站点URL
-  SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+  SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   // API URL
-  API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/v1',
-}
+  API_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
+};
 
-// Make sure to add actual environment variables in .env.local or in your hosting platform 
+// Make sure to add actual environment variables in .env.local or in your hosting platform

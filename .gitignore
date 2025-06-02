@@ -31,3 +31,5 @@ pnpm-lock.yaml
 
 # macos
 .DS_Store
+
+certificates

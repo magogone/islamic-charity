@@ -1,156 +1,194 @@
-"use client"
+"use client";
 
-import React, { useEffect, useRef, useState } from "react"
-import type { ReactNode } from "react"
-import Link from "next/link"
-import { useAuth } from "@/store/use-auth"
-import { useToast } from "@/components/ui/toast"
-import { Home, Share2, User } from "lucide-react"
-import { HeartPlusIcon } from "@/components/heart-plus-icon"
-import { LanguageSelector } from "@/components/language-selector"
-import { useTranslation } from "@/lib/i18n"
-import { useRouter } from "next/navigation"
-import { useAuthContext } from "@/store/auth-context"
+import React, { useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import Link from "next/link";
+import { useAuth } from "@/store/use-auth";
+import { useToast } from "@/components/ui/toast";
+import { Home, Share2, User, Star } from "lucide-react";
+import { HeartPlusIcon } from "@/components/heart-plus-icon";
+import { LanguageSelector } from "@/components/language-selector";
+import { useTranslation } from "@/lib/i18n";
+import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/store/auth-context";
 
 // 跟踪是否已经执行过布局组件的会话检查
 let layoutCheckPerformed = false;
 
 interface MainLayoutProps {
-  children: ReactNode
-  title?: string
-  currentPath: string
+  children: ReactNode;
+  title?: string;
+  currentPath: string;
 }
 
-export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
-  const { checkSession, isAuthenticated, user } = useAuth()
-  const { ToastContainer } = useToast()
-  const { t } = useTranslation()
-  const router = useRouter()
-  const { openLoginModal } = useAuthContext()
+const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
+  const { checkSession, isAuthenticated, user } = useAuth();
+  const { ToastContainer } = useToast();
+  const { t } = useTranslation();
+  const router = useRouter();
+  const { openLoginModal } = useAuthContext();
   const hasCheckedRef = useRef(false);
   const mainLayoutRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  
+
   // 添加客户端渲染状态，避免服务端渲染与客户端水合不匹配
   const [mounted, setMounted] = useState(false);
+
+  // 模拟用户VIP等级数据（与VIP Events页面保持一致）
+  const userData = {
+    vipLevel: 4,
+  };
 
   // 设置客户端挂载状态
   useEffect(() => {
     setMounted(true);
-    
+
     // 确保页面可以正常滚动
-    document.body.style.overflow = 'auto';
-    document.documentElement.style.overflow = 'auto';
-    document.body.style.height = 'auto';
-    
+    document.body.style.overflow = "auto";
+    document.documentElement.style.overflow = "auto";
+    document.body.style.height = "auto";
+
     // 监听滚动事件
     const handleScroll = () => {
       // 不再需要输出调试信息
     };
-    
-    window.addEventListener('scroll', handleScroll);
-    
+
+    window.addEventListener("scroll", handleScroll);
+
     // 保存原始的wheel处理器，以便在清理时恢复
     const originalWheelHandler = window.onwheel;
-    
+
     // 尝试使用passive wheel事件监听器，确保滚动正常
-    window.addEventListener('wheel', () => {
-      // 空函数，仅用于确保滚动事件传播
-    }, { passive: true });
-    
+    window.addEventListener(
+      "wheel",
+      () => {
+        // 空函数，仅用于确保滚动事件传播
+      },
+      { passive: true }
+    );
+
     // 在移动设备上处理触摸滑动，确保滚动正常工作
-    if (currentPath === '/donation') {
+    if (currentPath === "/donation") {
       // 延迟处理，确保页面完全加载
       setTimeout(() => {
         if (mainLayoutRef.current) {
           // 确保内容容器高度足够
           if (contentRef.current) {
-            contentRef.current.style.minHeight = 'calc(100vh + 300px)';
+            contentRef.current.style.minHeight = "calc(100vh + 300px)";
           }
-          
+
           // 页面加载后尝试滚动以激活滚动功能
           if (window.scrollY < 10) {
-            window.scrollTo({top: 10, behavior: 'smooth'});
+            window.scrollTo({ top: 10, behavior: "smooth" });
             setTimeout(() => {
-              window.scrollTo({top: 0, behavior: 'smooth'});
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }, 100);
           }
         }
       }, 1000);
     }
-    
+
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
       window.onwheel = originalWheelHandler;
     };
   }, [currentPath]);
-  
+
   // 新增：专门处理底部导航按钮的点击事件
   useEffect(() => {
     if (!mounted) return;
-    
+
     // 手动添加导航事件处理器，防止事件被其他元素拦截
     const setupDirectNavigation = () => {
       // 获取底部导航按钮
       const homeButton = document.querySelector('[data-path="/"]');
       const donateButton = document.querySelector('[data-path="/donation"]');
+      const vipEventsButton = document.querySelector(
+        '[data-path="/vip-events"]'
+      );
       const inviteButton = document.querySelector('[data-path="/promotion"]');
       const profileButton = document.querySelector('[data-path="/profile"]');
-      
-      // 为每个按钮添加点击事件
+
+      // 为每个按钮添加点击事件 - 暂时禁用认证检查
       if (homeButton) {
-        homeButton.addEventListener('click', (e) => {
+        homeButton.addEventListener("click", (e) => {
           e.stopPropagation(); // 阻止事件冒泡
           if (currentPath !== "/") {
             router.push("/");
           }
         });
       }
-      
+
       if (donateButton) {
-        donateButton.addEventListener('click', (e) => {
+        donateButton.addEventListener("click", (e) => {
           e.stopPropagation(); // 阻止事件冒泡
-          if (isAuthenticated) {
-            router.push("/donation");
-          } else {
-            openLoginModal("/donation");
-          }
+          // 暂时禁用认证检查，直接跳转
+          router.push("/donation");
+
+          // 原来的认证检查逻辑（已禁用）
+          // if (isAuthenticated) {
+          //   router.push("/donation");
+          // } else {
+          //   openLoginModal("/donation");
+          // }
         });
       }
-      
+
+      // 获取VIP事件按钮
+      if (vipEventsButton) {
+        vipEventsButton.addEventListener("click", (e) => {
+          e.stopPropagation(); // 阻止事件冒泡
+          // 暂时禁用认证检查，直接跳转
+          router.push("/vip-events");
+        });
+      }
+
       if (inviteButton) {
-        inviteButton.addEventListener('click', (e) => {
+        inviteButton.addEventListener("click", (e) => {
           e.stopPropagation(); // 阻止事件冒泡
-          if (isAuthenticated) {
-            router.push("/promotion");
-          } else {
-            openLoginModal("/promotion");
-          }
+          // 暂时禁用认证检查，直接跳转
+          router.push("/promotion");
+
+          // 原来的认证检查逻辑（已禁用）
+          // if (isAuthenticated) {
+          //   router.push("/promotion");
+          // } else {
+          //   openLoginModal("/promotion");
+          // }
         });
       }
-      
+
       if (profileButton) {
-        profileButton.addEventListener('click', (e) => {
+        profileButton.addEventListener("click", (e) => {
           e.stopPropagation(); // 阻止事件冒泡
-          if (isAuthenticated) {
-            router.push("/profile");
-          } else {
-            openLoginModal("/profile");
-          }
+          // 暂时禁用认证检查，直接跳转
+          router.push("/profile");
+
+          // 原来的认证检查逻辑（已禁用）
+          // if (isAuthenticated) {
+          //   router.push("/profile");
+          // } else {
+          //   openLoginModal("/profile");
+          // }
         });
       }
     };
-    
+
     // 延迟设置，确保DOM已完全渲染
     const navSetupTimer = setTimeout(setupDirectNavigation, 500);
-    
+
     return () => {
       clearTimeout(navSetupTimer);
     };
-  }, [mounted, currentPath, isAuthenticated, router, openLoginModal]);
-  
-  // 只检查一次会话，避免重复请求
+  }, [mounted, currentPath, router]);
+
+  // 只检查一次会话，避免重复请求 - 暂时禁用
   useEffect(() => {
+    // 暂时禁用所有认证检查逻辑
+    return;
+
+    // 原来的会话检查逻辑（已禁用）
+    /*
     // 如果已执行过检查，则跳过
     if (hasCheckedRef.current || layoutCheckPerformed) {
       return;
@@ -188,47 +226,63 @@ export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
     
     // 更新上次活动时间戳
     sessionStorage.setItem('last_activity', currentTime.toString());
-  }, [checkSession, isAuthenticated]);
+    */
+  }, []); // 移除所有依赖项
 
-  // Function to handle navigation with auth check
+  // Function to handle navigation with auth check - 暂时禁用认证检查
   const handleNavigation = (path: string) => {
-    if (path === "/" || isAuthenticated) {
-      router.push(path)
-    } else {
-      // Open login modal with target path
-      openLoginModal(path)
-    }
-  }
+    // 暂时禁用认证检查，直接跳转
+    router.push(path);
 
-  // 渲染用户信息或登录按钮的函数
+    // 原来的认证检查逻辑（已禁用）
+    // if (path === "/" || isAuthenticated) {
+    //   router.push(path)
+    // } else {
+    //   // Open login modal with target path
+    //   openLoginModal(path)
+    // }
+  };
+
+  // 渲染用户信息或登录按钮的函数 - 暂时简化
   const renderAuthSection = () => {
     if (!mounted) {
       // 在客户端挂载前，返回一个占位符，避免水合不匹配
       return <div className="auth-placeholder"></div>;
     }
-    
-    return isAuthenticated && user ? (
+
+    // 暂时只显示语言选择器，禁用登录功能
+    return (
       <div className="flex items-center gap-3">
-        <span className="text-sm text-islamic-cream">
-          {user.username || user.email.split("@")[0]}
-        </span>
-        <LanguageSelector />
-      </div>
-    ) : (
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => openLoginModal()}
-          className="px-3 py-1 text-islamic-gold hover:bg-islamic-gold/10 transition-colors text-sm rounded-md"
-        >
-          {t('common.login')}
-        </button>
         <LanguageSelector />
       </div>
     );
+
+    // 原来的认证相关逻辑（已禁用）
+    // return isAuthenticated && user ? (
+    //   <div className="flex items-center gap-3">
+    //     <span className="text-sm text-islamic-cream">
+    //       {user.username || user.email.split("@")[0]}
+    //     </span>
+    //     <LanguageSelector />
+    //   </div>
+    // ) : (
+    //   <div className="flex items-center gap-3">
+    //     <button
+    //       onClick={() => openLoginModal()}
+    //       className="px-3 py-1 text-islamic-gold hover:bg-islamic-gold/10 transition-colors text-sm rounded-md"
+    //     >
+    //       {t('common.login')}
+    //     </button>
+    //     <LanguageSelector />
+    //   </div>
+    // );
   };
 
   return (
-    <div ref={mainLayoutRef} className="min-h-screen bg-islamic-dark text-white overflow-visible">
+    <div
+      ref={mainLayoutRef}
+      className="min-h-screen bg-islamic-dark text-white overflow-visible"
+    >
       {/* Header */}
       <header className="px-6 py-4 border-b border-islamic-medium/50 bg-islamic-dark/70 backdrop-blur-sm sticky top-0 z-20">
         <div className="flex items-center justify-between max-w-lg mx-auto">
@@ -237,17 +291,15 @@ export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
           </div>
 
           {/* Username or login button + Language Selector */}
-          <div>
-            {renderAuthSection()}
-          </div>
+          <div>{renderAuthSection()}</div>
         </div>
       </header>
 
       {/* Main content - 使用相对定位和更明确的滚动区域 */}
-      <div 
-        ref={contentRef} 
+      <div
+        ref={contentRef}
         className="container max-w-lg mx-auto px-4 py-6 pb-24 min-h-screen overflow-y-auto overscroll-auto relative"
-        style={{ WebkitOverflowScrolling: 'touch' }}  // 增强iOS滚动行为
+        style={{ WebkitOverflowScrolling: "touch" }} // 增强iOS滚动行为
       >
         {children}
       </div>
@@ -261,58 +313,83 @@ export function MainLayout({ children, title, currentPath }: MainLayoutProps) {
                 handleNavigation("/");
               }}
               className={`flex flex-col items-center w-full bottom-nav-item ${
-                currentPath === "/" ? "text-islamic-gold active-nav" : "text-islamic-cream/60 hover:text-islamic-gold"
+                currentPath === "/"
+                  ? "text-islamic-gold active-nav"
+                  : "text-islamic-cream/60 hover:text-islamic-gold"
               } transition-colors py-2 relative z-50`}
               data-path="/"
-              style={{ touchAction: 'manipulation' }}
+              style={{ touchAction: "manipulation" }}
             >
-              <Home className="h-6 w-6" />
-              <span className="text-xs mt-1">{t('navigation.home')}</span>
+              <Home className="h-5 w-5" />
+              <span className="text-xs mt-1">{t("navigation.home")}</span>
             </button>
             <button
               onClick={() => {
                 handleNavigation("/donation");
               }}
               className={`flex flex-col items-center w-full bottom-nav-item ${
-                currentPath === "/donation" ? "text-islamic-gold active-nav" : "text-islamic-cream/60 hover:text-islamic-gold"
+                currentPath === "/donation"
+                  ? "text-islamic-gold active-nav"
+                  : "text-islamic-cream/60 hover:text-islamic-gold"
               } transition-colors py-2 relative z-50`}
               data-path="/donation"
-              style={{ touchAction: 'manipulation' }}
+              style={{ touchAction: "manipulation" }}
             >
-              <HeartPlusIcon className="h-6 w-6" />
-              <span className="text-xs mt-1">{t('navigation.donate')}</span>
+              <HeartPlusIcon className="h-5 w-5" />
+              <span className="text-xs mt-1">{t("navigation.donate")}</span>
+            </button>
+            <button
+              onClick={() => {
+                handleNavigation("/vip-events");
+              }}
+              className={`flex flex-col items-center w-full bottom-nav-item ${
+                currentPath === "/vip-events"
+                  ? "text-islamic-gold active-nav"
+                  : "text-islamic-cream/60 hover:text-islamic-gold"
+              } transition-colors py-2 relative z-50`}
+              data-path="/vip-events"
+              style={{ touchAction: "manipulation" }}
+            >
+              <Star className="h-5 w-5" />
+              <span className="text-xs mt-1">等级</span>
             </button>
             <button
               onClick={() => {
                 handleNavigation("/promotion");
               }}
               className={`flex flex-col items-center w-full bottom-nav-item ${
-                currentPath === "/promotion" ? "text-islamic-gold active-nav" : "text-islamic-cream/60 hover:text-islamic-gold"
+                currentPath === "/promotion"
+                  ? "text-islamic-gold active-nav"
+                  : "text-islamic-cream/60 hover:text-islamic-gold"
               } transition-colors py-2 relative z-50`}
               data-path="/promotion"
-              style={{ touchAction: 'manipulation' }}
+              style={{ touchAction: "manipulation" }}
             >
-              <Share2 className="h-6 w-6" />
-              <span className="text-xs mt-1">{t('navigation.invite')}</span>
+              <Share2 className="h-5 w-5" />
+              <span className="text-xs mt-1">{t("navigation.invite")}</span>
             </button>
             <button
               onClick={() => {
                 handleNavigation("/profile");
               }}
               className={`flex flex-col items-center w-full bottom-nav-item ${
-                currentPath === "/profile" ? "text-islamic-gold active-nav" : "text-islamic-cream/60 hover:text-islamic-gold"
+                currentPath === "/profile"
+                  ? "text-islamic-gold active-nav"
+                  : "text-islamic-cream/60 hover:text-islamic-gold"
               } transition-colors py-2 relative z-50`}
               data-path="/profile"
-              style={{ touchAction: 'manipulation' }}
+              style={{ touchAction: "manipulation" }}
             >
-              <User className="h-6 w-6" />
-              <span className="text-xs mt-1">{t('navigation.profile')}</span>
+              <User className="h-5 w-5" />
+              <span className="text-xs mt-1">{t("navigation.profile")}</span>
             </button>
           </div>
         </div>
       </div>
-      
+
       <ToastContainer />
     </div>
-  )
-}
+  );
+};
+
+export { MainLayout };
