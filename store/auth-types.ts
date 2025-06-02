@@ -30,4 +30,5 @@ export interface RegisterCredentials {
   password: string
   confirmPassword: string
   inviteCode?: string  // Optional invite code for referrals
+  verificationCode?: string  // Optional verification code
 }

@@ -296,7 +296,8 @@ export function useAuth() {
           name: credentials.username,
           password: credentials.password,
           repeat_password: credentials.confirmPassword,
-          invite_code: credentials.inviteCode // Include invite code if provided
+          invite_code: credentials.inviteCode, // Include invite code if provided
+          verification_code: credentials.verificationCode // Include verification code if provided
         }
         
         const response = await registerUser(apiCredentials)

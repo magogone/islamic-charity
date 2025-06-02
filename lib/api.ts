@@ -254,16 +254,26 @@ export async function apiRequest<T>(
 }
 
 /**
- * Register a new user
+ * Register user
  */
-export async function registerUser(credentials: {
+export async function registerUser(userData: {
   email: string;
   name: string;
   password: string;
   repeat_password: string;
-  invite_code?: string;  // Optional invite code
+  invite_code?: string;
+  verification_code?: string;
 }): Promise<ApiResponse<RegisterResponse>> {
-  return apiRequest<RegisterResponse>("/auth/register", "POST", credentials);
+  return apiRequest<RegisterResponse>("/auth/register", "POST", userData);
+}
+
+/**
+ * Send email verification code
+ */
+export async function sendVerificationCode(data: {
+  email: string;
+}): Promise<ApiResponse<any>> {
+  return apiRequest<any>("/auth/send-verification", "POST", data);
 }
 
 /**
