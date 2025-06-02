@@ -109,7 +109,7 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
       const inviteButton = document.querySelector('[data-path="/promotion"]');
       const profileButton = document.querySelector('[data-path="/profile"]');
 
-      // 为每个按钮添加点击事件 - 暂时禁用认证检查
+      // 为每个按钮添加点击事件
       if (homeButton) {
         homeButton.addEventListener("click", (e) => {
           e.stopPropagation(); // 阻止事件冒泡
@@ -122,15 +122,12 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
       if (donateButton) {
         donateButton.addEventListener("click", (e) => {
           e.stopPropagation(); // 阻止事件冒泡
-          // 暂时禁用认证检查，直接跳转
-          router.push("/donation");
 
-          // 原来的认证检查逻辑（已禁用）
-          // if (isAuthenticated) {
-          //   router.push("/donation");
-          // } else {
-          //   openLoginModal("/donation");
-          // }
+          if (isAuthenticated) {
+            router.push("/donation");
+          } else {
+            openLoginModal("/donation");
+          }
         });
       }
 
@@ -138,38 +135,33 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
       if (vipEventsButton) {
         vipEventsButton.addEventListener("click", (e) => {
           e.stopPropagation(); // 阻止事件冒泡
-          // 暂时禁用认证检查，直接跳转
-          router.push("/vip-events");
+          if (isAuthenticated) {
+            router.push("/vip-events");
+          } else {
+            openLoginModal("/vip-events");
+          }
         });
       }
 
       if (inviteButton) {
         inviteButton.addEventListener("click", (e) => {
           e.stopPropagation(); // 阻止事件冒泡
-          // 暂时禁用认证检查，直接跳转
-          router.push("/promotion");
-
-          // 原来的认证检查逻辑（已禁用）
-          // if (isAuthenticated) {
-          //   router.push("/promotion");
-          // } else {
-          //   openLoginModal("/promotion");
-          // }
+          if (isAuthenticated) {
+            router.push("/promotion");
+          } else {
+            openLoginModal("/promotion");
+          }
         });
       }
 
       if (profileButton) {
         profileButton.addEventListener("click", (e) => {
           e.stopPropagation(); // 阻止事件冒泡
-          // 暂时禁用认证检查，直接跳转
-          router.push("/profile");
-
-          // 原来的认证检查逻辑（已禁用）
-          // if (isAuthenticated) {
-          //   router.push("/profile");
-          // } else {
-          //   openLoginModal("/profile");
-          // }
+          if (isAuthenticated) {
+            router.push("/profile");
+          } else {
+            openLoginModal("/profile");
+          }
         });
       }
     };
@@ -180,15 +172,10 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
     return () => {
       clearTimeout(navSetupTimer);
     };
-  }, [mounted, currentPath, router]);
+  }, [mounted, currentPath, router, isAuthenticated, openLoginModal]);
 
-  // 只检查一次会话，避免重复请求 - 暂时禁用
+  // 只检查一次会话，避免重复请求
   useEffect(() => {
-    // 暂时禁用所有认证检查逻辑
-    return;
-
-    // 原来的会话检查逻辑（已禁用）
-    /*
     // 如果已执行过检查，则跳过
     if (hasCheckedRef.current || layoutCheckPerformed) {
       return;
@@ -226,22 +213,17 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
     
     // 更新上次活动时间戳
     sessionStorage.setItem('last_activity', currentTime.toString());
-    */
-  }, []); // 移除所有依赖项
+  }, [checkSession, isAuthenticated]);
 
-  // Function to handle navigation with auth check - 暂时禁用认证检查
+  // Function to handle navigation with auth check
   const handleNavigation = (path: string) => {
-    // 暂时禁用认证检查，直接跳转
-    router.push(path);
-
-    // 原来的认证检查逻辑（已禁用）
-    // if (path === "/" || isAuthenticated) {
-    //   router.push(path)
-    // } else {
-    //   // Open login modal with target path
-    //   openLoginModal(path)
-    // }
-  };
+    if (path === "/" || isAuthenticated) {
+      router.push(path)
+    } else {
+      // Open login modal with target path
+      openLoginModal(path)
+    }
+  }
 
   // 渲染用户信息或登录按钮的函数 - 暂时简化
   const renderAuthSection = () => {
@@ -249,33 +231,25 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
       // 在客户端挂载前，返回一个占位符，避免水合不匹配
       return <div className="auth-placeholder"></div>;
     }
-
-    // 暂时只显示语言选择器，禁用登录功能
-    return (
+    
+    return isAuthenticated && user ? (
       <div className="flex items-center gap-3">
+        <span className="text-sm text-islamic-cream">
+          {user.username || user.email.split("@")[0]}
+        </span>
+        <LanguageSelector />
+      </div>
+    ) : (
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => openLoginModal()}
+          className="px-3 py-1 text-islamic-gold hover:bg-islamic-gold/10 transition-colors text-sm rounded-md"
+        >
+          {t('common.login')}
+        </button>
         <LanguageSelector />
       </div>
     );
-
-    // 原来的认证相关逻辑（已禁用）
-    // return isAuthenticated && user ? (
-    //   <div className="flex items-center gap-3">
-    //     <span className="text-sm text-islamic-cream">
-    //       {user.username || user.email.split("@")[0]}
-    //     </span>
-    //     <LanguageSelector />
-    //   </div>
-    // ) : (
-    //   <div className="flex items-center gap-3">
-    //     <button
-    //       onClick={() => openLoginModal()}
-    //       className="px-3 py-1 text-islamic-gold hover:bg-islamic-gold/10 transition-colors text-sm rounded-md"
-    //     >
-    //       {t('common.login')}
-    //     </button>
-    //     <LanguageSelector />
-    //   </div>
-    // );
   };
 
   return (

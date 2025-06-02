@@ -112,8 +112,8 @@ export interface UserInfoResponse {
  * 团队信息响应数据
  */
 export interface TeamInfoResponse {
-  direct_invite_count: number; // 直属邀请人数
-  total_invite_count: number; // 总邀请人数（直接+间接）
+  direct_invite_count: number;   // 直属邀请人数
+  total_invite_count: number;    // 总邀请人数（直接+间接）
   invitee_donate_amount: string; // 被邀请人捐赠总额
   total_reward: string; // 总奖励
 }
@@ -137,24 +137,23 @@ export interface UserProfitResponse {
  * 发出认证失败事件，用于在特定页面显示登录提示
  */
 export function emitAuthFailure(endpoint: string, statusCode: number) {
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     // 检查当前路径是否在需要认证的页面
     const pathname = window.location.pathname;
-    const isProtectedRoute =
-      pathname === "/donation" ||
-      pathname.startsWith("/donation/") ||
-      pathname === "/promotion" ||
-      pathname.startsWith("/promotion/") ||
-      pathname === "/profile" ||
-      pathname.startsWith("/profile/");
-
+    const isProtectedRoute = pathname === '/donation' || 
+                            pathname.startsWith('/donation/') ||
+                            pathname === '/promotion' || 
+                            pathname.startsWith('/promotion/') ||
+                            pathname === '/profile' || 
+                            pathname.startsWith('/profile/');
+    
     if (isProtectedRoute) {
-      const event = new CustomEvent("auth-failure", {
-        detail: {
-          endpoint,
-          statusCode,
-          currentPath: pathname,
-        },
+      const event = new CustomEvent('auth-failure', {
+        detail: { 
+          endpoint, 
+          statusCode, 
+          currentPath: pathname 
+        }
       });
       window.dispatchEvent(event);
     }
@@ -170,24 +169,9 @@ export async function apiRequest<T>(
   data?: any,
   forceNoCache: boolean = false
 ): Promise<ApiResponse<T>> {
-  // 暂时禁用所有API调用
-  const API_DISABLED = true;
-  if (API_DISABLED) {
-    console.log(`[API] 调用被禁用: ${method} ${endpoint}`);
-    return {
-      success: false,
-      error: {
-        code: 503,
-        message: "API调用已暂时禁用",
-      },
-    };
-  }
-
   // 使用相对路径直接发送请求到/v1路径
-  let url = endpoint.startsWith("http")
-    ? endpoint
-    : `${ENV.API_URL}${endpoint}`;
-
+  let url = endpoint.startsWith('http') ? endpoint : `${ENV.API_URL}${endpoint}`;
+  
   const options: RequestInit = {
     method,
     headers: {
@@ -195,19 +179,19 @@ export async function apiRequest<T>(
     },
     credentials: "include",
   };
-
+  
   // 如果需要跳过缓存，添加额外参数
   if (forceNoCache) {
-    options.cache = "no-store";
+    options.cache = 'no-store';
     if (!options.headers) {
       options.headers = {};
     }
     Object.assign(options.headers, {
-      "Cache-Control": "no-cache, no-store, must-revalidate",
-      Pragma: "no-cache",
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
     });
   }
-
+  
   // 对于GET请求，将数据作为URL参数
   if (method === "GET" && data) {
     const params = new URLSearchParams();
@@ -219,30 +203,30 @@ export async function apiRequest<T>(
     // 对于其他请求，将数据放在请求体中
     options.body = JSON.stringify(data);
   }
-
+  
   try {
     const response = await fetch(url, options);
-
+    
     // 特殊处理 /auth/me 接口的非200响应
     if (response.status !== 200) {
       // 检查是否是 /auth/me 接口
-      if (endpoint.includes("/auth/me")) {
+      if (endpoint.includes('/auth/me')) {
         emitAuthFailure(endpoint, response.status);
       }
       throw new Error(`Network error: ${response.status}`);
     }
-
+    
     const result = await response.json();
-
+    
     // Automatically handle errors emitting them to the global error handler
     if (!result.success && result.error) {
       // 对于 /auth/me 接口的业务错误，也需要特殊处理
-      if (endpoint.includes("/auth/me")) {
+      if (endpoint.includes('/auth/me')) {
         emitAuthFailure(endpoint, result.error.code);
       }
       emitApiError(result.error.code, result.error.message);
     }
-
+    
     return result;
   } catch (error) {
     // Handle network errors
@@ -251,21 +235,20 @@ export async function apiRequest<T>(
       success: false,
       error: {
         code: 5000,
-        message:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      },
+        message: error instanceof Error ? error.message : "Unknown error occurred"
+      }
     };
-
+    
     // 对于网络错误，如果是 /auth/me 接口，也需要特殊处理
-    if (endpoint.includes("/auth/me")) {
+    if (endpoint.includes('/auth/me')) {
       emitAuthFailure(endpoint, 5000);
     }
-
+    
     // Emit the error to the global error handler
     if (errorResponse.error) {
       emitApiError(errorResponse.error.code, errorResponse.error.message);
     }
-
+    
     return errorResponse;
   }
 }
@@ -313,57 +296,42 @@ export async function logoutUser(): Promise<ApiResponse<LogoutResponse>> {
 /**
  * User donate
  */
-export async function donateAmount(
-  chain: string,
-  amount: string,
-  tokenType: string = "USDT",
-  remark: string = ""
-): Promise<ApiResponse<DonateResponse>> {
+export async function donateAmount(chain: string, amount: string, tokenType: string = "USDT", remark: string = ""): Promise<ApiResponse<DonateResponse>> {
   const donateData: DonateRequest = {
     chain,
     amount,
     token_type: tokenType,
-    remark,
+    remark
   };
-
+  
   return apiRequest<DonateResponse>("/user/donate", "POST", donateData);
 }
 
 /**
  * User withdraw
  */
-export async function withdrawAmount(
-  chain: string,
-  amount: string,
-  walletAddress: string
-): Promise<ApiResponse<WithdrawResponse>> {
+export async function withdrawAmount(chain: string, amount: string, walletAddress: string): Promise<ApiResponse<WithdrawResponse>> {
   const withdrawData: WithdrawRequest = {
     chain,
     amount,
     token_type: "USDT",
     remark: walletAddress,
   };
-
+  
   return apiRequest<WithdrawResponse>("/user/withdraw", "POST", withdrawData);
 }
 
 /**
  * Get settings by key and group
  */
-export async function getSettings(
-  key: string,
-  group: string
-): Promise<ApiResponse<SettingsResponse>> {
+export async function getSettings(key: string, group: string): Promise<ApiResponse<SettingsResponse>> {
   return apiRequest<SettingsResponse>("/settings/get", "GET", { key, group });
 }
 
 /**
  * Maps API errors to friendly messages
  */
-export function handleApiError(error: {
-  code: number;
-  message: string;
-}): string {
+export function handleApiError(error: { code: number; message: string }): string {
   // You can add custom error message mapping here if needed
   return error.message;
 }
@@ -376,26 +344,19 @@ export async function getUserInfo(): Promise<ApiResponse<UserInfoResponse>> {
     // 添加时间戳参数确保不使用缓存的响应
     const timestamp = Date.now();
     const endpoint = `/auth/me?_t=${timestamp}`;
-
+    
     // 使用forceNoCache参数确保请求不会被缓存
-    const result = await apiRequest<UserInfoResponse>(
-      endpoint,
-      "GET",
-      undefined,
-      true
-    );
-
+    const result = await apiRequest<UserInfoResponse>(endpoint, "GET", undefined, true);
+    
     // 如果成功，记录用户数据的关键信息
     if (!result.success || !result.data || !result.data.user) {
-      console.warn(
-        "[API] getUserInfo: No user data in response or request failed"
-      );
+      console.warn('[API] getUserInfo: No user data in response or request failed');
     }
-
+    
     return result;
   } catch (error) {
     console.error("[API] getUserInfo: Fatal error during API call:", error);
-
+    
     // 重新抛出错误，确保调用者知道请求失败
     throw error;
   }
@@ -404,33 +365,24 @@ export async function getUserInfo(): Promise<ApiResponse<UserInfoResponse>> {
 /**
  * 获取用户团队信息
  */
-export async function getUserTeamInfo(): Promise<
-  ApiResponse<TeamInfoResponse>
-> {
-  try {
+export async function getUserTeamInfo(): Promise<ApiResponse<TeamInfoResponse>> {
+  try {    
     // 添加时间戳参数确保不使用缓存的响应
     const timestamp = Date.now();
     const endpoint = `/user/invite/stats?_t=${timestamp}`;
-
+    
     // 使用forceNoCache参数确保请求不会被缓存
-    const result = await apiRequest<TeamInfoResponse>(
-      endpoint,
-      "GET",
-      undefined,
-      true
-    );
-
+    const result = await apiRequest<TeamInfoResponse>(endpoint, "GET", undefined, true);
+    
     // 如果成功，记录团队数据的关键信息
     if (!result.success || !result.data) {
-      console.warn(
-        "[API] getUserTeamInfo: No team data in response or request failed"
-      );
+      console.warn('[API] getUserTeamInfo: No team data in response or request failed');
     }
-
+    
     return result;
   } catch (error) {
     console.error("[API] getUserTeamInfo: Fatal error during API call:", error);
-
+    
     // 重新抛出错误，确保调用者知道请求失败
     throw error;
   }
@@ -439,45 +391,35 @@ export async function getUserTeamInfo(): Promise<
 /**
  * Generate invite code for the current user
  */
-export async function generateInviteCode(): Promise<
-  ApiResponse<InviteGenerateResponse>
-> {
+export async function generateInviteCode(): Promise<ApiResponse<InviteGenerateResponse>> {
   return apiRequest<InviteGenerateResponse>("/user/invite/generate", "POST");
 }
 
 /**
  * 获取用户预估收益
  */
-export async function getUserProfit(): Promise<
-  ApiResponse<UserProfitResponse>
-> {
-  try {
+export async function getUserProfit(): Promise<ApiResponse<UserProfitResponse>> {
+  try {    
     // 添加时间戳参数确保不使用缓存的响应
     const timestamp = Date.now();
-
+    
     // 确保使用与后端一致的路径
     const endpoint = `/user/profit?_t=${timestamp}`;
-
+    
     // 使用forceNoCache参数确保请求不会被缓存
-    const result = await apiRequest<UserProfitResponse>(
-      endpoint,
-      "GET",
-      undefined,
-      true
-    );
-
+    const result = await apiRequest<UserProfitResponse>(endpoint, "GET", undefined, true);
+    
     // 如果成功，记录收益数据的关键信息
     if (!result.success || !result.data) {
-      console.warn(
-        "[API] getUserProfit: No profit data in response or request failed"
-      );
+      console.warn('[API] getUserProfit: No profit data in response or request failed');
     }
-
+    
     return result;
   } catch (error) {
     console.error("[API] getUserProfit: Fatal error during API call:", error);
-
+    
     // 重新抛出错误，确保调用者知道请求失败
     throw error;
   }
 }
+ 

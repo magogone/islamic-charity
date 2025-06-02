@@ -51,11 +51,10 @@ export default function RootLayout({
               <StoreProvider>
                 <AuthProvider>
                   <ApiErrorHandler>
-                    {/* 暂时注释掉初始化组件 */}
-                    {/* <VipSettingsInitializer /> */}
-                    {/* <DailyRewardInitializer /> */}
-                    {/* <AuthSessionChecker /> */}
-                    {/* <SessionRefreshChecker /> */}
+                    <VipSettingsInitializer />
+                    <DailyRewardInitializer />
+                    <AuthSessionChecker />
+                    <SessionRefreshChecker />
                     {children}
                   </ApiErrorHandler>
                 </AuthProvider>
