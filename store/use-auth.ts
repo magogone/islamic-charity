@@ -1,20 +1,30 @@
-"use client"
+"use client";
 
-import { useCallback, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { useStore } from "./store-context"
-import type { LoginCredentials, RegisterCredentials, AuthUser } from "./auth-types"
-import { registerUser, loginUser, logoutUser, ApiUser, getUserInfo } from "@/lib/api"
-import { useWallet } from "@/hooks/use-wallet"
+import { useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useStore } from "./store-context";
+import type {
+  LoginCredentials,
+  RegisterCredentials,
+  AuthUser,
+} from "./auth-types";
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+  ApiUser,
+  getUserInfo,
+} from "@/lib/api";
+import { useWallet } from "@/hooks/use-wallet";
 
 // Storage keys for local storage
 const STORAGE_KEYS = {
-  AUTH_USER: 'auth_user'
-}
+  AUTH_USER: "auth_user",
+};
 
 // Helper function to get data from localStorage
 function getFromStorage<T>(key: string): T | null {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === "undefined") return null;
   try {
     const storedValue = window.localStorage.getItem(key);
     return storedValue ? JSON.parse(storedValue) : null;
@@ -26,7 +36,7 @@ function getFromStorage<T>(key: string): T | null {
 
 // Helper function to save data to localStorage
 function saveToStorage<T>(key: string, value: T): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
@@ -43,17 +53,17 @@ const mapApiUserToAuthUser = (apiUser: ApiUser): AuthUser => {
     isVerified: true, // Assuming successful login/registration means the user is verified
     createdAt: apiUser.created_at,
     donateAmount: apiUser.donate_amount,
-    vipLevel: apiUser.vip_level || 0,  // 默认为0级
-    referrals: apiUser.invitee_donate_count || 0,  // 默认为0个邀请
-    withdrawAmount: apiUser.withdraw_amount,  // 已提现金额
-    rewardAmount: apiUser.reward_amount,  // 可提现金额
-    inviteLevel: apiUser.invite_level || 0,  // 默认邀请等级为0
-  }
-}
+    vipLevel: apiUser.vip_level || 0, // 默认为0级
+    referrals: apiUser.invitee_donate_count || 0, // 默认为0个邀请
+    withdrawAmount: apiUser.withdraw_amount, // 已提现金额
+    rewardAmount: apiUser.reward_amount, // 可提现金额
+    inviteLevel: apiUser.invite_level || 0, // 默认邀请等级为0
+  };
+};
 
 export function useAuth() {
-  const { state, dispatch } = useStore()
-  const router = useRouter()
+  const { state, dispatch } = useStore();
+  const router = useRouter();
 
   // Add safe access to auth state with default values
   const authState = state.auth || {
@@ -61,52 +71,44 @@ export function useAuth() {
     isAuthenticated: false,
     isLoading: false,
     error: null,
-  }
+  };
 
   // 检查是否有认证 cookie
   const hasAuthCookie = useCallback((): boolean => {
-    if (typeof window === 'undefined') return false;
-    
+    if (typeof window === "undefined") return false;
+
     // 检查 cookie 中是否有认证相关的 cookie
     // 添加更多详细的日志记录并扩展检查逻辑
     const allCookies = document.cookie;
-    const hasCookie = allCookies.includes('charity_session=');
-    
+    const hasCookie = allCookies.includes("charity_session=");
+
     // 检查 localStorage 中是否有用户数据作为备用方案
-    const hasLocalUser = getFromStorage<AuthUser>(STORAGE_KEYS.AUTH_USER) !== null;
-    
+    const hasLocalUser =
+      getFromStorage<AuthUser>(STORAGE_KEYS.AUTH_USER) !== null;
+
     // 如果有任一认证标记，返回 true
     return hasCookie || hasLocalUser;
   }, []);
 
-  // 获取当前用户信息
   const getCurrentUser = useCallback(async () => {
+    // 暂时禁用API调用
+    return null;
+
+    // 原来的API调用逻辑（已禁用）
+    /*
     // 如果已经在加载中，不要重复请求
     if (authState.isLoading) {
-      return null;
+      return authState.user;
     }
     
-    // 获取全局存储的用户信息作为备份
-    const savedUser = getFromStorage<AuthUser>(STORAGE_KEYS.AUTH_USER);
-    
-    // 检查本地认证状态
-    const localAuthenticated = authState.isAuthenticated && authState.user;
-    
-    // 检查认证标记
-    const hasAuth = hasAuthCookie();
-    
-    // 如果没有认证标记，清除认证状态
-    if (!hasAuth) {
-      // 如果当前状态显示已登录，则更新为未登录
-      if (authState.isAuthenticated || authState.user) {
-        dispatch({ type: "AUTH_LOGOUT" });
-      }
-      return null;
+    // 如果已经认证且有用户数据，直接返回
+    if (authState.isAuthenticated && authState.user) {
+      return authState.user;
     }
     
-    // 如果有保存的用户且未显示为已登录，先恢复会话
-    if (savedUser && !authState.isAuthenticated) {
-      dispatch({ type: "AUTH_RESTORE_SESSION", payload: savedUser });
+    // 检查是否有认证cookie
+    if (!hasAuthCookie()) {
+      return null;
     }
     
     try {
@@ -152,37 +154,30 @@ export function useAuth() {
       dispatch({ type: "AUTH_LOGIN_FAILURE", payload: "" });
       return null;
     }
-  }, [dispatch, authState.isLoading, authState.isAuthenticated, authState.user, hasAuthCookie]);
+    */
+  }, []); // 移除所有依赖项
 
-  // 在组件挂载时检查用户会话
   const checkSession = useCallback(async () => {
+    // 暂时禁用会话检查
+    return null;
+
+    // 原来的会话检查逻辑（已禁用）
+    /*
     // 如果已经在加载中，不要重复请求
     if (authState.isLoading) {
+      return authState.user;
+    }
+    
+    // 如果已经认证且有用户数据，跳过检查
+    if (authState.isAuthenticated && authState.user) {
+      return authState.user;
+    }
+    
+    // 检查是否有认证cookie
+    if (!hasAuthCookie()) {
+      dispatch({ type: "AUTH_LOGOUT" });
       return null;
     }
-    
-    // 获取全局存储的用户信息作为备份
-    const savedUser = getFromStorage<AuthUser>(STORAGE_KEYS.AUTH_USER);
-    
-    // 检查认证标记
-    const hasAuth = hasAuthCookie();
-    
-    // 如果没有认证标记，清除认证状态
-    if (!hasAuth) {
-      // 如果当前状态显示已登录，则更新为未登录
-      if (authState.isAuthenticated || authState.user) {
-        dispatch({ type: "AUTH_LOGOUT" });
-      }
-      return null;
-    }
-    
-    // 如果有保存的用户且未显示为已登录，先恢复会话
-    if (savedUser && !authState.isAuthenticated) {
-      dispatch({ type: "AUTH_RESTORE_SESSION", payload: savedUser });
-    }
-    
-    // 激活加载状态，防止重复调用
-    dispatch({ type: "AUTH_LOGIN_START" });
     
     try {
       // 直接调用获取用户信息API
@@ -224,10 +219,15 @@ export function useAuth() {
       dispatch({ type: "AUTH_LOGIN_FAILURE", payload: "" });
       return null;
     }
-  }, [dispatch, authState.isLoading, authState.isAuthenticated, authState.user, hasAuthCookie]);
+    */
+  }, []); // 移除所有依赖项
 
-  const login = useCallback(
-    async (credentials: LoginCredentials) => {
+  const login = useCallback(async (credentials: LoginCredentials) => {
+    // 暂时禁用登录功能
+    throw new Error("登录功能已暂时禁用");
+
+    // 原来的登录逻辑（已禁用）
+    /*
       try {
         dispatch({ type: "AUTH_LOGIN_START" })
         
@@ -281,118 +281,72 @@ export function useAuth() {
         dispatch({ type: "AUTH_LOGIN_FAILURE", payload: "" })
         throw error
       }
-    },
-    [dispatch, router, getUserInfo],
-  )
+      */
+  }, []);
 
-  const register = useCallback(
-    async (credentials: RegisterCredentials) => {
+  const register = useCallback(async (credentials: RegisterCredentials) => {
+    // 暂时禁用注册功能
+    throw new Error("注册功能已暂时禁用");
+
+    // 原来的注册逻辑（已禁用）
+    /*
       try {
         dispatch({ type: "AUTH_REGISTER_START" })
         
-        // Map from our app's credential format to the API format
-        const apiCredentials = {
+        // Call the register API
+        const response = await registerUser({
           email: credentials.email,
-          name: credentials.username,
           password: credentials.password,
-          repeat_password: credentials.confirmPassword,
-          invite_code: credentials.inviteCode // Include invite code if provided
-        }
-        
-        const response = await registerUser(apiCredentials)
+          name: credentials.name,
+          invite_code: credentials.inviteCode
+        })
         
         if (!response.success) {
           // Error is already handled by the API utility
           throw new Error("Registration failed")
         }
         
-        // For registration, we now auto-login the user
-        dispatch({ type: "AUTH_REGISTER_SUCCESS", payload: null })
+        dispatch({ type: "AUTH_REGISTER_SUCCESS" })
         
-        // After registration, auto-login by calling the login API
-        const loginResponse = await loginUser({
-          email: credentials.email,
-          password: credentials.password
-        })
-        
-        if (!loginResponse.success) {
-          // If auto-login fails, still consider registration successful
-          // but redirect to login page
-          router.push('/login')
-          return null
-        }
-        
-        // Fetch user info after successful login
-        const userInfoResponse = await getUserInfo()
-        
-        if (!userInfoResponse.success || !userInfoResponse.data) {
-          // If getting user info fails, still redirect to login page
-          router.push('/login')
-          return null
-        }
-        
-        // Map the API user to our app's user format
-        const user = mapApiUserToAuthUser(userInfoResponse.data.user)
-        
-        // Update auth state with the logged in user
-        dispatch({ type: "AUTH_LOGIN_SUCCESS", payload: user })
-        
-        // Save user data to localStorage
-        saveToStorage(STORAGE_KEYS.AUTH_USER, user);
-        
-        // Redirect to home page after successful registration and auto-login
-        router.push('/')
-        
-        return user
+        // After successful registration, user should login
+        return response
       } catch (error) {
         // Just set loading state to false, error is handled by the API utility
         dispatch({ type: "AUTH_REGISTER_FAILURE", payload: "" })
         throw error
       }
-    },
-    [dispatch, router, getUserInfo],
-  )
+      */
+  }, []);
 
   // 在调用useAuth时创建一个全局事件，这样可以在其他地方监听此事件
   const triggerLogoutEvent = useCallback(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       // 触发一个自定义事件，钱包组件可以监听这个事件
-      window.dispatchEvent(new CustomEvent('user-logout'));
+      window.dispatchEvent(new CustomEvent("user-logout"));
     }
   }, []);
 
   const logout = useCallback(async () => {
+    // 暂时简化登出功能，只清除本地状态
+    dispatch({ type: "AUTH_LOGOUT" });
+    router.push("/");
+    return;
+
+    // 原来的登出逻辑（已禁用）
+    /*
     try {
-      // Immediately dispatch logout action BEFORE making the API call
-      dispatch({ type: "AUTH_LOGOUT" })
-      
-      // Clear user data from localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
-      }
-      
-      // Reset the global session check flag so it will check again on next login
-      if (typeof window !== 'undefined') {
-        // This will reset the flag in the AuthSessionChecker component
-        window.dispatchEvent(new CustomEvent('reset-session-check'));
-        
-        // 触发自定义的注销事件，钱包组件会监听这个事件
-        triggerLogoutEvent();
-      }
-      
-      // Call the real logout API after cleaning up local state
-      logoutUser().catch(() => {
-        // Silently ignore errors in logout API call
-        // User is already logged out locally
-      });
-      
-      // Redirect to home page after logout
-      router.push("/")
+      // Try to call logout API, but don't fail if it's not available
+      await logoutUser()
     } catch (error) {
-      // Error handling is not needed here since we already dispatched logout
+      // Silently ignore logout API errors
+      console.warn('[useAuth] Logout API call failed, but continuing with local logout:', error);
+    } finally {
+      // Always clear local state regardless of API response
+      dispatch({ type: "AUTH_LOGOUT" })
       router.push("/")
     }
-  }, [dispatch, router, triggerLogoutEvent])
+    */
+  }, []);
 
   return {
     user: authState.user,
@@ -404,5 +358,5 @@ export function useAuth() {
     logout,
     checkSession,
     getCurrentUser,
-  }
+  };
 }

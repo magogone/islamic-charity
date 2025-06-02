@@ -2,14 +2,16 @@
   "navigation": {
     "home": "首页",
     "donate": "捐赠",
+    "vipEvents": "等级",
     "invite": "邀请",
-    "profile": "个人中心"
+    "profile": "我的"
   },
   "common": {
     "loading": "加载中...",
     "logout": "退出登录",
     "login": "登录",
-    "close": "关闭"
+    "close": "关闭",
+    "appTitle": "巴拉卡特联盟基金会"
   },
   "auth": {
     "login": "登录",
@@ -50,7 +52,23 @@
   "home": {
     "title": "巴拉卡特联盟基金会",
     "fullDescription": "创新慈善模式：神圣使命 - 通过捐赠参与扶贫事业",
-    "donateButton": "立即捐赠"
+    "donateButton": "立即捐赠",
+    "welcome": "欢迎来到巴拉卡特联盟基金会",
+    "subtitle": "创新慈善模式，让每一份善意都能抵达需要的地方",
+    "startDonating": "开始捐赠",
+    "whyChooseUs": "为什么选择我们",
+    "feature1Title": "透明化管理",
+    "feature1Desc": "每一笔捐赠都有明确记录，资金流向清晰透明",
+    "feature2Title": "VIP奖励系统",
+    "feature2Desc": "捐赠越多，奖励越丰厚，让慈善成为双赢",
+    "feature3Title": "社区驱动",
+    "feature3Desc": "推荐好友参与，共同构建慈善社区",
+    "feature4Title": "全球影响力",
+    "feature4Desc": "您的善举将帮助全球超过25个国家的需要者",
+    "ctaTitle": "加入我们的慈善事业",
+    "ctaSubtitle": "每一份捐赠都将获得回报，让慈善成为可持续的事业",
+    "donateNow": "立即捐赠",
+    "joinUs": "加入我们"
   },
   "news": {
     "title": "新闻",
