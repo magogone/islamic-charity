@@ -1,150 +1,157 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { createContext, useContext, useReducer, useEffect, type ReactNode, useState } from "react"
-import type { NewsAnnouncementItemProps } from "@/components/news-announcement-item"
-import type { AuthState, AuthUser } from "./auth-types"
+import type React from "react";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  type ReactNode,
+  useState,
+} from "react";
+import type { NewsAnnouncementItemProps } from "@/components/news-announcement-item";
+import type { AuthState, AuthUser } from "./auth-types";
 
 // Define storage keys
 const STORAGE_KEYS = {
   AUTH_TOKEN: "barkat_auth_token",
   AUTH_USER: "barkat_auth_user",
-}
+};
 
 // Storage utility functions implemented directly to avoid import issues
 const saveToStorage = <T,>(key: string, data: T): void => {
   if (typeof window !== "undefined") {
     try {
-      window.localStorage.setItem(key, JSON.stringify(data))
+      window.localStorage.setItem(key, JSON.stringify(data));
     } catch (error: any) {
-      console.error(`Error saving to localStorage: ${error}`)
+      console.error(`Error saving to localStorage: ${error}`);
     }
   }
-}
+};
 
 const getFromStorage = <T,>(key: string): T | null => {
   if (typeof window !== "undefined") {
     try {
-      const item = window.localStorage.getItem(key)
-      return item ? JSON.parse(item) : null
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : null;
     } catch (error: any) {
-      console.error(`Error getting from localStorage: ${error}`)
-      return null
+      console.error(`Error getting from localStorage: ${error}`);
+      return null;
     }
   }
-  return null
-}
+  return null;
+};
 
 const removeFromStorage = (key: string): void => {
   if (typeof window !== "undefined") {
     try {
-      window.localStorage.removeItem(key)
+      window.localStorage.removeItem(key);
     } catch (error: any) {
-      console.error(`Error removing from localStorage: ${error}`)
+      console.error(`Error removing from localStorage: ${error}`);
     }
   }
-}
+};
 
 // Define the store state types
 export interface StoreState {
   // User data
   user: {
-    id: string
-    username: string
-    vipLevel: number
-    totalDonation: number
-    referrals: number
-  }
+    id: string;
+    username: string;
+    vipLevel: number;
+    totalDonation: number;
+    referrals: number;
+  };
 
   // Donation data
   donation: {
     dailyFunds: {
-      current: number
-      max: number
-    }
-    periodProgress: number
-    startDate: string
-    remainingDays: number
-    endDate: string
-    currentRate: number
-    maxRate: number
-    totalAccumulated: number
-    totalExpectedReward: number
-    totalMaxReward: number
-    withdrawnAmount: number
-    withdrawableAmount: number
-    referrals?: number
-    totalDonation?: number
-    vipLevel?: number
-    lastUpdated?: number
+      current: number;
+      max: number;
+    };
+    periodProgress: number;
+    startDate: string;
+    remainingDays: number;
+    endDate: string;
+    currentRate: number;
+    maxRate: number;
+    totalAccumulated: number;
+    totalExpectedReward: number;
+    totalMaxReward: number;
+    withdrawnAmount: number;
+    withdrawableAmount: number;
+    referrals?: number;
+    totalDonation?: number;
+    vipLevel?: number;
+    lastUpdated?: number;
     dailyRewards?: Array<{
-      date: string
-      actual: number
-      maximum: number
-      distributed?: boolean
-    }>
-  }
+      date: string;
+      actual: number;
+      maximum: number;
+      distributed?: boolean;
+    }>;
+  };
 
   // Invitation data
   invitation: {
-    totalReferrals: number
-    directReferrals: number
-    indirectReferrals: number
-    teamTotalDonations: number
-    totalRewards: number
+    totalReferrals: number;
+    directReferrals: number;
+    indirectReferrals: number;
+    teamTotalDonations: number;
+    totalRewards: number;
     rewardRate: {
-      level1: number
-      level2: number
-      level3: number
-      level4: number
-      level5: number
-      total: number
-    }
+      level1: number;
+      level2: number;
+      level3: number;
+      level4: number;
+      level5: number;
+      total: number;
+    };
     basicReward: {
-      current: number
-      max: number
-    }
+      current: number;
+      max: number;
+    };
     maxReferralReward: {
-      level1: number
-      level2: number
-      level3: number
-      level4: number
-      level5: number
-      total: number
-    }
-  }
+      level1: number;
+      level2: number;
+      level3: number;
+      level4: number;
+      level5: number;
+      total: number;
+    };
+  };
 
   // VIP data
   vipInfo: {
     levels: {
       [key: number]: {
         rewardRates: {
-          level1: number
-          level2: number
-          level3: number
-          level4: number
-          level5: number
-          total: number
-        }
-        donationAmount: number
-        totalReturn: number
-        dailyFundRange: string
-        period: number
-      }
-    }
+          level1: number;
+          level2: number;
+          level3: number;
+          level4: number;
+          level5: number;
+          total: number;
+        };
+        donationAmount: number;
+        totalReturn: number;
+        dailyFundRange: string;
+        period: number;
+      };
+    };
     reliefFundRates: {
-      noReferral: number
-      referral1: number
-      referral3: number
-      referral5: number
-    }
-  }
+      noReferral: number;
+      referral1: number;
+      referral3: number;
+      referral5: number;
+    };
+  };
 
   // News data
-  news: NewsAnnouncementItemProps[]
+  news: NewsAnnouncementItemProps[];
 
   // Auth data
-  auth: AuthState
+  auth: AuthState;
 }
 
 // Define action types
@@ -154,7 +161,15 @@ type ActionType =
   | { type: "UPDATE_INVITATION"; payload: Partial<StoreState["invitation"]> }
   | { type: "UPDATE_NEWS"; payload: NewsAnnouncementItemProps[] }
   | { type: "UPDATE_VIP_INFO"; payload: Partial<StoreState["vipInfo"]> }
-  | { type: "UPDATE_TEAM"; payload: { directReferrals: number; totalReferrals: number; teamTotalDonations: number; totalRewards: number } }
+  | {
+      type: "UPDATE_TEAM";
+      payload: {
+        directReferrals: number;
+        totalReferrals: number;
+        teamTotalDonations: number;
+        totalRewards: number;
+      };
+    }
   | { type: "AUTH_LOGIN_START" }
   | { type: "AUTH_LOGIN_SUCCESS"; payload: AuthUser }
   | { type: "AUTH_REGISTER_START" }
@@ -162,15 +177,15 @@ type ActionType =
   | { type: "AUTH_LOGIN_FAILURE"; payload: string }
   | { type: "AUTH_REGISTER_FAILURE"; payload: string }
   | { type: "AUTH_LOGOUT" }
-  | { type: "AUTH_RESTORE_SESSION"; payload: AuthUser }
+  | { type: "AUTH_RESTORE_SESSION"; payload: AuthUser };
 
 // Get saved auth user from storage
 const getSavedAuthUser = (): AuthUser | null => {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return null; // 服务器端渲染时返回null
   }
-  return getFromStorage<AuthUser>(STORAGE_KEYS.AUTH_USER)
-}
+  return getFromStorage<AuthUser>(STORAGE_KEYS.AUTH_USER);
+};
 
 // Initial auth state with persisted user if available
 const initialAuthState: AuthState = {
@@ -178,7 +193,7 @@ const initialAuthState: AuthState = {
   isAuthenticated: false,
   isLoading: false,
   error: null,
-}
+};
 
 // Initial state
 const initialState: StoreState = {
@@ -264,7 +279,7 @@ const initialState: StoreState = {
         },
         donationAmount: 100,
         totalReturn: 120,
-        dailyFundRange: "1.2-3 U",
+        dailyFundRange: "1.2-3 USD",
         period: 40,
       },
       2: {
@@ -278,7 +293,7 @@ const initialState: StoreState = {
         },
         donationAmount: 300,
         totalReturn: 360,
-        dailyFundRange: "3.6-9 U",
+        dailyFundRange: "3.6-9 USD",
         period: 40,
       },
       3: {
@@ -292,7 +307,7 @@ const initialState: StoreState = {
         },
         donationAmount: 500,
         totalReturn: 600,
-        dailyFundRange: "6-15 U",
+        dailyFundRange: "6-15 USD",
         period: 40,
       },
       4: {
@@ -306,7 +321,7 @@ const initialState: StoreState = {
         },
         donationAmount: 800,
         totalReturn: 960,
-        dailyFundRange: "9.6-24 U",
+        dailyFundRange: "9.6-24 USD",
         period: 40,
       },
       5: {
@@ -320,7 +335,7 @@ const initialState: StoreState = {
         },
         donationAmount: 1200,
         totalReturn: 1440,
-        dailyFundRange: "14.4-36 U",
+        dailyFundRange: "14.4-36 USD",
         period: 40,
       },
     },
@@ -337,7 +352,8 @@ const initialState: StoreState = {
       title: "Barkat Foundation Launches New Poverty Relief Project",
       content:
         "Barkat Foundation announces the launch of a new poverty relief project aimed at helping more Muslim families in impoverished areas. The project will provide education, medical care, and essential living supplies. This initiative is expected to reach over 5,000 families in its first phase and will expand to more regions in the coming months.",
-      imageUrl: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=600&auto=format&fit=crop",
+      imageUrl:
+        "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=600&auto=format&fit=crop",
       date: "2023-04-15",
       isNew: true,
       type: "news",
@@ -347,7 +363,8 @@ const initialState: StoreState = {
       title: "Foundation Partners with International Charity Organizations",
       content:
         "Barkat Foundation has established strategic partnerships with multiple international charity organizations to jointly advance poverty alleviation work in global Muslim communities and expand charitable impact. These partnerships will enable the foundation to reach more beneficiaries and implement more effective programs.",
-      imageUrl: "https://images.unsplash.com/photo-1560252829-804f1aedf1be?q=80&w=600&auto=format&fit=crop",
+      imageUrl:
+        "https://images.unsplash.com/photo-1560252829-804f1aedf1be?q=80&w=600&auto=format&fit=crop",
       date: "2023-04-10",
       type: "news",
     },
@@ -356,7 +373,8 @@ const initialState: StoreState = {
       title: "Annual Charity Report Released",
       content:
         "Barkat Foundation releases its 2023 annual charity report, detailing charitable achievements, fund usage, and future plans over the past year. The report highlights the foundation's commitment to transparency and accountability in its operations. Key achievements include providing clean water to over 10,000 people and supporting the education of 500 children.",
-      imageUrl: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=600&auto=format&fit=crop",
+      imageUrl:
+        "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=600&auto=format&fit=crop",
       date: "2023-04-05",
       type: "news",
     },
@@ -365,14 +383,15 @@ const initialState: StoreState = {
       title: "New Feature: Direct Charity Project Donations",
       content:
         "We've added a direct charity project donation feature. Users can now choose specific charity projects for targeted donations to better fulfill their charitable intentions. This feature allows donors to see exactly where their money is going and the impact it is making.",
-      imageUrl: "https://images.unsplash.com/photo-1607000975631-e05b9830fbea?q=80&w=600&auto=format&fit=crop",
+      imageUrl:
+        "https://images.unsplash.com/photo-1607000975631-e05b9830fbea?q=80&w=600&auto=format&fit=crop",
       date: "2023-04-12",
       isNew: true,
       type: "news",
     },
   ],
   auth: initialAuthState,
-}
+};
 
 // Create reducer
 const reducer = (state: StoreState, action: ActionType): StoreState => {
@@ -384,7 +403,7 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
           ...state.user,
           ...action.payload,
         },
-      }
+      };
     case "UPDATE_DONATION":
       return {
         ...state,
@@ -392,7 +411,7 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
           ...state.donation,
           ...action.payload,
         },
-      }
+      };
     case "UPDATE_INVITATION":
       return {
         ...state,
@@ -400,7 +419,7 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
           ...state.invitation,
           ...action.payload,
         },
-      }
+      };
     case "UPDATE_TEAM":
       return {
         ...state,
@@ -411,12 +430,12 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
           teamTotalDonations: action.payload.teamTotalDonations,
           totalRewards: action.payload.totalRewards,
         },
-      }
+      };
     case "UPDATE_NEWS":
       return {
         ...state,
         news: action.payload,
-      }
+      };
     case "UPDATE_VIP_INFO":
       return {
         ...state,
@@ -424,7 +443,7 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
           ...state.vipInfo,
           ...action.payload,
         },
-      }
+      };
     case "AUTH_LOGIN_START":
     case "AUTH_REGISTER_START":
       return {
@@ -434,11 +453,11 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
           isLoading: true,
           error: null,
         },
-      }
+      };
     case "AUTH_LOGIN_SUCCESS":
     case "AUTH_RESTORE_SESSION":
       // Save user to localStorage
-      saveToStorage(STORAGE_KEYS.AUTH_USER, action.payload)
+      saveToStorage(STORAGE_KEYS.AUTH_USER, action.payload);
 
       return {
         ...state,
@@ -448,7 +467,7 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
           isLoading: false,
           error: null,
         },
-      }
+      };
     case "AUTH_LOGIN_FAILURE":
     case "AUTH_REGISTER_FAILURE":
       return {
@@ -458,10 +477,10 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
           isLoading: false,
           error: action.payload,
         },
-      }
+      };
     case "AUTH_LOGOUT":
       // Remove user from localStorage
-      removeFromStorage(STORAGE_KEYS.AUTH_USER)
+      removeFromStorage(STORAGE_KEYS.AUTH_USER);
 
       return {
         ...state,
@@ -471,7 +490,7 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
           isLoading: false,
           error: null,
         },
-      }
+      };
     case "AUTH_REGISTER_SUCCESS":
       // If the payload is null, just update loading state without setting user
       if (action.payload === null) {
@@ -481,12 +500,12 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
             ...state.auth,
             isLoading: false,
             error: null,
-          }
-        }
+          },
+        };
       }
-      
+
       // Otherwise update with user data like before
-      saveToStorage(STORAGE_KEYS.AUTH_USER, action.payload)
+      saveToStorage(STORAGE_KEYS.AUTH_USER, action.payload);
       return {
         ...state,
         auth: {
@@ -494,49 +513,53 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
           isAuthenticated: true,
           isLoading: false,
           error: null,
-        }
-      }
+        },
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 
 // Create context
 type StoreContextType = {
-  state: StoreState
-  dispatch: React.Dispatch<ActionType>
-}
+  state: StoreState;
+  dispatch: React.Dispatch<ActionType>;
+};
 
-const StoreContext = createContext<StoreContextType | undefined>(undefined)
+const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 // Create provider component
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, initialState)
-  const [mounted, setMounted] = useState(false)
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [mounted, setMounted] = useState(false);
 
   // 检测客户端挂载
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   // Check for saved session on initial load (only on client)
   useEffect(() => {
     if (mounted) {
-      const savedUser = getSavedAuthUser()
+      const savedUser = getSavedAuthUser();
       if (savedUser && !state.auth.isAuthenticated) {
-        dispatch({ type: "AUTH_RESTORE_SESSION", payload: savedUser })
+        dispatch({ type: "AUTH_RESTORE_SESSION", payload: savedUser });
       }
     }
-  }, [mounted, state.auth.isAuthenticated])
+  }, [mounted, state.auth.isAuthenticated]);
 
-  return <StoreContext.Provider value={{ state, dispatch }}>{children}</StoreContext.Provider>
+  return (
+    <StoreContext.Provider value={{ state, dispatch }}>
+      {children}
+    </StoreContext.Provider>
+  );
 }
 
 // Custom hook to use the store
 export function useStore() {
-  const context = useContext(StoreContext)
+  const context = useContext(StoreContext);
   if (context === undefined) {
-    throw new Error("useStore must be used within a StoreProvider")
+    throw new Error("useStore must be used within a StoreProvider");
   }
-  return context
+  return context;
 }

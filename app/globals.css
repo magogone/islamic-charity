@@ -464,6 +464,42 @@
   }
 }
 
+/* VIP Level styling for bottom navigation */
+.vip-level-text {
+  font-weight: 700;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  filter: drop-shadow(0 0 2px rgba(251, 191, 36, 0.5));
+}
+
+/* Fallback for browsers that don't support background-clip: text */
+@supports not (-webkit-background-clip: text) {
+  .vip-level-text {
+    color: #fbbf24;
+    font-weight: 700;
+    text-shadow: 0 0 4px rgba(251, 191, 36, 0.6), 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Active state enhancement for VIP level */
+.active-nav .vip-level-text {
+  background: linear-gradient(135deg, #d4b96e, #f7d794, #d4b96e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 3px rgba(212, 185, 110, 0.8));
+}
+
+@supports not (-webkit-background-clip: text) {
+  .active-nav .vip-level-text {
+    color: #d4b96e;
+    text-shadow: 0 0 6px rgba(212, 185, 110, 0.8), 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+}
+
 .animate-spin-slow {
   animation: spin-slow 8s linear infinite;
 }

@@ -6,6 +6,7 @@ import { useTranslation } from "@/lib/i18n";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/store/use-auth";
 import {
   Play,
   Calendar,
@@ -207,14 +208,47 @@ export default function VipEventsPage() {
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryType>("member");
 
-  // 模拟用户数据
+  // 获取真实用户数据
+  const { user, isAuthenticated } = useAuth();
   const userData = {
-    username: "艾哈迈德",
-    vipLevel: 4,
-    currentDonation: 800,
-    nextLevelAmount: 1000,
-    upgradeProgress: 80,
-    nextLevelName: "至善",
+    username: user?.username || "艾哈迈德",
+    vipLevel: user?.vipLevel || 1,
+    currentDonation: user?.donateAmount ? parseFloat(user.donateAmount) : 100,
+    nextLevelAmount:
+      user?.vipLevel === 5
+        ? 1200
+        : user?.vipLevel === 4
+        ? 1200
+        : user?.vipLevel === 3
+        ? 800
+        : user?.vipLevel === 2
+        ? 500
+        : 300,
+    upgradeProgress:
+      user?.vipLevel === 5
+        ? 100
+        : Math.min(
+            ((user?.donateAmount ? parseFloat(user.donateAmount) : 100) /
+              (user?.vipLevel === 4
+                ? 1200
+                : user?.vipLevel === 3
+                ? 800
+                : user?.vipLevel === 2
+                ? 500
+                : 300)) *
+              100,
+            100
+          ),
+    nextLevelName:
+      user?.vipLevel === 5
+        ? "至善"
+        : user?.vipLevel === 4
+        ? "至善"
+        : user?.vipLevel === 3
+        ? "米尔贾"
+        : user?.vipLevel === 2
+        ? "蒙塔哈"
+        : "巴达尔",
   };
 
   const handleImageError = (
@@ -235,7 +269,7 @@ export default function VipEventsPage() {
   };
 
   return (
-    <MainLayout title="VIP会员专区" currentPath="/vip-events">
+    <MainLayout title={t("vipLevel.title")} currentPath="/vip-events">
       <style jsx>{`
         .scrollbar-hide {
           -ms-overflow-style: none; /* Internet Explorer 10+ */
@@ -406,9 +440,13 @@ export default function VipEventsPage() {
 
                 {/* 右侧 - 用户信息和数据 */}
                 <div className="flex-1 min-w-0">
-                  {/* 用户名 */}
-                  <div className="text-lg font-bold text-[#d4b96e] mb-3">
-                    {userData.username}
+                  {/* 等级名称 */}
+                  <div className="text-xl font-bold text-[#d4b96e] mb-3 ml-4">
+                    {userData.vipLevel === 1 && t("vip.level1")}
+                    {userData.vipLevel === 2 && t("vip.level2")}
+                    {userData.vipLevel === 3 && t("vip.level3")}
+                    {userData.vipLevel === 4 && t("vip.level4")}
+                    {userData.vipLevel === 5 && t("vip.level5")}
                   </div>
 
                   {/* 数据展示 */}
@@ -419,10 +457,13 @@ export default function VipEventsPage() {
                         <Heart className="h-3.5 w-3.5 text-[#d4b96e]" />
                       </div>
                       <div>
-                        <div className="text-base font-bold text-[#d4b96e]">
-                          {userData.currentDonation}U
+                        <div className="text-base font-bold text-[#d4b96e] flex items-baseline">
+                          {userData.currentDonation}
+                          <span className="text-xs ml-1">USD</span>
                         </div>
-                        <div className="text-xs text-[#f5efe0]/60">已捐赠</div>
+                        <div className="text-xs text-[#f5efe0]/60">
+                          {t("donationOverview.donationAmount")}
+                        </div>
                       </div>
                     </div>
 
@@ -432,10 +473,12 @@ export default function VipEventsPage() {
                         <TrendingUp className="h-3.5 w-3.5 text-green-400" />
                       </div>
                       <div>
-                        <div className="text-base font-bold text-green-400">
-                          60U
+                        <div className="text-base font-bold text-green-400 flex items-baseline">
+                          60<span className="text-xs ml-1">USD</span>
                         </div>
-                        <div className="text-xs text-[#f5efe0]/60">可提取</div>
+                        <div className="text-xs text-[#f5efe0]/60">
+                          {t("donationOverview.withdrawableAmount")}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -446,7 +489,9 @@ export default function VipEventsPage() {
               <div className="mt-3">
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center text-xs">
-                    <span className="text-[#f5efe0]/60">升级进度</span>
+                    <span className="text-[#f5efe0]/60">
+                      {t("vipLevel.upgradeProgress")}
+                    </span>
                     <span className="text-[#d4b96e] ml-2">
                       {userData.upgradeProgress}%
                     </span>
@@ -463,7 +508,7 @@ export default function VipEventsPage() {
               {/* 升级按钮 */}
               <div className="mt-3">
                 <Button className="w-full bg-gradient-to-r from-[#d4b96e] to-[#b39339] text-[#1a1f2c] hover:opacity-90 transition-opacity py-1.5">
-                  一键升级至V5
+                  {t("vipLevel.upgradeToV5")}
                 </Button>
               </div>
             </div>
@@ -476,10 +521,26 @@ export default function VipEventsPage() {
           <div className="border-b border-[#d4b96e]/20">
             <div className="grid grid-cols-4 w-full">
               {[
-                { key: "member" as CategoryType, label: "会员", Icon: Crown },
-                { key: "alliance" as CategoryType, label: "联盟", Icon: Heart },
-                { key: "level" as CategoryType, label: "等级", Icon: Trophy },
-                { key: "ongoing" as CategoryType, label: "进行", Icon: Clock },
+                {
+                  key: "member" as CategoryType,
+                  label: t("navigation.member"),
+                  Icon: Crown,
+                },
+                {
+                  key: "alliance" as CategoryType,
+                  label: t("navigation.alliance"),
+                  Icon: Heart,
+                },
+                {
+                  key: "level" as CategoryType,
+                  label: t("navigation.level"),
+                  Icon: Trophy,
+                },
+                {
+                  key: "ongoing" as CategoryType,
+                  label: t("navigation.ongoing"),
+                  Icon: Clock,
+                },
               ].map(({ key, label, Icon }) => (
                 <button
                   key={key}
@@ -589,8 +650,9 @@ export default function VipEventsPage() {
                           {event.donationAmount && (
                             <div className="flex items-center space-x-2 mb-3">
                               <Heart className="h-4 w-4 text-[#d4b96e]" />
-                              <span className="text-sm font-medium text-[#d4b96e]">
-                                您的捐赠: {event.donationAmount}U
+                              <span className="text-sm font-medium text-[#d4b96e] flex items-baseline">
+                                您的捐赠: {event.donationAmount}
+                                <span className="text-xs ml-1">USD</span>
                               </span>
                             </div>
                           )}
@@ -718,10 +780,10 @@ export default function VipEventsPage() {
               {/* 等级说明标题 */}
               <div className="text-center mb-6">
                 <h3 className="text-xl font-bold text-[#d4b96e] mb-2">
-                  VIP等级体系
+                  {t("vipLevel.title")}
                 </h3>
                 <p className="text-sm text-[#f5efe0]/80">
-                  通过慈善捐赠提升等级，享受更多权益
+                  {t("vipLevel.subtitle")}
                 </p>
               </div>
 
@@ -731,8 +793,8 @@ export default function VipEventsPage() {
                 <Card className="bg-gradient-to-br from-[#0a0a0f] to-[#151515] border-[#d4b96e]/20 overflow-hidden relative">
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
-                    <Badge className="absolute top-4 right-4 bg-[#D2691E]/20 text-[#D2691E] border-[#D2691E]/30">
-                      100U
+                    <Badge className="absolute top-4 right-4 bg-[#D2691E]/20 text-[#D2691E] border-[#D2691E]/30 flex items-baseline">
+                      100<span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -831,10 +893,10 @@ export default function VipEventsPage() {
                         </div>
                         <div className="min-w-0 flex-1 ml-4">
                           <h4 className="text-lg font-bold text-[#D2691E]">
-                            布拉克
+                            {t("vip.level1")}
                           </h4>
                           <p className="text-xs text-[#f5efe0]/60">
-                            入门级会员
+                            {t("vipLevel.entryLevel")}
                           </p>
                         </div>
                       </div>
@@ -843,29 +905,42 @@ export default function VipEventsPage() {
                     <div className="space-y-3 ml-4">
                       <div>
                         <p className="text-sm font-medium text-[#f5efe0] mb-1">
-                          升级条件
+                          {t("vipLevel.upgradeConditions")}
                         </p>
                         <p className="text-xs text-[#f5efe0]/70">
-                          累计捐赠达到100U
+                          {t("vipLevel.cumulativeDonation").replace(
+                            "{amount}",
+                            "100"
+                          )}
+                          <span className="text-xs ml-1">USD</span>
                         </p>
                       </div>
 
                       <div>
                         <p className="text-sm font-medium text-[#f5efe0] mb-1">
-                          专属权益
+                          {t("vipLevel.exclusiveBenefits")}
                         </p>
                         <ul className="space-y-1 text-xs text-[#f5efe0]/70">
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#D2691E]" />
-                            <span>每日救济基金：1.2-3U</span>
+                            <span>
+                              {t("vipLevel.dailyReliefFund")}: 1.2-3
+                              <span className="text-xs ml-1">USD</span>
+                            </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#D2691E]" />
-                            <span>推荐奖励：10%（一代）</span>
+                            <span>
+                              {t("vipLevel.referralReward")}: 10%{" "}
+                              {t("vipLevel.generation1")}
+                            </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#D2691E]" />
-                            <span>收益周期：50天</span>
+                            <span>
+                              {t("vipLevel.rewardCycle")}: 50
+                              {t("vipLevel.days")}
+                            </span>
                           </li>
                         </ul>
                       </div>
@@ -877,8 +952,8 @@ export default function VipEventsPage() {
                 <Card className="bg-gradient-to-br from-[#0a0a0f] to-[#151515] border-[#d4b96e]/20 overflow-hidden relative">
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
-                    <Badge className="absolute top-4 right-4 bg-[#CD7F32]/20 text-[#CD7F32] border-[#CD7F32]/30">
-                      300U
+                    <Badge className="absolute top-4 right-4 bg-[#CD7F32]/20 text-[#CD7F32] border-[#CD7F32]/30 flex items-baseline">
+                      300<span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -978,10 +1053,10 @@ export default function VipEventsPage() {
                         </div>
                         <div className="min-w-0 flex-1 ml-4">
                           <h4 className="text-lg font-bold text-[#CD7F32]">
-                            巴达尔
+                            {t("vip.level2")}
                           </h4>
                           <p className="text-xs text-[#f5efe0]/60">
-                            进阶级会员
+                            {t("vipLevel.advancedMember")}
                           </p>
                         </div>
                       </div>
@@ -990,29 +1065,43 @@ export default function VipEventsPage() {
                     <div className="space-y-3 ml-4">
                       <div>
                         <p className="text-sm font-medium text-[#f5efe0] mb-1">
-                          升级条件
+                          {t("vipLevel.upgradeConditions")}
                         </p>
                         <p className="text-xs text-[#f5efe0]/70">
-                          累计捐赠达到300U
+                          {t("vipLevel.cumulativeDonation").replace(
+                            "{amount}",
+                            "300"
+                          )}
+                          <span className="text-xs ml-1">USD</span>
                         </p>
                       </div>
 
                       <div>
                         <p className="text-sm font-medium text-[#f5efe0] mb-1">
-                          专属权益
+                          {t("vipLevel.exclusiveBenefits")}
                         </p>
                         <ul className="space-y-1 text-xs text-[#f5efe0]/70">
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#CD7F32]" />
-                            <span>每日救济基金：3.6-9U</span>
+                            <span>
+                              {t("vipLevel.dailyReliefFund")}: 3.6-9
+                              <span className="text-xs ml-1">USD</span>
+                            </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#CD7F32]" />
-                            <span>推荐奖励：10%（一代）+ 4%（二代）</span>
+                            <span>
+                              {t("vipLevel.referralReward")}: 10%{" "}
+                              {t("vipLevel.generation1")} + 4%{" "}
+                              {t("vipLevel.generation2")}
+                            </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#CD7F32]" />
-                            <span>收益周期：50天</span>
+                            <span>
+                              {t("vipLevel.rewardCycle")}: 50
+                              {t("vipLevel.days")}
+                            </span>
                           </li>
                         </ul>
                       </div>
@@ -1024,8 +1113,8 @@ export default function VipEventsPage() {
                 <Card className="bg-gradient-to-br from-[#0a0a0f] to-[#151515] border-[#d4b96e]/20 overflow-hidden relative">
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
-                    <Badge className="absolute top-4 right-4 bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/30">
-                      500U
+                    <Badge className="absolute top-4 right-4 bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/30 flex items-baseline">
+                      500<span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -1141,9 +1230,11 @@ export default function VipEventsPage() {
                         </div>
                         <div className="min-w-0 flex-1 ml-4">
                           <h4 className="text-lg font-bold text-[#FFD700]">
-                            蒙塔哈
+                            {t("vip.level3")}
                           </h4>
-                          <p className="text-xs text-[#f5efe0]/60">高级会员</p>
+                          <p className="text-xs text-[#f5efe0]/60">
+                            {t("vipLevel.intermediateMember")}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -1151,43 +1242,56 @@ export default function VipEventsPage() {
                     <div className="space-y-3 ml-4">
                       <div>
                         <p className="text-sm font-medium text-[#f5efe0] mb-1">
-                          升级条件
+                          {t("vipLevel.upgradeConditions")}
                         </p>
                         <p className="text-xs text-[#f5efe0]/70">
-                          累计捐赠达到1000U
+                          {t("vipLevel.cumulativeDonation").replace(
+                            "{amount}",
+                            "500"
+                          )}
+                          <span className="text-xs ml-1">USD</span>
                         </p>
                       </div>
 
                       <div>
                         <p className="text-sm font-medium text-[#f5efe0] mb-1">
-                          专属权益
+                          {t("vipLevel.exclusiveBenefits")}
                         </p>
                         <ul className="space-y-1 text-xs text-[#f5efe0]/70">
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#E6E6FA]" />
-                            <span>每日救济基金：14.4-36U</span>
+                            <span>
+                              {t("vipLevel.dailyReliefFund")}: 14.4-36
+                              <span className="text-xs ml-1">USD</span>
+                            </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#E6E6FA]" />
                             <span>
-                              推荐奖励：15%（一代）+ 6%（二代）+ 3%（三至五代）
+                              {t("vipLevel.referralReward")}: 15%{" "}
+                              {t("vipLevel.generation1")} + 6%{" "}
+                              {t("vipLevel.generation2")} + 3%{" "}
+                              {t("vipLevel.generation3to5")}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#E6E6FA]" />
-                            <span>收益周期：50天</span>
+                            <span>
+                              {t("vipLevel.rewardCycle")}: 50
+                              {t("vipLevel.days")}
+                            </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Trophy className="h-3 w-3 text-[#E6E6FA]" />
-                            <span>基金会荣誉贡献者身份</span>
+                            <span>{t("vipLevel.honoraryContributor")}</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Award className="h-3 w-3 text-[#E6E6FA]" />
-                            <span>年度慈善大使评选资格</span>
+                            <span>{t("vipLevel.ambassadorSelection")}</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Zap className="h-3 w-3 text-[#E6E6FA]" />
-                            <span>专属一对一客户经理</span>
+                            <span>{t("vipLevel.personalManager")}</span>
                           </li>
                         </ul>
                       </div>
@@ -1199,8 +1303,8 @@ export default function VipEventsPage() {
                 <Card className="bg-gradient-to-br from-[#0a0a0f] to-[#151515] border-[#d4b96e]/20 overflow-hidden relative">
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
-                    <Badge className="absolute top-4 right-4 bg-[#B8860B]/20 text-[#B8860B] border-[#B8860B]/30">
-                      800U
+                    <Badge className="absolute top-4 right-4 bg-[#B8860B]/20 text-[#B8860B] border-[#B8860B]/30 flex items-baseline">
+                      800<span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -1338,10 +1442,10 @@ export default function VipEventsPage() {
                         </div>
                         <div className="min-w-0 flex-1 ml-4">
                           <h4 className="text-lg font-bold text-[#9370DB]">
-                            米尔贾
+                            {t("vip.level4")}
                           </h4>
                           <p className="text-xs text-[#f5efe0]/60">
-                            传奇级会员
+                            {t("vipLevel.seniorMember")}
                           </p>
                         </div>
                       </div>
@@ -1350,48 +1454,61 @@ export default function VipEventsPage() {
                     <div className="space-y-3 ml-4">
                       <div>
                         <p className="text-sm font-medium text-[#f5efe0] mb-1">
-                          升级条件
+                          {t("vipLevel.upgradeConditions")}
                         </p>
                         <p className="text-xs text-[#f5efe0]/70">
-                          累计捐赠达到800U
+                          {t("vipLevel.cumulativeDonation").replace(
+                            "{amount}",
+                            "800"
+                          )}
+                          <span className="text-xs ml-1">USD</span>
                         </p>
                       </div>
 
                       <div>
                         <p className="text-sm font-medium text-[#f5efe0] mb-1">
-                          专属权益
+                          {t("vipLevel.exclusiveBenefits")}
                         </p>
                         <ul className="space-y-1 text-xs text-[#f5efe0]/70">
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#9370DB]" />
-                            <span>每日救济基金：24-60U</span>
+                            <span>
+                              {t("vipLevel.dailyReliefFund")}: 24-60
+                              <span className="text-xs ml-1">USD</span>
+                            </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#9370DB]" />
                             <span>
-                              推荐奖励：20%（一代）+ 8%（二代）+ 5%（三至五代）+
-                              2%（六至十代）
+                              {t("vipLevel.referralReward")}: 20%{" "}
+                              {t("vipLevel.generation1")} + 8%{" "}
+                              {t("vipLevel.generation2")} + 5%{" "}
+                              {t("vipLevel.generation3to5")} + 2%{" "}
+                              {t("vipLevel.generation6to10")}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#9370DB]" />
-                            <span>收益周期：50天</span>
+                            <span>
+                              {t("vipLevel.rewardCycle")}: 50
+                              {t("vipLevel.days")}
+                            </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Trophy className="h-3 w-3 text-[#9370DB]" />
-                            <span>基金会董事会荣誉成员</span>
+                            <span>{t("vipLevel.boardMember")}</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Award className="h-3 w-3 text-[#9370DB]" />
-                            <span>年度慈善领袖评选资格</span>
+                            <span>{t("vipLevel.leadershipSelection")}</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Zap className="h-3 w-3 text-[#9370DB]" />
-                            <span>24小时专属高级客户经理</span>
+                            <span>{t("vipLevel.premiumManager")}</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Diamond className="h-3 w-3 text-[#9370DB]" />
-                            <span>优先参与高端慈善晚宴</span>
+                            <span>{t("vipLevel.charityGala")}</span>
                           </li>
                         </ul>
                       </div>
@@ -1403,8 +1520,8 @@ export default function VipEventsPage() {
                 <Card className="bg-gradient-to-br from-[#0a0a0f] to-[#151515] border-[#d4b96e]/20 overflow-hidden relative">
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
-                    <Badge className="absolute top-4 right-4 bg-[#F8F8FF]/20 text-[#F8F8FF] border-[#F8F8FF]/30">
-                      1500U
+                    <Badge className="absolute top-4 right-4 bg-[#F8F8FF]/20 text-[#F8F8FF] border-[#F8F8FF]/30 flex items-baseline">
+                      1500<span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -1539,10 +1656,10 @@ export default function VipEventsPage() {
                         </div>
                         <div className="min-w-0 flex-1 ml-4">
                           <h4 className="text-lg font-bold text-[#F8F8FF]">
-                            至善
+                            {t("vip.level5")}
                           </h4>
                           <p className="text-xs text-[#f5efe0]/60">
-                            神话级会员
+                            {t("vipLevel.eliteMember")}
                           </p>
                         </div>
                       </div>
@@ -1551,52 +1668,66 @@ export default function VipEventsPage() {
                     <div className="space-y-3 ml-4">
                       <div>
                         <p className="text-sm font-medium text-[#f5efe0] mb-1">
-                          升级条件
+                          {t("vipLevel.upgradeConditions")}
                         </p>
                         <p className="text-xs text-[#f5efe0]/70">
-                          累计捐赠达到1500U
+                          {t("vipLevel.cumulativeDonation").replace(
+                            "{amount}",
+                            "1200"
+                          )}
+                          <span className="text-xs ml-1">USD</span>
                         </p>
                       </div>
 
                       <div>
                         <p className="text-sm font-medium text-[#f5efe0] mb-1">
-                          专属权益
+                          {t("vipLevel.exclusiveBenefits")}
                         </p>
                         <ul className="space-y-1 text-xs text-[#f5efe0]/70">
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#F8F8FF]" />
-                            <span>每日救济基金：45-120U</span>
+                            <span>
+                              {t("vipLevel.dailyReliefFund")}: 45-120
+                              <span className="text-xs ml-1">USD</span>
+                            </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#F8F8FF]" />
                             <span>
-                              推荐奖励：25%（一代）+ 12%（二代）+
-                              8%（三至五代）+ 5%（六至十代）+ 2%（无限代）
+                              {t("vipLevel.referralReward")}: 25%{" "}
+                              {t("vipLevel.generation1")} + 12%{" "}
+                              {t("vipLevel.generation2")} + 8%{" "}
+                              {t("vipLevel.generation3to5")} + 5%{" "}
+                              {t("vipLevel.generation6to10")} + 2%{" "}
+                              {t("vipLevel.unlimitedGen")}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#F8F8FF]" />
-                            <span>收益周期：50天</span>
+                            <span>
+                              {t("vipLevel.rewardCycle")}: 50
+                              {t("vipLevel.days")}
+                            </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Trophy className="h-3 w-3 text-[#F8F8FF]" />
-                            <span>基金会创始人委员会成员</span>
+                            <span>{t("vipLevel.foundingMember")}</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Award className="h-3 w-3 text-[#F8F8FF]" />
-                            <span>全球慈善大使终身荣誉</span>
+                            <span>{t("vipLevel.globalAmbassador")}</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Zap className="h-3 w-3 text-[#F8F8FF]" />
-                            <span>专属私人慈善顾问团队</span>
+                            <span>{t("vipLevel.privateAdvisor")}</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Diamond className="h-3 w-3 text-[#F8F8FF]" />
-                            <span>年度全球慈善峰会主办权</span>
+                            <span>{t("vipLevel.summitHost")}</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Crown className="h-3 w-3 text-[#F8F8FF]" />
-                            <span>基金会战略决策参与权</span>
+                            <span>{t("vipLevel.strategicParticipation")}</span>
                           </li>
                         </ul>
                       </div>
@@ -1612,17 +1743,11 @@ export default function VipEventsPage() {
                     <Info className="h-5 w-5 text-[#d4b96e] flex-shrink-0 mt-0.5" />
                     <div className="space-y-2 text-xs text-[#f5efe0]/70">
                       <p className="font-medium text-sm text-[#d4b96e] mb-2">
-                        等级升级说明
+                        {t("vipLevel.upgradeInstructions")}
                       </p>
-                      <p>
-                        • 等级升级为累计制，一旦达到升级条件即可永久享受对应权益
-                      </p>
-                      <p>
-                        • 每日救济基金根据您的推荐人数动态调整，推荐越多收益越高
-                      </p>
-                      <p>• 推荐奖励需要您保持活跃捐赠状态才能获得</p>
-                      <p>• 高等级会员享有更多专属活动和优先参与权</p>
-                      <p>• 所有收益均可随时提现，无任何限制</p>
+                      <p>{t("vipLevel.cumulativeUpgrade")}</p>
+                      <p>{t("vipLevel.donationRequirement")}</p>
+                      <p>{t("vipLevel.higherBenefits")}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -1637,7 +1762,9 @@ export default function VipEventsPage() {
                 <h3 className="text-lg font-bold text-[#d4b96e] mb-2">
                   正在进行的项目
                 </h3>
-                <p className="text-sm text-[#f5efe0]/70">急需您的支持与参与</p>
+                <p className="text-sm text-[#f5efe0]/70">
+                  这些项目急需您的支持
+                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1692,7 +1819,7 @@ export default function VipEventsPage() {
 
                           <div className="mb-4">
                             <div className="flex justify-between text-xs text-[#f5efe0]/60 mb-1">
-                              <span>募集进度</span>
+                              <span>筹款进度</span>
                               <span className="font-medium text-[#d4b96e]">
                                 {event.progress}%
                               </span>
@@ -1709,10 +1836,12 @@ export default function VipEventsPage() {
                             </div>
                             <div className="flex justify-between text-xs text-[#f5efe0]/60 mt-1">
                               <span>
-                                已筹: {event.currentAmount.toLocaleString()}U
+                                已筹集: {event.currentAmount.toLocaleString()}
+                                <span className="text-xs ml-1">USD</span>
                               </span>
                               <span>
-                                目标: {event.targetAmount.toLocaleString()}U
+                                目标: {event.targetAmount.toLocaleString()}
+                                <span className="text-xs ml-1">USD</span>
                               </span>
                             </div>
                           </div>
@@ -1721,7 +1850,7 @@ export default function VipEventsPage() {
                             <div className="flex items-center space-x-2">
                               <Users className="h-4 w-4" />
                               <span>
-                                {event.participants.toLocaleString()}人参与
+                                {event.participants.toLocaleString()} 人参与
                               </span>
                             </div>
                             <Button className="h-7 px-3 bg-gradient-to-r from-[#d4b96e] to-[#b39339] text-[#0a0a0f] hover:opacity-90 text-xs">

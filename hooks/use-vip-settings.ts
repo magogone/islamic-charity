@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useEffect, useState, useRef } from 'react';
-import { getSetting } from '@/lib/settings';
-import { useStore } from '@/store/store-context';
+import { useEffect, useState, useRef } from "react";
+import { getSetting } from "@/lib/settings";
+import { useStore } from "@/store/store-context";
 
 // 全局变量，用于跟踪VIP设置是否已初始化
 let globalInitialized = false;
@@ -11,14 +11,15 @@ let globalInitialized = false;
 const appStartTime = Date.now();
 
 // 自动重置函数 - 在客户端运行时执行
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   // 检查上次初始化时间，如果超过5秒，可能是页面刷新或重新部署
-  const lastInitTime = parseInt(sessionStorage.getItem('vip_init_time') || '0');
+  const lastInitTime = parseInt(sessionStorage.getItem("vip_init_time") || "0");
   const timeSinceLastInit = appStartTime - lastInitTime;
-  
-  if (timeSinceLastInit > 5000) { // 5秒钟是一个合理的阈值
+
+  if (timeSinceLastInit > 5000) {
+    // 5秒钟是一个合理的阈值
     globalInitialized = false;
-    sessionStorage.setItem('vip_init_time', appStartTime.toString());
+    sessionStorage.setItem("vip_init_time", appStartTime.toString());
   }
 }
 
@@ -39,7 +40,7 @@ interface VipRewardRatesConfig {
 }
 
 /**
- * 日常奖励率接口 
+ * 日常奖励率接口
  */
 interface ReliefFundRates {
   noReferral: number;
@@ -52,20 +53,20 @@ interface ReliefFundRates {
  * 根据VIP配置，计算对应的totalReturn和dailyFundRange
  */
 function calculateDerivedValues(
-  threshold: number, 
+  threshold: number,
   reliefFundRates?: ReliefFundRates
 ) {
   // Default values if reliefFundRates is not provided yet
   const minRate = reliefFundRates?.noReferral || 1;
   const maxRate = reliefFundRates?.referral5 || 2.5;
-  
-  // Total return calculation based on the minimum percentage 
+
+  // Total return calculation based on the minimum percentage
   // This represents what users will get over time with no referrals
   const totalReturn = threshold * 1.2;
-  
+
   return {
     totalReturn,
-    dailyFundRange: `${minRate}-${maxRate} U`
+    dailyFundRange: `${minRate}-${maxRate} USD`,
   };
 }
 
@@ -80,10 +81,10 @@ export function useVipSettings() {
   const prevStateRef = useRef(state);
   const initializedRef = useRef(false);
   const [mounted, setMounted] = useState(false);
-  
+
   // 添加recalculated引用到顶层
   const hasRecalculatedRef = useRef(false);
-  
+
   // 防止在一个实例内重复初始化
   initializedRef.current = initializedRef.current || globalInitialized;
 
@@ -93,13 +94,15 @@ export function useVipSettings() {
   }, []);
 
   // Check if rate configs are available
-  const ratesAvailable = mounted && !!state.vipInfo.reliefFundRates && 
-                        !!state.vipInfo.reliefFundRates.noReferral;
+  const ratesAvailable =
+    mounted &&
+    !!state.vipInfo.reliefFundRates &&
+    !!state.vipInfo.reliefFundRates.noReferral;
 
   useEffect(() => {
     // 增加渲染次数计数
     renderCountRef.current += 1;
-    
+
     // 更新state引用
     prevStateRef.current = state;
 
@@ -107,7 +110,7 @@ export function useVipSettings() {
     if (initializedRef.current || globalInitialized) {
       return;
     }
-    
+
     // 标记为已初始化，防止重复加载
     initializedRef.current = true;
     globalInitialized = true;
@@ -116,44 +119,48 @@ export function useVipSettings() {
       try {
         setLoading(true);
         setError(null);
-        
+
         // 获取VIP等级配置
-        const vipConfigStr = await getSetting('vip_config', 'vip', '[]');
-        
+        const vipConfigStr = await getSetting("vip_config", "vip", "[]");
+
         const vipLevels = JSON.parse(vipConfigStr) as VipLevelConfig[];
-        
+
         // 获取奖励率配置
-        const rewardRatesStr = await getSetting('reward_rates', 'vip', '[]');
-        
-        const rewardRates = JSON.parse(rewardRatesStr) as VipRewardRatesConfig[];
-        
+        const rewardRatesStr = await getSetting("reward_rates", "vip", "[]");
+
+        const rewardRates = JSON.parse(
+          rewardRatesStr
+        ) as VipRewardRatesConfig[];
+
         // 验证数据有效性
         if (!vipLevels.length || !rewardRates.length) {
-          throw new Error('Invalid VIP configuration data');
+          throw new Error("Invalid VIP configuration data");
         }
-        
+
         // 构造新的VIP配置
         const newLevels: Record<number, any> = {};
-        
+
         vipLevels.forEach((levelConfig: VipLevelConfig) => {
           const level = levelConfig.level;
           const threshold = levelConfig.threshold;
-          
+
           // 查找对应的奖励率配置
-          const rewardConfig = rewardRates.find((r: VipRewardRatesConfig) => r.level === level);
-          
+          const rewardConfig = rewardRates.find(
+            (r: VipRewardRatesConfig) => r.level === level
+          );
+
           if (rewardConfig) {
             const { totalReturn, dailyFundRange } = calculateDerivedValues(
-              threshold, 
+              threshold,
               state.vipInfo.reliefFundRates
             );
-            
+
             // 确保rates数组至少有6个元素
             const rates = rewardConfig.rates;
             while (rates.length < 6) {
               rates.push(0);
             }
-            
+
             // 为每个VIP等级配置数据
             newLevels[level] = {
               rewardRates: {
@@ -162,45 +169,47 @@ export function useVipSettings() {
                 level3: rates[2] || 0,
                 level4: rates[3] || 0,
                 level5: rates[4] || 0,
-                total: rates.slice(0, 5).reduce((sum: number, rate: number) => sum + rate, 0)
+                total: rates
+                  .slice(0, 5)
+                  .reduce((sum: number, rate: number) => sum + rate, 0),
               },
               donationAmount: threshold,
               totalReturn: totalReturn,
               dailyFundRange: dailyFundRange,
-              period: 40 // 保持期间不变
+              period: 40, // 保持期间不变
             };
           }
         });
-        
+
         // 对比旧值和新值
-        const hasChanges = JSON.stringify(state.vipInfo.levels) !== JSON.stringify(newLevels);
-        
+        const hasChanges =
+          JSON.stringify(state.vipInfo.levels) !== JSON.stringify(newLevels);
+
         if (hasChanges) {
           // 更新store
           const updatedVipInfo = {
             ...state.vipInfo,
-            levels: newLevels
+            levels: newLevels,
           };
-          
+
           // 使用新的UPDATE_VIP_INFO action更新store
-          dispatch({ 
-            type: "UPDATE_VIP_INFO", 
-            payload: updatedVipInfo 
+          dispatch({
+            type: "UPDATE_VIP_INFO",
+            payload: updatedVipInfo,
           });
-          
+
           // 记录初始化成功的时间
-          if (typeof window !== 'undefined') {
-            sessionStorage.setItem('vip_init_time', Date.now().toString());
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem("vip_init_time", Date.now().toString());
           }
         }
-        
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('Unknown error'));
+        setError(err instanceof Error ? err : new Error("Unknown error"));
       } finally {
         setLoading(false);
       }
     }
-    
+
     loadVipSettings();
   }, [dispatch, state.vipInfo.reliefFundRates, mounted]); // Add reliefFundRates and mounted as dependencies
 
@@ -212,24 +221,27 @@ export function useVipSettings() {
     }
 
     // Only proceed if we have levels to update
-    if (!state.vipInfo.levels || Object.keys(state.vipInfo.levels).length === 0) {
+    if (
+      !state.vipInfo.levels ||
+      Object.keys(state.vipInfo.levels).length === 0
+    ) {
       return;
     }
-    
+
     // 检查是否已经重新计算过
     if (hasRecalculatedRef.current) {
       return;
     }
-    
+
     // 使用JSON字符串化来进行深度比较，避免不必要的更新
     const prevLevelsJSON = JSON.stringify(state.vipInfo.levels);
-    
+
     // Update existing levels with new rate calculations
     const updatedLevels = { ...state.vipInfo.levels };
     let hasChanges = false;
 
     // Update each level with new calculations
-    Object.keys(updatedLevels).forEach(levelKey => {
+    Object.keys(updatedLevels).forEach((levelKey) => {
       const level = updatedLevels[levelKey as unknown as number];
       const threshold = level.donationAmount;
 
@@ -247,7 +259,7 @@ export function useVipSettings() {
         updatedLevels[levelKey as unknown as number] = {
           ...level,
           totalReturn,
-          dailyFundRange
+          dailyFundRange,
         };
       }
     });
@@ -260,18 +272,17 @@ export function useVipSettings() {
         type: "UPDATE_VIP_INFO",
         payload: {
           ...state.vipInfo,
-          levels: updatedLevels
-        }
+          levels: updatedLevels,
+        },
       });
     }
-    
+
     // 标记已经重新计算过
     hasRecalculatedRef.current = true;
-    
   }, [ratesAvailable, state.vipInfo.reliefFundRates, dispatch]);
-  
+
   return {
     loading,
-    error
+    error,
   };
-} 
+}

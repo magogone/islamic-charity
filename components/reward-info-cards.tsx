@@ -1,42 +1,57 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { InfoIcon, Users } from "lucide-react"
-import { Card } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { useState } from "react";
+import { InfoIcon, Users } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface RewardInfoCardsProps {
   basicReward: {
-    current: number
-    max: number
-    totalEarned?: number
-  }
+    current: number;
+    max: number;
+    totalEarned?: number;
+  };
   referralReward: {
     current: {
-      level1: number
-      level2: number
-      level3: number
-      level4: number
-      level5: number
-      total: number
-    }
+      level1: number;
+      level2: number;
+      level3: number;
+      level4: number;
+      level5: number;
+      total: number;
+    };
     max: {
-      level1: number
-      level2: number
-      level3: number
-      level4: number
-      level5: number
-      total: number
-    }
-    totalEarned?: number
-  }
-  className?: string
+      level1: number;
+      level2: number;
+      level3: number;
+      level4: number;
+      level5: number;
+      total: number;
+    };
+    totalEarned?: number;
+  };
+  className?: string;
 }
 
-export function RewardInfoCards({ basicReward, referralReward, className = "" }: RewardInfoCardsProps) {
-  const [basicInfoOpen, setBasicInfoOpen] = useState(false)
-  const [referralInfoOpen, setReferralInfoOpen] = useState(false)
+export function RewardInfoCards({
+  basicReward,
+  referralReward,
+  className = "",
+}: RewardInfoCardsProps) {
+  const [basicInfoOpen, setBasicInfoOpen] = useState(false);
+  const [referralInfoOpen, setReferralInfoOpen] = useState(false);
 
   return (
     <>
@@ -49,15 +64,22 @@ export function RewardInfoCards({ basicReward, referralReward, className = "" }:
               <span className="text-sm text-islamic-gold">基础奖励</span>
             </div>
             {basicReward.totalEarned !== undefined && (
-              <span className="text-sm font-medium text-[#8dc63f]">+{basicReward.totalEarned} U</span>
+              <span className="text-sm font-medium text-[#8dc63f] flex items-baseline">
+                +{basicReward.totalEarned}
+                <span className="text-xs ml-1">USD</span>
+              </span>
             )}
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-islamic-cream/70">当前奖励比例</span>
+              <span className="text-xs text-islamic-cream/70">
+                当前奖励比例
+              </span>
               <div className="flex items-center">
-                <span className="text-sm font-medium text-islamic-gold">{basicReward.current}%</span>
+                <span className="text-sm font-medium text-islamic-gold">
+                  {basicReward.current}%
+                </span>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -77,52 +99,73 @@ export function RewardInfoCards({ basicReward, referralReward, className = "" }:
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-xs text-islamic-cream/70">最高奖励比例</span>
-              <span className="text-sm font-medium text-islamic-gold/80">{basicReward.max}%</span>
+              <span className="text-xs text-islamic-cream/70">
+                最高奖励比例
+              </span>
+              <span className="text-sm font-medium text-islamic-gold/80">
+                {basicReward.max}%
+              </span>
             </div>
           </div>
         </Card>
 
-        {/* 推荐奖励卡片 */}
+        {/* 回馈奖励卡片 */}
         <Card className="overflow-hidden border-none shadow-md bg-islamic-medium/70 backdrop-blur-sm text-white p-3">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center">
               <Users className="h-4 w-4 text-islamic-gold mr-2" />
-              <span className="text-sm text-islamic-gold">推荐奖励</span>
+              <span className="text-sm text-islamic-gold">回馈奖励</span>
             </div>
             {referralReward.totalEarned !== undefined && (
-              <span className="text-sm font-medium text-[#8dc63f]">+{referralReward.totalEarned} U</span>
+              <span className="text-sm font-medium text-[#8dc63f] flex items-baseline">
+                +{referralReward.totalEarned}
+                <span className="text-xs ml-1">USD</span>
+              </span>
             )}
           </div>
 
           <div className="grid grid-cols-5 gap-1 mb-2">
             <div className="text-center">
               <div className="text-xs text-islamic-cream/70">1代</div>
-              <div className="text-sm font-medium text-islamic-gold">{referralReward.current.level1}%</div>
+              <div className="text-sm font-medium text-islamic-gold">
+                {referralReward.current.level1}%
+              </div>
             </div>
             <div className="text-center">
               <div className="text-xs text-islamic-cream/70">2代</div>
-              <div className="text-sm font-medium text-islamic-gold">{referralReward.current.level2}%</div>
+              <div className="text-sm font-medium text-islamic-gold">
+                {referralReward.current.level2}%
+              </div>
             </div>
             <div className="text-center">
               <div className="text-xs text-islamic-cream/70">3代</div>
-              <div className="text-sm font-medium text-islamic-gold">{referralReward.current.level3}%</div>
+              <div className="text-sm font-medium text-islamic-gold">
+                {referralReward.current.level3}%
+              </div>
             </div>
             <div className="text-center">
               <div className="text-xs text-islamic-cream/70">4代</div>
-              <div className="text-sm font-medium text-islamic-gold">{referralReward.current.level4}%</div>
+              <div className="text-sm font-medium text-islamic-gold">
+                {referralReward.current.level4}%
+              </div>
             </div>
             <div className="text-center">
               <div className="text-xs text-islamic-cream/70">5代</div>
-              <div className="text-sm font-medium text-islamic-gold">{referralReward.current.level5}%</div>
+              <div className="text-sm font-medium text-islamic-gold">
+                {referralReward.current.level5}%
+              </div>
             </div>
           </div>
 
           <div className="flex items-center justify-between">
             <span className="text-xs text-islamic-cream/70">总计</span>
             <div className="flex items-center">
-              <span className="text-sm font-medium text-islamic-gold">{referralReward.current.total}%</span>
-              <span className="text-xs text-islamic-cream/60 ml-1">/ {referralReward.max.total}%</span>
+              <span className="text-sm font-medium text-islamic-gold">
+                {referralReward.current.total}%
+              </span>
+              <span className="text-xs text-islamic-cream/60 ml-1">
+                / {referralReward.max.total}%
+              </span>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -134,7 +177,7 @@ export function RewardInfoCards({ basicReward, referralReward, className = "" }:
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>查看推荐奖励详情</p>
+                    <p>查看回馈奖励详情</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -152,12 +195,16 @@ export function RewardInfoCards({ basicReward, referralReward, className = "" }:
               <Users className="mr-2 h-5 w-5" />
               基础奖励详情
             </DialogTitle>
-            <DialogDescription className="text-islamic-cream/70">了解更多关于基础奖励的信息</DialogDescription>
+            <DialogDescription className="text-islamic-cream/70">
+              了解更多关于基础奖励的信息
+            </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
             <div className="space-y-3">
-              <h3 className="text-sm font-medium text-islamic-gold">奖励比例说明</h3>
+              <h3 className="text-sm font-medium text-islamic-gold">
+                奖励比例说明
+              </h3>
               <p className="text-xs text-islamic-cream/80">
                 基础奖励是根据您的捐赠金额和VIP等级计算的，随着您的VIP等级提升，基础奖励比例也会相应提高。
               </p>
@@ -197,23 +244,27 @@ export function RewardInfoCards({ basicReward, referralReward, className = "" }:
         </DialogContent>
       </Dialog>
 
-      {/* 推荐奖励详情弹窗 */}
+      {/* 回馈奖励详情弹窗 */}
       <Dialog open={referralInfoOpen} onOpenChange={setReferralInfoOpen}>
         <DialogContent className="sm:max-w-[425px] bg-islamic-cardBg text-white border-islamic-medium">
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-islamic-gold to-islamic-gold/50"></div>
           <DialogHeader>
             <DialogTitle className="text-islamic-gold flex items-center">
               <Users className="mr-2 h-5 w-5" />
-              推荐奖励详情
+              回馈奖励详情
             </DialogTitle>
-            <DialogDescription className="text-islamic-cream/70">了解更多关于推荐奖励的信息</DialogDescription>
+            <DialogDescription className="text-islamic-cream/70">
+              了解更多关于回馈奖励的信息
+            </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
             <div className="space-y-3">
-              <h3 className="text-sm font-medium text-islamic-gold">推荐层级说明</h3>
+              <h3 className="text-sm font-medium text-islamic-gold">
+                推荐层级说明
+              </h3>
               <p className="text-xs text-islamic-cream/80">
-                推荐奖励是根据您推荐的好友（1代）、好友推荐的好友（2代）以及更深层级的推荐（3-5代）计算的。
+                回馈奖励是根据您推荐的好友（1代）、好友推荐的好友（2代）以及更深层级的推荐（3-5代）计算的。
               </p>
 
               <div className="space-y-2">
@@ -233,8 +284,12 @@ export function RewardInfoCards({ basicReward, referralReward, className = "" }:
                 </div>
               </div>
 
-              <h3 className="text-sm font-medium text-islamic-gold mt-4">VIP等级加成</h3>
-              <p className="text-xs text-islamic-cream/80">随着您的VIP等级提升，推荐奖励比例也会相应提高，最高可达：</p>
+              <h3 className="text-sm font-medium text-islamic-gold mt-4">
+                VIP等级加成
+              </h3>
+              <p className="text-xs text-islamic-cream/80">
+                随着您的VIP等级提升，回馈奖励比例也会相应提高，最高可达：
+              </p>
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
@@ -261,5 +316,5 @@ export function RewardInfoCards({ basicReward, referralReward, className = "" }:
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }

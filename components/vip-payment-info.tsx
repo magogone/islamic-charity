@@ -136,14 +136,20 @@ export function VipPaymentInfo({ className }: VipPaymentInfoProps) {
                         isCurrentLevel ? "text-[#d4b96e] font-semibold" : ""
                       }`}
                     >
-                      {data.donationAmount}U
+                      <div className="flex items-baseline">
+                        {data.donationAmount}
+                        <span className="text-xs ml-1">USD</span>
+                      </div>
                     </div>
                     <div
                       className={`py-2 border-t border-[#2a2f3c]/30 ${
                         isCurrentLevel ? "text-[#d4b96e] font-semibold" : ""
                       }`}
                     >
-                      {data.totalReturn}U
+                      <div className="flex items-baseline">
+                        {data.totalReturn}
+                        <span className="text-xs ml-1">USD</span>
+                      </div>
                     </div>
                   </React.Fragment>
                 );

@@ -34,11 +34,6 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
   // 添加客户端渲染状态，避免服务端渲染与客户端水合不匹配
   const [mounted, setMounted] = useState(false);
 
-  // 模拟用户VIP等级数据（与VIP Events页面保持一致）
-  const userData = {
-    vipLevel: 4,
-  };
-
   // 设置客户端挂载状态
   useEffect(() => {
     setMounted(true);
@@ -180,50 +175,54 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
     if (hasCheckedRef.current || layoutCheckPerformed) {
       return;
     }
-    
+
     // 导入AuthSessionChecker的状态检查函数
     let getSessionCheckStatus;
     try {
-      getSessionCheckStatus = require("./auth-session-checker").getSessionCheckStatus;
+      getSessionCheckStatus =
+        require("./auth-session-checker").getSessionCheckStatus;
     } catch (e) {
       console.error("[MainLayout] Failed to import getSessionCheckStatus", e);
     }
-    
+
     hasCheckedRef.current = true;
-    
+
     // 如果AuthSessionChecker已经完成检查，则不需要再次检查
     if (getSessionCheckStatus && getSessionCheckStatus()) {
       layoutCheckPerformed = true;
       return;
     }
-    
+
     // 获取上次活动时间
-    const lastActivity = sessionStorage.getItem('last_activity');
+    const lastActivity = sessionStorage.getItem("last_activity");
     const currentTime = Date.now();
-    
+
     // 仅在下列条件下执行会话检查:
-    // 1. 有超过30秒的不活动期间 (可能是页面刷新) 
+    // 1. 有超过30秒的不活动期间 (可能是页面刷新)
     // 2. 当前没有有效的用户会话
     // 3. AuthSessionChecker尚未完成检查
-    if ((!lastActivity || (currentTime - parseInt(lastActivity)) > 30000) && 
-        !isAuthenticated && !layoutCheckPerformed) {
+    if (
+      (!lastActivity || currentTime - parseInt(lastActivity) > 30000) &&
+      !isAuthenticated &&
+      !layoutCheckPerformed
+    ) {
       layoutCheckPerformed = true;
       checkSession();
     }
-    
+
     // 更新上次活动时间戳
-    sessionStorage.setItem('last_activity', currentTime.toString());
+    sessionStorage.setItem("last_activity", currentTime.toString());
   }, [checkSession, isAuthenticated]);
 
   // Function to handle navigation with auth check
   const handleNavigation = (path: string) => {
     if (path === "/" || isAuthenticated) {
-      router.push(path)
+      router.push(path);
     } else {
       // Open login modal with target path
-      openLoginModal(path)
+      openLoginModal(path);
     }
-  }
+  };
 
   // 渲染用户信息或登录按钮的函数 - 暂时简化
   const renderAuthSection = () => {
@@ -231,7 +230,7 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
       // 在客户端挂载前，返回一个占位符，避免水合不匹配
       return <div className="auth-placeholder"></div>;
     }
-    
+
     return isAuthenticated && user ? (
       <div className="flex items-center gap-3">
         <span className="text-sm text-islamic-cream">
@@ -245,7 +244,7 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
           onClick={() => openLoginModal()}
           className="px-3 py-1 text-islamic-gold hover:bg-islamic-gold/10 transition-colors text-sm rounded-md"
         >
-          {t('common.login')}
+          {t("common.login")}
         </button>
         <LanguageSelector />
       </div>
@@ -325,7 +324,11 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
               style={{ touchAction: "manipulation" }}
             >
               <Star className="h-5 w-5" />
-              <span className="text-xs mt-1">等级</span>
+              <span className="text-xs mt-1 vip-level-text">
+                {isAuthenticated && user?.vipLevel
+                  ? `V${user.vipLevel}`
+                  : "等级"}
+              </span>
             </button>
             <button
               onClick={() => {

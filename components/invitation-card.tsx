@@ -1,69 +1,101 @@
-"use client"
+"use client";
 
-import { Share2, InfoIcon, User, UserPlus, Percent, Users, UsersIcon, Award, Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import Link from "next/link"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { useState, useEffect } from "react"
-import { useAuth } from "@/store/use-auth"
-import { useAuthContext } from "@/store/auth-context"
-import { useDailyRewardRates } from "@/hooks/use-daily-reward-rates"
-import { useStore } from "@/store/store-context"
-import { useTranslation } from "@/lib/i18n"
+import {
+  Share2,
+  InfoIcon,
+  User,
+  UserPlus,
+  Percent,
+  Users,
+  UsersIcon,
+  Award,
+  Loader2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/store/use-auth";
+import { useAuthContext } from "@/store/auth-context";
+import { useDailyRewardRates } from "@/hooks/use-daily-reward-rates";
+import { useStore } from "@/store/store-context";
+import { useTranslation } from "@/lib/i18n";
 
 export interface InvitationCardProps {
   data?: {
-    totalReferrals?: number
-    directReferrals?: number
-    indirectReferrals?: number
-    totalRewards?: number
+    totalReferrals?: number;
+    directReferrals?: number;
+    indirectReferrals?: number;
+    totalRewards?: number;
     rewardRate?: {
-      level1?: number
-      level2?: number
-      level3?: number
-      level4?: number
-      level5?: number
-      total?: number
-    }
+      level1?: number;
+      level2?: number;
+      level3?: number;
+      level4?: number;
+      level5?: number;
+      total?: number;
+    };
     basicReward?: {
-      current?: number
-      max?: number
-    }
+      current?: number;
+      max?: number;
+    };
     maxReferralReward?: {
-      level1?: number
-      level2?: number
-      level3?: number
-      level4?: number
-      level5?: number
-      total?: number
-    }
-  }
-  className?: string
-  isLoading?: boolean
-  refresh?: () => void
+      level1?: number;
+      level2?: number;
+      level3?: number;
+      level4?: number;
+      level5?: number;
+      total?: number;
+    };
+  };
+  className?: string;
+  isLoading?: boolean;
+  refresh?: () => void;
 }
 
-export function InvitationCard({ data, className = "", isLoading = false, refresh }: InvitationCardProps) {
-  const [basicInfoOpen, setBasicInfoOpen] = useState(false)
-  const [referralInfoOpen, setReferralInfoOpen] = useState(false)
-  const { isAuthenticated, user } = useAuth()
-  const { openLoginModal } = useAuthContext()
-  const [mounted, setMounted] = useState(false)
-  const { rateConfigs, loading: ratesLoading } = useDailyRewardRates()
-  const { state } = useStore()
-  const { t } = useTranslation()
-  
+export function InvitationCard({
+  data,
+  className = "",
+  isLoading = false,
+  refresh,
+}: InvitationCardProps) {
+  const [basicInfoOpen, setBasicInfoOpen] = useState(false);
+  const [referralInfoOpen, setReferralInfoOpen] = useState(false);
+  const { isAuthenticated, user } = useAuth();
+  const { openLoginModal } = useAuthContext();
+  const [mounted, setMounted] = useState(false);
+  const { rateConfigs, loading: ratesLoading } = useDailyRewardRates();
+  const { state } = useStore();
+  const { t } = useTranslation();
+
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (mounted && isAuthenticated && refresh) {
-      refresh()
+      refresh();
     }
-  }, [mounted, isAuthenticated, refresh])
+  }, [mounted, isAuthenticated, refresh]);
 
   // Default data to prevent undefined errors
   const defaultData = {
@@ -91,8 +123,8 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
       level5: 2,
       total: 30,
     },
-  }
-  
+  };
+
   // Use safe data with defaults
   const safeData = {
     totalReferrals: data?.totalReferrals ?? defaultData.totalReferrals,
@@ -112,104 +144,122 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
       max: data?.basicReward?.max ?? defaultData.basicReward.max,
     },
     maxReferralReward: {
-      level1: data?.maxReferralReward?.level1 ?? defaultData.maxReferralReward.level1,
-      level2: data?.maxReferralReward?.level2 ?? defaultData.maxReferralReward.level2,
-      level3: data?.maxReferralReward?.level3 ?? defaultData.maxReferralReward.level3,
-      level4: data?.maxReferralReward?.level4 ?? defaultData.maxReferralReward.level4,
-      level5: data?.maxReferralReward?.level5 ?? defaultData.maxReferralReward.level5,
-      total: data?.maxReferralReward?.total ?? defaultData.maxReferralReward.total,
+      level1:
+        data?.maxReferralReward?.level1 ?? defaultData.maxReferralReward.level1,
+      level2:
+        data?.maxReferralReward?.level2 ?? defaultData.maxReferralReward.level2,
+      level3:
+        data?.maxReferralReward?.level3 ?? defaultData.maxReferralReward.level3,
+      level4:
+        data?.maxReferralReward?.level4 ?? defaultData.maxReferralReward.level4,
+      level5:
+        data?.maxReferralReward?.level5 ?? defaultData.maxReferralReward.level5,
+      total:
+        data?.maxReferralReward?.total ?? defaultData.maxReferralReward.total,
     },
-  }
+  };
 
   // Determine the user's VIP level
-  const userVipLevel = user?.vipLevel || 0
-  
-  // Get user's invite level 
-  const userInviteLevel = user?.inviteLevel || 0
-  
-  // Get referral rewards based on VIP level
-  const vipLevelData = mounted ? state?.vipInfo?.levels?.[userVipLevel] : null
-  
+  const userVipLevel = user?.vipLevel || 0;
+
+  // Get user's invite level
+  const userInviteLevel = user?.inviteLevel || 0;
+
+  // Get reward benefits based on VIP level
+  const vipLevelData = mounted ? state?.vipInfo?.levels?.[userVipLevel] : null;
+
   // Get the min and max values for VIP levels
-  const minVipReward = mounted && state?.vipInfo?.levels?.[1]?.rewardRates?.total || 20  // VIP1的总奖励作为最小值
-  const maxVipReward = mounted && state?.vipInfo?.levels?.[5]?.rewardRates?.total || 30  // VIP5的总奖励作为最大值
-  
+  const minVipReward =
+    (mounted && state?.vipInfo?.levels?.[1]?.rewardRates?.total) || 20; // VIP1的总奖励作为最小值
+  const maxVipReward =
+    (mounted && state?.vipInfo?.levels?.[5]?.rewardRates?.total) || 30; // VIP5的总奖励作为最大值
+
   // Get current VIP level's total reward
-  const currentVipTotalReward = userVipLevel > 0 ? (vipLevelData?.rewardRates?.total || 0) : 0
-  
+  const currentVipTotalReward =
+    userVipLevel > 0 ? vipLevelData?.rewardRates?.total || 0 : 0;
+
   // Calculate current reward based on user's invite level (1-5)
-  const currentRewardRate = userVipLevel === 0 ? 0 : (
-    userInviteLevel >= 1 && userInviteLevel <= 5 
-      ? (userInviteLevel === 1 
-          ? vipLevelData?.rewardRates?.level1 
-          : userInviteLevel === 2 
-            ? vipLevelData?.rewardRates?.level2 
-            : userInviteLevel === 3 
-              ? vipLevelData?.rewardRates?.level3 
-              : userInviteLevel === 4 
-                ? vipLevelData?.rewardRates?.level4 
-                : vipLevelData?.rewardRates?.level5) || 0
-      : vipLevelData?.rewardRates?.level1 || 0
-  )
-  
+  const currentRewardRate =
+    userVipLevel === 0
+      ? 0
+      : userInviteLevel >= 1 && userInviteLevel <= 5
+      ? (userInviteLevel === 1
+          ? vipLevelData?.rewardRates?.level1
+          : userInviteLevel === 2
+          ? vipLevelData?.rewardRates?.level2
+          : userInviteLevel === 3
+          ? vipLevelData?.rewardRates?.level3
+          : userInviteLevel === 4
+          ? vipLevelData?.rewardRates?.level4
+          : vipLevelData?.rewardRates?.level5) || 0
+      : vipLevelData?.rewardRates?.level1 || 0;
+
   // Get the current reward rate based on direct referral count
   const getCurrentRateText = (referrals: number): string => {
     if (!mounted || ratesLoading) {
       // Default values when not mounted or rates are loading
-      if (referrals === 0) return "1%"
-      if (referrals >= 5) return "2.5%"
-      if (referrals >= 3) return "2%"
-      if (referrals >= 1) return "1.5%"
-      return "1%"
+      if (referrals === 0) return "1%";
+      if (referrals >= 5) return "2.5%";
+      if (referrals >= 3) return "2%";
+      if (referrals >= 1) return "1.5%";
+      return "1%";
     }
-    
+
     // Dynamic values when mounted and rates are loaded
-    if (referrals >= 5) return `${rateConfigs.referral5}%`
-    if (referrals >= 3) return `${rateConfigs.referral3}%`
-    if (referrals >= 1) return `${rateConfigs.referral1}%`
-    return `${rateConfigs.noReferral}%`
-  }
-  
+    if (referrals >= 5) return `${rateConfigs.referral5}%`;
+    if (referrals >= 3) return `${rateConfigs.referral3}%`;
+    if (referrals >= 1) return `${rateConfigs.referral1}%`;
+    return `${rateConfigs.noReferral}%`;
+  };
+
   // Get the basic reward rates from the configuration
-  const basicRewardMin = mounted && !ratesLoading ? rateConfigs.noReferral : 1
-  const basicRewardMax = mounted && !ratesLoading ? rateConfigs.referral5 : 2.5
-  const currentBasicReward = mounted && !ratesLoading 
-    ? getCurrentRateText(user?.referrals || 0).replace('%', '')
-    : "0"
-  
+  const basicRewardMin = mounted && !ratesLoading ? rateConfigs.noReferral : 1;
+  const basicRewardMax = mounted && !ratesLoading ? rateConfigs.referral5 : 2.5;
+  const currentBasicReward =
+    mounted && !ratesLoading
+      ? getCurrentRateText(user?.referrals || 0).replace("%", "")
+      : "0";
+
   // Calculate progress percentages for the reward bars
-  const basicRewardProgress = ((parseFloat(currentBasicReward) - basicRewardMin) / (basicRewardMax - basicRewardMin)) * 100
-  
+  const basicRewardProgress =
+    ((parseFloat(currentBasicReward) - basicRewardMin) /
+      (basicRewardMax - basicRewardMin)) *
+    100;
+
   // For VIP reward progress: show current VIP level's position in VIP1-VIP5 range
-  const referralRewardProgress = userVipLevel === 0 ? 0 : 
-    ((currentVipTotalReward - minVipReward) / (maxVipReward - minVipReward)) * 100
+  const referralRewardProgress =
+    userVipLevel === 0
+      ? 0
+      : ((currentVipTotalReward - minVipReward) /
+          (maxVipReward - minVipReward)) *
+        100;
 
   // Get reward rate style based on direct referral count
   const getRateClass = (referrals: number) => {
     if ((user?.referrals || 0) >= referrals) {
-      return "border-islamic-gold/50 bg-islamic-gold/10 text-islamic-gold"
+      return "border-islamic-gold/50 bg-islamic-gold/10 text-islamic-gold";
     }
-    return "border-islamic-medium/50 bg-islamic-medium/30 text-islamic-cream/90"
-  }
-  
+    return "border-islamic-medium/50 bg-islamic-medium/30 text-islamic-cream/90";
+  };
+
   // Get rate percentage text based on referral count
   const getRateText = (referrals: number): string => {
     if (!mounted || ratesLoading) {
       // Default values when not mounted or rates are loading
-      if (referrals === 0) return "1%"
-      if (referrals === 1) return "1.5%"
-      if (referrals === 3) return "2%"
-      if (referrals === 5) return "2.5%"
-      return "1%"
+      if (referrals === 0) return "1%";
+      if (referrals === 1) return "1.5%";
+      if (referrals === 3) return "2%";
+      if (referrals === 5) return "2.5%";
+      return "1%";
     }
-    
+
     // Dynamic values when mounted and rates are loaded
-    if (referrals === 0) return `${rateConfigs.noReferral}%`
-    if (referrals === 1) return `${rateConfigs.referral1}%`
-    if (referrals === 3) return `${rateConfigs.referral3}%`
-    if (referrals === 5) return `${rateConfigs.referral5}%`
-    return `${rateConfigs.noReferral}%`
-  }
+    if (referrals === 0) return `${rateConfigs.noReferral}%`;
+    if (referrals === 1) return `${rateConfigs.referral1}%`;
+    if (referrals === 3) return `${rateConfigs.referral3}%`;
+    if (referrals === 5) return `${rateConfigs.referral5}%`;
+    return `${rateConfigs.noReferral}%`;
+  };
 
   return (
     <Card
@@ -219,14 +269,16 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center text-xl text-[#8dc63f]">
           <Share2 className="mr-2 h-5 w-5" />
-          {t('invitation.inviteFriends')}
+          {t("invitation.inviteFriends")}
         </CardTitle>
       </CardHeader>
       <CardContent className="pb-2">
         {isLoading ? (
           <div className="flex justify-center items-center py-10">
             <Loader2 className="h-8 w-8 text-islamic-gold animate-spin" />
-            <span className="ml-3 text-islamic-cream">{t('invitation.loadingInvitationData')}</span>
+            <span className="ml-3 text-islamic-cream">
+              {t("invitation.loadingInvitationData")}
+            </span>
           </div>
         ) : (
           <>
@@ -235,22 +287,34 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
               <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-4 flex items-center">
                 <Users className="h-8 w-8 text-islamic-cream/50 mr-3" />
                 <div className="flex flex-col">
-                  <span className="text-3xl font-bold text-[#8dc63f] leading-tight">{safeData.totalReferrals}</span>
-                  <span className="text-xs text-islamic-cream/70">{t('invitation.total')}</span>
+                  <span className="text-3xl font-bold text-[#8dc63f] leading-tight">
+                    {safeData.totalReferrals}
+                  </span>
+                  <span className="text-xs text-islamic-cream/70">
+                    {t("invitation.total")}
+                  </span>
                 </div>
               </div>
               <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-4 flex items-center">
                 <UserPlus className="h-8 w-8 text-islamic-cream/50 mr-3" />
                 <div className="flex flex-col">
-                  <span className="text-3xl font-bold text-[#8dc63f] leading-tight">{safeData.directReferrals}</span>
-                  <span className="text-xs text-islamic-cream/70">{t('invitation.direct')}</span>
+                  <span className="text-3xl font-bold text-[#8dc63f] leading-tight">
+                    {safeData.directReferrals}
+                  </span>
+                  <span className="text-xs text-islamic-cream/70">
+                    {t("invitation.direct")}
+                  </span>
                 </div>
               </div>
               <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-4 flex items-center">
                 <UsersIcon className="h-8 w-8 text-islamic-cream/50 mr-3" />
                 <div className="flex flex-col">
-                  <span className="text-3xl font-bold text-[#8dc63f] leading-tight">{safeData.indirectReferrals}</span>
-                  <span className="text-xs text-islamic-cream/70">{t('invitation.indirect')}</span>
+                  <span className="text-3xl font-bold text-[#8dc63f] leading-tight">
+                    {safeData.indirectReferrals}
+                  </span>
+                  <span className="text-xs text-islamic-cream/70">
+                    {t("invitation.indirect")}
+                  </span>
                 </div>
               </div>
             </div>
@@ -261,15 +325,21 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
               <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3">
                 <div className="flex items-center mb-3">
                   <User className="h-4 w-4 text-islamic-gold mr-2" />
-                  <span className="text-sm text-islamic-gold">{t('invitation.basicRewards')}</span>
+                  <span className="text-sm text-islamic-gold">
+                    {t("invitation.basicRewards")}
+                  </span>
                 </div>
 
                 {/* Visual representation of reward range - progress bar */}
                 <div className="mb-3">
                   <div className="relative pt-1 pb-3">
                     <div className="flex mb-1 items-center justify-between">
-                      <div className="text-xs text-islamic-cream/70">{basicRewardMin}%</div>
-                      <div className="text-xs text-islamic-cream/70">{basicRewardMax}%</div>
+                      <div className="text-xs text-islamic-cream/70">
+                        {basicRewardMin}%
+                      </div>
+                      <div className="text-xs text-islamic-cream/70">
+                        {basicRewardMax}%
+                      </div>
                     </div>
                     <div className="overflow-hidden h-2 mb-1 text-xs flex rounded bg-islamic-dark/50">
                       <div
@@ -288,10 +358,14 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Award className="h-4 w-4 text-islamic-gold mr-2" />
-                    <span className="text-xs text-islamic-cream">{t('invitation.currentRewards')}</span>
+                    <span className="text-xs text-islamic-cream">
+                      {t("invitation.currentRewards")}
+                    </span>
                   </div>
                   <div className="flex items-center">
-                    <span className="text-sm font-medium text-islamic-gold">{getCurrentRateText(user?.referrals || 0)}</span>
+                    <span className="text-sm font-medium text-islamic-gold">
+                      {getCurrentRateText(user?.referrals || 0)}
+                    </span>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -303,7 +377,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                           </button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>{t('invitation.viewBasicRewardDetails')}</p>
+                          <p>{t("invitation.viewBasicRewardDetails")}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -311,12 +385,14 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                 </div>
               </div>
 
-              {/* Referral Reward Card */}
+              {/* Reward Benefit Card */}
               <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-3">
                 <div className="flex items-center mb-3">
                   <UserPlus className="h-4 w-4 text-islamic-gold mr-2" />
                   <span className="text-sm text-islamic-gold">
-                    {userVipLevel === 0 ? t('invitation.referralRewardsInactive') : t('invitation.referralRewards')}
+                    {userVipLevel === 0
+                      ? t("invitation.referralRewardsInactive")
+                      : t("invitation.referralRewards")}
                   </span>
                 </div>
 
@@ -324,8 +400,12 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                 <div className="mb-3">
                   <div className="relative pt-1 pb-3">
                     <div className="flex mb-1 items-center justify-between">
-                      <div className="text-xs text-islamic-cream/70">{minVipReward}%</div>
-                      <div className="text-xs text-islamic-cream/70">{maxVipReward}%</div>
+                      <div className="text-xs text-islamic-cream/70">
+                        {minVipReward}%
+                      </div>
+                      <div className="text-xs text-islamic-cream/70">
+                        {maxVipReward}%
+                      </div>
                     </div>
                     <div className="overflow-hidden h-2 mb-1 text-xs flex rounded bg-islamic-dark/50">
                       <div
@@ -344,10 +424,14 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Award className="h-4 w-4 text-islamic-gold mr-2" />
-                    <span className="text-xs text-islamic-cream">{t('invitation.currentRewards')}</span>
+                    <span className="text-xs text-islamic-cream">
+                      {t("invitation.currentRewards")}
+                    </span>
                   </div>
                   <div className="flex items-center">
-                    <span className="text-sm font-medium text-islamic-gold">{currentVipTotalReward}%</span>
+                    <span className="text-sm font-medium text-islamic-gold">
+                      {currentVipTotalReward}%
+                    </span>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -359,7 +443,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                           </button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>{t('invitation.viewReferralRewardDetails')}</p>
+                          <p>{t("invitation.viewReferralRewardDetails")}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -371,27 +455,33 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
             {/* Invitation Tip */}
             <div className="p-3 rounded-lg bg-[#8dc63f]/20 border border-[#8dc63f]/30 text-xs text-islamic-cream/90">
               <p>
-                {t('invitation.inviteTip').replace('{maxRate}', String(vipLevelData?.rewardRates?.level1 || maxVipReward))}
+                {t("invitation.inviteTip").replace(
+                  "{maxRate}",
+                  String(vipLevelData?.rewardRates?.level1 || maxVipReward)
+                )}
               </p>
             </div>
           </>
         )}
       </CardContent>
-      
+
       <CardFooter className="pt-3 pb-4">
         {!mounted ? (
           // 服务端渲染和客户端挂载前的占位按钮
           <div className="w-full">
             <Button className="w-full bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c] flex items-center justify-center">
-              {t('invitation.inviteNow')}
+              {t("invitation.inviteNow")}
               <Share2 className="ml-2 h-4 w-4" />
             </Button>
           </div>
         ) : isAuthenticated ? (
           // 已登录用户看到的链接按钮
           <Link href="/promotion/share" className="w-full">
-            <Button className="w-full bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c] flex items-center justify-center" disabled={isLoading}>
-              {t('invitation.inviteNow')}
+            <Button
+              className="w-full bg-[#8dc63f] hover:bg-[#8dc63f]/90 text-[#1a0d2c] flex items-center justify-center"
+              disabled={isLoading}
+            >
+              {t("invitation.inviteNow")}
               <Share2 className="ml-2 h-4 w-4" />
             </Button>
           </Link>
@@ -402,7 +492,7 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
             onClick={() => openLoginModal("/promotion/share")}
             disabled={isLoading}
           >
-            {t('invitation.inviteNow')}
+            {t("invitation.inviteNow")}
             <Share2 className="ml-2 h-4 w-4" />
           </Button>
         )}
@@ -415,23 +505,29 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
           <DialogHeader>
             <DialogTitle className="text-islamic-gold flex items-center">
               <User className="mr-2 h-5 w-5" />
-              {t('invitation.basicRewardDetails')}
+              {t("invitation.basicRewardDetails")}
             </DialogTitle>
-            <DialogDescription className="text-islamic-cream/70">{t('invitation.learnMoreBasicRewards')}</DialogDescription>
+            <DialogDescription className="text-islamic-cream/70">
+              {t("invitation.learnMoreBasicRewards")}
+            </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
             <div className="space-y-3">
               <h3 className="text-sm font-medium text-islamic-gold flex items-center">
                 <Percent className="mr-2 h-4 w-4" />
-                {t('invitation.povertyReliefFundRate')}
+                {t("invitation.povertyReliefFundRate")}
               </h3>
               <p className="text-xs text-islamic-cream/80">
-                {t('invitation.basedOnReferrals')}
+                {t("invitation.basedOnReferrals")}
               </p>
 
               <div className="space-y-2">
-                <div className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(0)}`}>
+                <div
+                  className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(
+                    0
+                  )}`}
+                >
                   <span className="text-sm flex items-center">
                     <Users className="h-4 w-4 mr-2 opacity-70" />
                     <span>0</span>
@@ -439,7 +535,11 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                   <span className="font-medium">{getRateText(0)}</span>
                 </div>
 
-                <div className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(1)}`}>
+                <div
+                  className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(
+                    1
+                  )}`}
+                >
                   <span className="text-sm flex items-center">
                     <Users className="h-4 w-4 mr-2 opacity-70" />
                     <span>1</span>
@@ -447,7 +547,11 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                   <span className="font-medium">{getRateText(1)}</span>
                 </div>
 
-                <div className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(3)}`}>
+                <div
+                  className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(
+                    3
+                  )}`}
+                >
                   <span className="text-sm flex items-center">
                     <Users className="h-4 w-4 mr-2 opacity-70" />
                     <span>3</span>
@@ -455,7 +559,11 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                   <span className="font-medium">{getRateText(3)}</span>
                 </div>
 
-                <div className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(5)}`}>
+                <div
+                  className={`flex justify-between items-center p-2 rounded-md border ${getRateClass(
+                    5
+                  )}`}
+                >
                   <span className="text-sm flex items-center">
                     <Users className="h-4 w-4 mr-2 opacity-70" />
                     <span>5</span>
@@ -465,46 +573,94 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
               </div>
 
               <p className="text-xs text-islamic-cream/70 italic">
-                {t('invitation.currentlyReferred').replace('{count}', String(safeData.totalReferrals)).replace('{rate}', getCurrentRateText(user?.referrals || 0))}
+                {t("invitation.currentlyReferred")
+                  .replace("{count}", String(safeData.totalReferrals))
+                  .replace("{rate}", getCurrentRateText(user?.referrals || 0))}
               </p>
             </div>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Referral Reward Details Dialog */}
+      {/* Reward Benefit Details Dialog */}
       <Dialog open={referralInfoOpen} onOpenChange={setReferralInfoOpen}>
         <DialogContent className="sm:max-w-[425px] bg-islamic-cardBg text-white border-islamic-medium">
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-islamic-gold to-islamic-gold/50"></div>
           <DialogHeader>
             <DialogTitle className="text-islamic-gold flex items-center">
               <UserPlus className="mr-2 h-5 w-5" />
-              {userVipLevel === 0 ? t('invitation.referralRewardsInactive') : t('invitation.referralRewardDetails')}
+              {userVipLevel === 0
+                ? t("invitation.referralRewardsInactive")
+                : t("invitation.referralRewardDetails")}
             </DialogTitle>
             <DialogDescription className="text-islamic-cream/70">
-              {userVipLevel === 0 ? 
-                t('invitation.makeDonationToActivate') : 
-                t('invitation.referralRewardsByVipLevel')
-              }
+              {userVipLevel === 0
+                ? t("invitation.makeDonationToActivate")
+                : t("invitation.referralRewardsByVipLevel")}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
             {userVipLevel > 0 && (
               <p className="text-xs text-islamic-cream/80 mb-2">
-                {t('invitation.rewardSystemExplanation').replace('{level}', String(userInviteLevel || t('invitation.notSet')))}
+                {t("invitation.rewardSystemExplanation").replace(
+                  "{level}",
+                  String(userInviteLevel || t("invitation.notSet"))
+                )}
               </p>
             )}
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="border-b border-islamic-medium/30">
-                    <th className="p-2 text-left text-xs font-medium text-islamic-cream/70">{t('invitation.level')}</th>
-                    <th className={`p-2 text-center text-xs font-medium ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-cream/70'}`}>VIP 1</th>
-                    <th className={`p-2 text-center text-xs font-medium ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-cream/70'}`}>VIP 2</th>
-                    <th className={`p-2 text-center text-xs font-medium ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-cream/70'}`}>VIP 3</th>
-                    <th className={`p-2 text-center text-xs font-medium ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-cream/70'}`}>VIP 4</th>
-                    <th className={`p-2 text-center text-xs font-medium ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-cream/70'}`}>VIP 5</th>
+                    <th className="p-2 text-left text-xs font-medium text-islamic-cream/70">
+                      {t("invitation.level")}
+                    </th>
+                    <th
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 1
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-cream/70"
+                      }`}
+                    >
+                      VIP 1
+                    </th>
+                    <th
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 2
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-cream/70"
+                      }`}
+                    >
+                      VIP 2
+                    </th>
+                    <th
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 3
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-cream/70"
+                      }`}
+                    >
+                      VIP 3
+                    </th>
+                    <th
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 4
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-cream/70"
+                      }`}
+                    >
+                      VIP 4
+                    </th>
+                    <th
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 5
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-cream/70"
+                      }`}
+                    >
+                      VIP 5
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -513,22 +669,54 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">{t('invitation.level')} 1</span>
+                        <span className="text-xs">
+                          {t("invitation.level")} 1
+                        </span>
                       </div>
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 1
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[1]?.rewardRates?.level1 || 10}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 2
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[2]?.rewardRates?.level1 || 12}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 3
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[3]?.rewardRates?.level1 || 15}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 4
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[4]?.rewardRates?.level1 || 18}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 5
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[5]?.rewardRates?.level1 || 20}%
                     </td>
                   </tr>
@@ -538,22 +726,54 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">{t('invitation.level')} 2</span>
+                        <span className="text-xs">
+                          {t("invitation.level")} 2
+                        </span>
                       </div>
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 1
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[1]?.rewardRates?.level2 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 2
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[2]?.rewardRates?.level2 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 3
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[3]?.rewardRates?.level2 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 4
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[4]?.rewardRates?.level2 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 5
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[5]?.rewardRates?.level2 || 4}%
                     </td>
                   </tr>
@@ -563,22 +783,54 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">{t('invitation.level')} 3</span>
+                        <span className="text-xs">
+                          {t("invitation.level")} 3
+                        </span>
                       </div>
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 1
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[1]?.rewardRates?.level3 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 2
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[2]?.rewardRates?.level3 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 3
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[3]?.rewardRates?.level3 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 4
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[4]?.rewardRates?.level3 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 5
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[5]?.rewardRates?.level3 || 4}%
                     </td>
                   </tr>
@@ -588,22 +840,54 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">{t('invitation.level')} 4</span>
+                        <span className="text-xs">
+                          {t("invitation.level")} 4
+                        </span>
                       </div>
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 1
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[1]?.rewardRates?.level4 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 2
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[2]?.rewardRates?.level4 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 3
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[3]?.rewardRates?.level4 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 4
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[4]?.rewardRates?.level4 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 5
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[5]?.rewardRates?.level4 || 4}%
                     </td>
                   </tr>
@@ -613,22 +897,54 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                     <td className="p-2 text-left">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 mr-1 text-islamic-gold/80" />
-                        <span className="text-xs">{t('invitation.level')} 5</span>
+                        <span className="text-xs">
+                          {t("invitation.level")} 5
+                        </span>
                       </div>
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 1
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[1]?.rewardRates?.level5 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 2
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[2]?.rewardRates?.level5 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 3
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[3]?.rewardRates?.level5 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 4
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[4]?.rewardRates?.level5 || 4}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-medium ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/10' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-medium ${
+                        userVipLevel === 5
+                          ? "text-islamic-gold bg-islamic-gold/10"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[5]?.rewardRates?.level5 || 4}%
                     </td>
                   </tr>
@@ -638,36 +954,73 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
                     <td className="p-2 text-left font-medium">
                       <div className="flex items-center">
                         <Award className="h-4 w-4 mr-1 text-islamic-gold" />
-                        <span className="text-xs">{t('invitation.total')}</span>
+                        <span className="text-xs">{t("invitation.total")}</span>
                       </div>
                     </td>
-                    <td className={`p-2 text-center text-xs font-bold ${userVipLevel === 1 ? 'text-islamic-gold bg-islamic-gold/20' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-bold ${
+                        userVipLevel === 1
+                          ? "text-islamic-gold bg-islamic-gold/20"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[1]?.rewardRates?.total || 20}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-bold ${userVipLevel === 2 ? 'text-islamic-gold bg-islamic-gold/20' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-bold ${
+                        userVipLevel === 2
+                          ? "text-islamic-gold bg-islamic-gold/20"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[2]?.rewardRates?.total || 22}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-bold ${userVipLevel === 3 ? 'text-islamic-gold bg-islamic-gold/20' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-bold ${
+                        userVipLevel === 3
+                          ? "text-islamic-gold bg-islamic-gold/20"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[3]?.rewardRates?.total || 25}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-bold ${userVipLevel === 4 ? 'text-islamic-gold bg-islamic-gold/20' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-bold ${
+                        userVipLevel === 4
+                          ? "text-islamic-gold bg-islamic-gold/20"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[4]?.rewardRates?.total || 28}%
                     </td>
-                    <td className={`p-2 text-center text-xs font-bold ${userVipLevel === 5 ? 'text-islamic-gold bg-islamic-gold/20' : 'text-islamic-gold'}`}>
+                    <td
+                      className={`p-2 text-center text-xs font-bold ${
+                        userVipLevel === 5
+                          ? "text-islamic-gold bg-islamic-gold/20"
+                          : "text-islamic-gold"
+                      }`}
+                    >
                       {state?.vipInfo?.levels?.[5]?.rewardRates?.total || 30}%
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-            
+
             {userVipLevel > 0 && (
               <div className="mt-4 p-3 rounded-lg bg-islamic-gold/10 border border-islamic-gold/30 text-xs text-islamic-cream/90">
                 <p>
-                  <span className="font-medium text-islamic-gold">{t('invitation.currentInvitationLevel')}:</span> {userInviteLevel > 0 ? userInviteLevel : t('invitation.notSet')}
+                  <span className="font-medium text-islamic-gold">
+                    {t("invitation.currentInvitationLevel")}:
+                  </span>{" "}
+                  {userInviteLevel > 0
+                    ? userInviteLevel
+                    : t("invitation.notSet")}
                 </p>
                 <p className="mt-2">
-                  {t('invitation.invitationLevelExplanation').replace('{maxRate}', String(maxVipReward)).replace('{minRate}', String(minVipReward))}
+                  {t("invitation.invitationLevelExplanation")
+                    .replace("{maxRate}", String(maxVipReward))
+                    .replace("{minRate}", String(minVipReward))}
                 </p>
               </div>
             )}
@@ -675,5 +1028,5 @@ export function InvitationCard({ data, className = "", isLoading = false, refres
         </DialogContent>
       </Dialog>
     </Card>
-  )
+  );
 }
