@@ -33,6 +33,390 @@ import {
 // 定义类型
 type CategoryType = "member" | "alliance" | "level" | "ongoing";
 
+// VIP徽章组件
+const VipBadge = ({ vipLevel }: { vipLevel: number }) => {
+  // V1 - 布拉克等级徽章
+  if (vipLevel === 1) {
+    return (
+      <div className="absolute inset-x-0 top-0 w-16 h-16">
+        {/* V1 - 铜色系 - 超强立体金属质感 */}
+        {/* 多层外部阴影系统 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#D2691E]/40 to-[#A0522D]/50 rounded-full blur-2xl scale-125"></div>
+        <div className="absolute inset-1 bg-gradient-to-b from-[#CD853F]/30 to-[#8B4513]/40 rounded-full blur-xl scale-115"></div>
+        <div className="absolute inset-2 bg-gradient-to-b from-[#D2691E]/20 to-[#A0522D]/30 rounded-full blur-lg scale-110"></div>
+
+        {/* 徽章主体 - 超复杂多层金属效果 */}
+        <div className="relative w-16 h-16 rounded-full bg-gradient-to-b from-[#654321] to-[#3C2414] p-[1px] shadow-[0_8px_25px_rgba(210,105,30,0.8),0_4px_15px_rgba(160,82,45,0.6),0_2px_8px_rgba(205,133,63,0.4)]">
+          {/* 最外层立体边框 */}
+          <div className="w-full h-full rounded-full bg-gradient-to-b from-[#8B4513] to-[#654321] p-[1px] shadow-[inset_0_1px_3px_rgba(255,255,255,0.4),inset_0_-1px_3px_rgba(0,0,0,0.6)]">
+            {/* 外圈立体装饰环 */}
+            <div className="w-full h-full rounded-full bg-gradient-to-b from-[#D2691E] to-[#A0522D] p-[2px] shadow-[inset_0_4px_8px_rgba(0,0,0,0.5),inset_0_-1px_4px_rgba(255,255,255,0.3)]">
+              {/* 中间立体凹槽层 */}
+              <div className="relative w-full h-full rounded-full bg-gradient-to-b from-[#CD853F] to-[#D2691E] p-[2px] shadow-[inset_0_3px_6px_rgba(0,0,0,0.4)]">
+                {/* 立体装饰环纹 */}
+                <div className="absolute inset-1 rounded-full border-[0.5px] border-white/40 shadow-[0_0_3px_rgba(255,255,255,0.5)]"></div>
+                <div className="absolute inset-2 rounded-full border-[0.5px] border-[#A0522D]/50"></div>
+                <div className="absolute inset-3 rounded-full border-[0.5px] border-white/20"></div>
+
+                {/* 内圈超精细金属表面 */}
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-[#F4A460] via-[#CD853F] via-[#D2691E] to-[#A0522D] flex items-center justify-center relative overflow-hidden shadow-[inset_0_2px_4px_rgba(255,255,255,0.5),inset_0_-2px_3px_rgba(0,0,0,0.4)]">
+                  {/* 超复杂金属光泽系统 */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-transparent to-black/35 rounded-full"></div>
+                  <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-12 h-6 bg-gradient-to-b from-white/90 to-transparent rounded-full blur-lg"></div>
+                  <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-8 h-4 bg-gradient-to-b from-white/70 to-transparent rounded-full blur-md"></div>
+                  <div className="absolute bottom-1 right-1 w-8 h-4 bg-black/35 rounded-full blur-lg"></div>
+                  <div className="absolute bottom-2 right-2 w-4 h-2 bg-black/50 rounded-full blur-md"></div>
+
+                  {/* 精密同心圆金属纹理 */}
+                  <div className="absolute inset-1 rounded-full border-[0.5px] border-white/50 shadow-[0_0_4px_rgba(255,255,255,0.4)]"></div>
+                  <div className="absolute inset-2 rounded-full border-[0.5px] border-white/30"></div>
+                  <div className="absolute inset-3 rounded-full border-[0.5px] border-[#A0522D]/40"></div>
+                  <div className="absolute inset-4 rounded-full border-[0.5px] border-white/20"></div>
+
+                  {/* 立体放射状装饰线 */}
+                  {[...Array(12)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute w-[1px] h-4 bg-gradient-to-b from-transparent via-white/50 to-transparent shadow-[0_0_2px_rgba(255,255,255,0.7)]"
+                      style={{
+                        top: "50%",
+                        left: "50%",
+                        transform: `translate(-50%, -50%) rotate(${
+                          i * 30
+                        }deg) translateY(-14px)`,
+                      }}
+                    />
+                  ))}
+
+                  {/* 中心立体图标 - 星星 */}
+                  <div className="relative z-10 bg-gradient-to-b from-[#8B4513] to-[#654321] rounded-full p-2 shadow-[0_4px_10px_rgba(0,0,0,0.8),0_2px_5px_rgba(0,0,0,0.6)] border-2 border-[#D2691E]/60">
+                    <div className="bg-gradient-to-b from-[#D2691E] to-[#A0522D] rounded-full p-0.5 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)]">
+                      <Star
+                        className="h-5 w-5 text-[#F4A460] drop-shadow-[0_3px_6px_rgba(0,0,0,0.9)] filter brightness-125"
+                        fill="currentColor"
+                        style={{
+                          filter:
+                            "drop-shadow(0 0 4px rgba(244, 164, 96, 0.7))",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // V2 - 巴达尔等级徽章
+  if (vipLevel === 2) {
+    return (
+      <div className="absolute inset-x-0 top-0 w-16 h-16">
+        {/* V2 - 青铜金色系 - 超强立体金属质感 */}
+        {/* 多层外部阴影系统 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#CD7F32]/50 to-[#B8860B]/60 rounded-full blur-2xl scale-130"></div>
+        <div className="absolute inset-1 bg-gradient-to-b from-[#DEB887]/40 to-[#CD7F32]/50 rounded-full blur-xl scale-120"></div>
+        <div className="absolute inset-2 bg-gradient-to-b from-[#CD7F32]/30 to-[#B8860B]/40 rounded-full blur-lg scale-115"></div>
+
+        {/* 徽章主体 - 超复杂多层设计 */}
+        <div className="relative w-16 h-16 rounded-full bg-gradient-to-b from-[#654321] to-[#3C2414] p-[1px] shadow-[0_10px_30px_rgba(205,127,50,0.9),0_5px_15px_rgba(184,134,11,0.7),0_2px_8px_rgba(222,184,135,0.5)]">
+          {/* 最外层立体边框 */}
+          <div className="w-full h-full rounded-full bg-gradient-to-b from-[#8B4513] to-[#654321] p-[1px] shadow-[inset_0_1px_3px_rgba(255,255,255,0.4),inset_0_-1px_3px_rgba(0,0,0,0.6)]">
+            {/* 外圈立体装饰环 */}
+            <div className="w-full h-full rounded-full bg-gradient-to-b from-[#CD7F32] to-[#B8860B] p-[2px] shadow-[inset_0_4px_8px_rgba(0,0,0,0.5),inset_0_-1px_4px_rgba(255,255,255,0.3)]">
+              {/* 中间立体凹槽层 */}
+              <div className="relative w-full h-full rounded-full bg-gradient-to-b from-[#DEB887] to-[#CD7F32] p-[2px] shadow-[inset_0_3px_6px_rgba(0,0,0,0.4)]">
+                {/* 立体装饰环纹 */}
+                <div className="absolute inset-1 rounded-full border-[0.5px] border-white/40 shadow-[0_0_3px_rgba(255,255,255,0.5)]"></div>
+                <div className="absolute inset-2 rounded-full border-[0.5px] border-[#B8860B]/50"></div>
+                <div className="absolute inset-3 rounded-full border-[0.5px] border-white/20"></div>
+
+                {/* 内圈超精细金属表面 */}
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-[#F5DEB3] via-[#DEB887] via-[#CD7F32] to-[#B8860B] flex items-center justify-center relative overflow-hidden shadow-[inset_0_2px_4px_rgba(255,255,255,0.5),inset_0_-2px_3px_rgba(0,0,0,0.4)]">
+                  {/* 超复杂金属光泽系统 */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-transparent to-black/35 rounded-full"></div>
+                  <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-12 h-6 bg-gradient-to-b from-white/90 to-transparent rounded-full blur-lg"></div>
+                  <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-8 h-4 bg-gradient-to-b from-white/70 to-transparent rounded-full blur-md"></div>
+                  <div className="absolute bottom-1 right-1 w-8 h-4 bg-black/35 rounded-full blur-lg"></div>
+                  <div className="absolute bottom-2 right-2 w-4 h-2 bg-black/50 rounded-full blur-md"></div>
+                  <div className="absolute top-2.5 right-1.5 w-4 h-4 bg-white/60 rounded-full blur-md"></div>
+                  <div className="absolute bottom-2.5 left-2 w-3 h-3 bg-white/50 rounded-full blur-sm"></div>
+                  <div className="absolute top-3.5 left-3 w-2 h-2 bg-white/40 rounded-full blur-sm"></div>
+
+                  {/* 精密同心圆金属纹理 */}
+                  <div className="absolute inset-1 rounded-full border-[0.5px] border-white/50 shadow-[0_0_4px_rgba(255,255,255,0.4)]"></div>
+                  <div className="absolute inset-2 rounded-full border-[0.5px] border-white/30"></div>
+                  <div className="absolute inset-3 rounded-full border-[0.5px] border-[#B8860B]/40"></div>
+                  <div className="absolute inset-4 rounded-full border-[0.5px] border-white/20"></div>
+
+                  {/* 立体放射状装饰线 */}
+                  {[...Array(16)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute w-[1px] h-5 bg-gradient-to-b from-transparent via-white/50 to-transparent shadow-[0_0_2px_rgba(255,255,255,0.7)]"
+                      style={{
+                        top: "50%",
+                        left: "50%",
+                        transform: `translate(-50%, -50%) rotate(${
+                          i * 22.5
+                        }deg) translateY(-16px)`,
+                      }}
+                    />
+                  ))}
+
+                  {/* 立体装饰点 */}
+                  {[...Array(8)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute w-1 h-1 bg-gradient-to-br from-white/60 to-[#B8860B]/80 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.6)]"
+                      style={{
+                        top: "50%",
+                        left: "50%",
+                        transform: `translate(-50%, -50%) rotate(${
+                          i * 45
+                        }deg) translateY(-20px)`,
+                      }}
+                    />
+                  ))}
+
+                  {/* 中心立体图标 - 拇指向上 */}
+                  <div className="relative z-10 bg-gradient-to-b from-[#8B4513] to-[#654321] rounded-full p-2 shadow-[0_4px_10px_rgba(0,0,0,0.8),0_2px_5px_rgba(0,0,0,0.6)] border-2 border-[#CD7F32]/60">
+                    <div className="bg-gradient-to-b from-[#CD7F32] to-[#B8860B] rounded-full p-0.5 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)]">
+                      <svg
+                        className="h-5 w-5 text-[#F5DEB3] drop-shadow-[0_3px_6px_rgba(0,0,0,0.9)] filter brightness-125"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        style={{
+                          filter:
+                            "drop-shadow(0 0 4px rgba(245, 222, 179, 0.7))",
+                        }}
+                      >
+                        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // V3 - 蒙塔哈等级徽章
+  if (vipLevel === 3) {
+    return (
+      <div className="absolute inset-x-0 top-0 w-16 h-16">
+        {/* V3 - 金银配色 - 至尊立体金属质感 */}
+        {/* 多层外部阴影系统 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FFD700]/60 to-[#C0C0C0]/70 rounded-full blur-3xl scale-135"></div>
+        <div className="absolute inset-1 bg-gradient-to-b from-[#FFF8DC]/50 to-[#FFD700]/60 rounded-full blur-2xl scale-125"></div>
+        <div className="absolute inset-2 bg-gradient-to-b from-[#FFD700]/40 to-[#C0C0C0]/50 rounded-full blur-xl scale-120"></div>
+
+        {/* 徽章主体 - 豪华三层设计 */}
+        <div className="relative w-16 h-16 rounded-full bg-gradient-to-b from-[#654321] to-[#3C2414] p-[1px] shadow-[0_12px_35px_rgba(255,215,0,1),0_6px_20px_rgba(192,192,192,0.8),0_3px_10px_rgba(255,248,220,0.6)]">
+          {/* 最外层立体边框 */}
+          <div className="w-full h-full rounded-full bg-gradient-to-b from-[#B8860B] to-[#8B7355] p-[1px] shadow-[inset_0_2px_4px_rgba(255,255,255,0.5),inset_0_-2px_4px_rgba(0,0,0,0.7)]">
+            {/* 外圈装饰带 */}
+            <div className="w-full h-full rounded-full bg-gradient-to-b from-[#E5E5E5] to-[#C0C0C0] p-[1.5px] shadow-[inset_0_5px_10px_rgba(0,0,0,0.6),inset_0_-2px_5px_rgba(255,255,255,0.4)]">
+              {/* 装饰花纹环 */}
+              <div className="relative w-full h-full rounded-full bg-gradient-to-b from-[#FFD700] to-[#DAA520] p-[2px] shadow-[inset_0_3px_6px_rgba(0,0,0,0.4)]">
+                {/* 内圈超精细金属表面 */}
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-[#FFFACD] via-[#FFD700] via-[#DAA520] to-[#C0C0C0] flex items-center justify-center relative overflow-hidden shadow-[inset_0_3px_6px_rgba(255,255,255,0.6),inset_0_-3px_4px_rgba(0,0,0,0.5)]">
+                  {/* 豪华金属光泽系统 */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-transparent to-black/40 rounded-full"></div>
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-14 h-7 bg-gradient-to-b from-white/95 to-transparent rounded-full blur-xl"></div>
+                  <div className="absolute top-1 left-1/2 -translate-x-1/2 w-10 h-5 bg-gradient-to-b from-white/80 to-transparent rounded-full blur-lg"></div>
+                  <div className="absolute bottom-0 right-0 w-10 h-5 bg-black/40 rounded-full blur-xl"></div>
+                  <div className="absolute bottom-1 right-1 w-6 h-3 bg-black/60 rounded-full blur-lg"></div>
+
+                  {/* 中心立体图标 - 奖杯 */}
+                  <div className="relative z-10 bg-gradient-to-b from-[#8B7355] to-[#654321] rounded-full p-2.5 shadow-[0_5px_12px_rgba(0,0,0,0.9),0_3px_8px_rgba(0,0,0,0.7)] border-2 border-[#FFD700]/70">
+                    <div className="bg-gradient-to-b from-[#FFD700] to-[#DAA520] rounded-full p-0.5 shadow-[inset_0_1px_3px_rgba(255,255,255,0.5)]">
+                      <Trophy
+                        className="h-5 w-5 text-[#FFFACD] drop-shadow-[0_4px_8px_rgba(0,0,0,1)] filter brightness-130"
+                        fill="currentColor"
+                        style={{
+                          filter:
+                            "drop-shadow(0 0 6px rgba(255, 250, 205, 0.8))",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // V4 - 米尔贾等级徽章
+  if (vipLevel === 4) {
+    return (
+      <div className="absolute inset-x-0 top-0 w-16 h-16">
+        {/* V4 - 深金紫色系 - 传奇立体金属质感 */}
+        {/* 多层外部阴影系统 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#B8860B]/70 to-[#8B4513]/80 rounded-full blur-3xl scale-110"></div>
+        <div className="absolute inset-1 bg-gradient-to-b from-[#DAA520]/60 to-[#B8860B]/70 rounded-full blur-2xl scale-105"></div>
+        <div className="absolute inset-2 bg-gradient-to-b from-[#B8860B]/50 to-[#8B4513]/60 rounded-full blur-xl scale-102"></div>
+
+        {/* 徽章主体 - 传奇齿轮环设计 */}
+        <div className="relative w-16 h-16 rounded-full bg-gradient-to-b from-[#654321] to-[#3C2414] p-[1px] shadow-[0_15px_40px_rgba(184,134,11,1),0_8px_25px_rgba(139,69,19,0.9),0_4px_15px_rgba(218,165,32,0.7)]">
+          {/* 外层齿轮装饰环 */}
+          <div className="absolute inset-0 rounded-full">
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute"
+                style={{
+                  top: "50%",
+                  left: "50%",
+                  transform: `translate(-50%, -50%) rotate(${
+                    i * 18
+                  }deg) translateY(-26px)`,
+                }}
+              >
+                <div
+                  className="w-2 h-4 bg-gradient-to-t from-[#8B4513] via-[#B8860B] to-[#DAA520] shadow-[0_2px_6px_rgba(0,0,0,0.8),inset_0_1px_2px_rgba(255,255,255,0.4)]"
+                  style={{
+                    clipPath:
+                      "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
+                  }}
+                ></div>
+              </div>
+            ))}
+          </div>
+
+          {/* 最外层华丽边框 */}
+          <div className="w-full h-full rounded-full bg-gradient-to-b from-[#B8860B] to-[#8B7355] p-[1px] shadow-[inset_0_3px_6px_rgba(255,255,255,0.6),inset_0_-3px_6px_rgba(0,0,0,0.8)]">
+            {/* 中层紫金装饰环 */}
+            <div className="w-full h-full rounded-full bg-gradient-to-b from-[#9370DB] to-[#B8860B] p-[2px] shadow-[inset_0_6px_12px_rgba(0,0,0,0.7),inset_0_-2px_6px_rgba(255,255,255,0.5)]">
+              {/* 内层立体金属层 */}
+              <div className="relative w-full h-full rounded-full bg-gradient-to-b from-[#DAA520] to-[#B8860B] p-[2px] shadow-[inset_0_4px_8px_rgba(0,0,0,0.5)]">
+                {/* 内圈传奇金属表面 */}
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-[#DDA0DD] via-[#DAA520] via-[#B8860B] to-[#8B7355] flex items-center justify-center relative overflow-hidden shadow-[inset_0_4px_8px_rgba(255,255,255,0.7),inset_0_-4px_6px_rgba(0,0,0,0.6)]">
+                  {/* 传奇金属光泽系统 */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/85 via-transparent to-black/45 rounded-full"></div>
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-8 bg-gradient-to-b from-white/95 to-transparent rounded-full blur-2xl"></div>
+                  <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-12 h-6 bg-gradient-to-b from-white/85 to-transparent rounded-full blur-xl"></div>
+                  <div className="absolute bottom-0 right-0 w-12 h-6 bg-black/45 rounded-full blur-2xl"></div>
+                  <div className="absolute bottom-1 right-1 w-8 h-4 bg-black/65 rounded-full blur-xl"></div>
+
+                  {/* 中心传奇图标 - 皇冠 */}
+                  <div className="relative z-10 bg-gradient-to-b from-[#8B7355] to-[#654321] rounded-full p-3 shadow-[0_6px_15px_rgba(0,0,0,1),0_4px_10px_rgba(0,0,0,0.8)] border-2 border-[#B8860B]/80">
+                    <div className="bg-gradient-to-b from-[#B8860B] to-[#8B7355] rounded-full p-1 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)]">
+                      <div className="bg-gradient-to-b from-[#DAA520] to-[#B8860B] rounded-full p-0.5">
+                        <Crown
+                          className="h-4 w-4 text-[#DDA0DD] drop-shadow-[0_5px_10px_rgba(0,0,0,1)] filter brightness-150"
+                          fill="currentColor"
+                          style={{
+                            filter:
+                              "drop-shadow(0 0 8px rgba(221, 160, 221, 1))",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // V5 - 至善等级徽章
+  if (vipLevel === 5) {
+    return (
+      <div className="absolute inset-x-0 top-0 w-16 h-16">
+        {/* V5 - 至尊钻石铂金系 - 神话级金属质感 */}
+        {/* 多层外部神话光环 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F8F8FF]/80 to-[#E6E6FA]/90 rounded-full blur-4xl scale-140"></div>
+        <div className="absolute inset-1 bg-gradient-to-b from-[#DDA0DD]/60 to-[#F8F8FF]/70 rounded-full blur-3xl scale-130"></div>
+        <div className="absolute inset-2 bg-gradient-to-b from-[#F8F8FF]/50 to-[#E6E6FA]/60 rounded-full blur-2xl scale-125"></div>
+
+        {/* 徽章主体 - 神话钻石切割设计 */}
+        <div className="relative w-16 h-16 rounded-full bg-gradient-to-b from-[#654321] to-[#3C2414] p-[1px] shadow-[0_20px_50px_rgba(248,248,255,1),0_12px_30px_rgba(230,230,250,0.9),0_6px_20px_rgba(221,160,221,0.8)]">
+          {/* 外层神话装饰环 */}
+          <div className="absolute inset-0 rounded-full">
+            {[...Array(24)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute"
+                style={{
+                  top: "50%",
+                  left: "50%",
+                  transform: `translate(-50%, -50%) rotate(${
+                    i * 15
+                  }deg) translateY(-28px)`,
+                }}
+              >
+                <div
+                  className="w-2.5 h-5 bg-gradient-to-t from-[#E6E6FA] via-[#F8F8FF] to-[#DDA0DD] shadow-[0_3px_8px_rgba(0,0,0,1),inset_0_2px_4px_rgba(255,255,255,0.6)]"
+                  style={{
+                    clipPath:
+                      "polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)",
+                  }}
+                ></div>
+              </div>
+            ))}
+          </div>
+
+          {/* 最外层神话边框 */}
+          <div className="w-full h-full rounded-full bg-gradient-to-b from-[#E6E6FA] to-[#B8860B] p-[1px] shadow-[inset_0_4px_8px_rgba(255,255,255,0.7),inset_0_-4px_8px_rgba(0,0,0,0.9)]">
+            {/* 中层钻石装饰环 */}
+            <div className="w-full h-full rounded-full bg-gradient-to-b from-[#F8F8FF] to-[#DDA0DD] p-[2px] shadow-[inset_0_8px_16px_rgba(0,0,0,0.8),inset_0_-3px_8px_rgba(255,255,255,0.6)]">
+              {/* 内层神话金属层 */}
+              <div className="relative w-full h-full rounded-full bg-gradient-to-b from-[#DDA0DD] to-[#E6E6FA] p-[2px] shadow-[inset_0_6px_12px_rgba(0,0,0,0.6)]">
+                {/* 内圈神话金属表面 */}
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-[#FFFAFA] via-[#F8F8FF] via-[#DDA0DD] to-[#E6E6FA] flex items-center justify-center relative overflow-hidden shadow-[inset_0_6px_12px_rgba(255,255,255,0.8),inset_0_-6px_8px_rgba(0,0,0,0.7)]">
+                  {/* 神话金属光泽系统 */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-transparent to-black/50 rounded-full"></div>
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-10 bg-gradient-to-b from-white/100 to-transparent rounded-full blur-3xl"></div>
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-8 bg-gradient-to-b from-white/90 to-transparent rounded-full blur-2xl"></div>
+                  <div className="absolute bottom-0 right-0 w-16 h-8 bg-black/50 rounded-full blur-3xl"></div>
+                  <div className="absolute bottom-0 right-0 w-12 h-6 bg-black/70 rounded-full blur-2xl"></div>
+
+                  {/* 中心神话图标 - 钻石 */}
+                  <div className="relative z-10 bg-gradient-to-b from-[#B8860B] to-[#654321] rounded-full p-3.5 shadow-[0_8px_20px_rgba(0,0,0,1),0_6px_15px_rgba(0,0,0,0.9)] border-2 border-[#F8F8FF]/90">
+                    <div className="bg-gradient-to-b from-[#F8F8FF] to-[#DDA0DD] rounded-full p-1.5 shadow-[inset_0_3px_6px_rgba(255,255,255,0.7)]">
+                      <div className="bg-gradient-to-b from-[#DDA0DD] to-[#E6E6FA] rounded-full p-0.5">
+                        <Diamond
+                          className="h-4 w-4 text-[#FFFAFA] drop-shadow-[0_6px_12px_rgba(0,0,0,1)] filter brightness-200"
+                          fill="currentColor"
+                          style={{
+                            filter:
+                              "drop-shadow(0 0 10px rgba(255, 250, 250, 1))",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 默认返回V1徽章
+  return (
+    <div className="absolute inset-x-0 top-0 w-16 h-16">
+      <div className="w-full h-full rounded-full bg-gradient-to-b from-[#D2691E] to-[#A0522D] flex items-center justify-center">
+        <Star className="h-6 w-6 text-white" fill="currentColor" />
+      </div>
+    </div>
+  );
+};
+
 // 模拟数据
 const memberEvents = [
   {
@@ -303,138 +687,11 @@ export default function VipEventsPage() {
 
             <div className="relative p-4 pl-6">
               <div className="flex items-center space-x-6">
-                {/* 左侧 - V4徽章 */}
+                {/* 左侧 - 动态VIP徽章 */}
                 <div className="flex-shrink-0 ml-2">
                   <div className="relative w-16 h-20 flex-shrink-0 ml-2">
                     {/* 徽章容器 */}
-                    <div className="absolute inset-x-0 top-0 w-16 h-16">
-                      {/* V4 - 深金紫色系 - 传奇立体金属质感 */}
-                      {/* 多层外部阴影系统 */}
-                      <div className="absolute inset-0 bg-gradient-to-b from-[#B8860B]/70 to-[#8B4513]/80 rounded-full blur-3xl scale-110"></div>
-                      <div className="absolute inset-1 bg-gradient-to-b from-[#DAA520]/60 to-[#B8860B]/70 rounded-full blur-2xl scale-105"></div>
-                      <div className="absolute inset-2 bg-gradient-to-b from-[#B8860B]/50 to-[#8B4513]/60 rounded-full blur-xl scale-102"></div>
-
-                      {/* 徽章主体 - 传奇齿轮环设计 */}
-                      <div className="relative w-16 h-16 rounded-full bg-gradient-to-b from-[#654321] to-[#3C2414] p-[1px] shadow-[0_15px_40px_rgba(184,134,11,1),0_8px_25px_rgba(139,69,19,0.9),0_4px_15px_rgba(218,165,32,0.7)]">
-                        {/* 外层齿轮装饰环 */}
-                        <div className="absolute inset-0 rounded-full">
-                          {[...Array(20)].map((_, i) => (
-                            <div
-                              key={i}
-                              className="absolute"
-                              style={{
-                                top: "50%",
-                                left: "50%",
-                                transform: `translate(-50%, -50%) rotate(${
-                                  i * 18
-                                }deg) translateY(-26px)`,
-                              }}
-                            >
-                              <div
-                                className="w-2 h-4 bg-gradient-to-t from-[#8B4513] via-[#B8860B] to-[#DAA520] shadow-[0_2px_6px_rgba(0,0,0,0.8),inset_0_1px_2px_rgba(255,255,255,0.4)]"
-                                style={{
-                                  clipPath:
-                                    "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
-                                }}
-                              ></div>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* 最外层华丽边框 */}
-                        <div className="w-full h-full rounded-full bg-gradient-to-b from-[#B8860B] to-[#8B7355] p-[1px] shadow-[inset_0_3px_6px_rgba(255,255,255,0.6),inset_0_-3px_6px_rgba(0,0,0,0.8)]">
-                          {/* 中层紫金装饰环 */}
-                          <div className="w-full h-full rounded-full bg-gradient-to-b from-[#9370DB] to-[#B8860B] p-[2px] shadow-[inset_0_6px_12px_rgba(0,0,0,0.7),inset_0_-2px_6px_rgba(255,255,255,0.5)]">
-                            {/* 内层立体金属层 */}
-                            <div className="relative w-full h-full rounded-full bg-gradient-to-b from-[#DAA520] to-[#B8860B] p-[2px] shadow-[inset_0_4px_8px_rgba(0,0,0,0.5)]">
-                              {/* 装饰星形点 */}
-                              <div className="absolute inset-0 rounded-full">
-                                {[...Array(12)].map((_, i) => (
-                                  <div
-                                    key={i}
-                                    className="absolute w-2 h-2 bg-gradient-to-br from-[#9370DB] to-[#DAA520] shadow-[0_2px_5px_rgba(0,0,0,0.8),inset_0_1px_2px_rgba(255,255,255,0.6)]"
-                                    style={{
-                                      top: "50%",
-                                      left: "50%",
-                                      transform: `translate(-50%, -50%) rotate(${
-                                        i * 30
-                                      }deg) translateY(-26px)`,
-                                      clipPath:
-                                        "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
-                                    }}
-                                  />
-                                ))}
-                              </div>
-
-                              {/* 内圈传奇金属表面 */}
-                              <div className="w-full h-full rounded-full bg-gradient-to-br from-[#DDA0DD] via-[#DAA520] via-[#B8860B] to-[#8B7355] flex items-center justify-center relative overflow-hidden shadow-[inset_0_4px_8px_rgba(255,255,255,0.7),inset_0_-4px_6px_rgba(0,0,0,0.6)]">
-                                {/* 传奇金属光泽系统 */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-white/85 via-transparent to-black/45 rounded-full"></div>
-                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-8 bg-gradient-to-b from-white/95 to-transparent rounded-full blur-2xl"></div>
-                                <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-12 h-6 bg-gradient-to-b from-white/85 to-transparent rounded-full blur-xl"></div>
-                                <div className="absolute bottom-0 right-0 w-12 h-6 bg-black/45 rounded-full blur-2xl"></div>
-                                <div className="absolute bottom-1 right-1 w-8 h-4 bg-black/65 rounded-full blur-xl"></div>
-                                <div className="absolute top-2 right-1 w-6 h-6 bg-white/75 rounded-full blur-lg"></div>
-                                <div className="absolute bottom-2 left-1 w-5 h-5 bg-white/65 rounded-full blur-md"></div>
-
-                                {/* 超精密同心圆纹理 */}
-                                <div className="absolute inset-0.5 rounded-full border-[1px] border-white/70 shadow-[0_0_6px_rgba(255,255,255,0.7)]"></div>
-                                <div className="absolute inset-1.5 rounded-full border-[0.5px] border-white/60"></div>
-                                <div className="absolute inset-2.5 rounded-full border-[0.5px] border-[#9370DB]/50"></div>
-                                <div className="absolute inset-3.5 rounded-full border-[0.5px] border-white/40"></div>
-                                <div className="absolute inset-4.5 rounded-full border-[0.5px] border-[#B8860B]/50"></div>
-
-                                {/* 传奇放射状装饰线 */}
-                                {[...Array(32)].map((_, i) => (
-                                  <div
-                                    key={i}
-                                    className="absolute w-[1px] h-7 bg-gradient-to-b from-transparent via-white/70 to-transparent shadow-[0_0_4px_rgba(255,255,255,1)]"
-                                    style={{
-                                      top: "50%",
-                                      left: "50%",
-                                      transform: `translate(-50%, -50%) rotate(${
-                                        i * 11.25
-                                      }deg) translateY(-20px)`,
-                                    }}
-                                  />
-                                ))}
-
-                                {/* 传奇紫金装饰点 */}
-                                {[...Array(16)].map((_, i) => (
-                                  <div
-                                    key={i}
-                                    className="absolute w-1.5 h-1.5 bg-gradient-to-br from-[#DDA0DD]/90 to-[#B8860B]/95 transform rotate-45 shadow-[0_3px_6px_rgba(0,0,0,0.9),inset_0_1px_2px_rgba(255,255,255,0.7)]"
-                                    style={{
-                                      top: "50%",
-                                      left: "50%",
-                                      transform: `translate(-50%, -50%) rotate(${
-                                        i * 22.5
-                                      }deg) translateY(-24px) rotate(45deg)`,
-                                    }}
-                                  />
-                                ))}
-
-                                {/* 中心传奇图标 - 皇冠 */}
-                                <div className="relative z-10 bg-gradient-to-b from-[#8B7355] to-[#654321] rounded-full p-3 shadow-[0_6px_15px_rgba(0,0,0,1),0_4px_10px_rgba(0,0,0,0.8)] border-2 border-[#B8860B]/80">
-                                  <div className="bg-gradient-to-b from-[#B8860B] to-[#8B7355] rounded-full p-1 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)]">
-                                    <div className="bg-gradient-to-b from-[#DAA520] to-[#B8860B] rounded-full p-0.5">
-                                      <Crown
-                                        className="h-4 w-4 text-[#DDA0DD] drop-shadow-[0_5px_10px_rgba(0,0,0,1)] filter brightness-150"
-                                        fill="currentColor"
-                                        style={{
-                                          filter:
-                                            "drop-shadow(0 0 8px rgba(221, 160, 221, 1))",
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <VipBadge vipLevel={userData.vipLevel} />
                   </div>
                 </div>
 
@@ -507,9 +764,21 @@ export default function VipEventsPage() {
 
               {/* 升级按钮 */}
               <div className="mt-3">
-                <Button className="w-full bg-gradient-to-r from-[#d4b96e] to-[#b39339] text-[#1a1f2c] hover:opacity-90 transition-opacity py-1.5">
-                  {t("vipLevel.upgradeToV5")}
-                </Button>
+                {userData.vipLevel < 5 ? (
+                  <Button className="w-full bg-gradient-to-r from-[#d4b96e] to-[#b39339] text-[#1a1f2c] hover:opacity-90 transition-opacity py-1.5">
+                    {userData.vipLevel === 1 && t("vipLevel.upgradeToLevel2")}
+                    {userData.vipLevel === 2 && t("vipLevel.upgradeToLevel3")}
+                    {userData.vipLevel === 3 && t("vipLevel.upgradeToLevel4")}
+                    {userData.vipLevel === 4 && t("vipLevel.upgradeToLevel5")}
+                  </Button>
+                ) : (
+                  <Button
+                    disabled
+                    className="w-full bg-gradient-to-r from-[#d4b96e]/50 to-[#b39339]/50 text-[#1a1f2c]/70 py-1.5 cursor-not-allowed"
+                  >
+                    {t("vipLevel.maxLevel")}
+                  </Button>
+                )}
               </div>
             </div>
           </div>
@@ -1747,6 +2016,7 @@ export default function VipEventsPage() {
                       </p>
                       <p>{t("vipLevel.cumulativeUpgrade")}</p>
                       <p>{t("vipLevel.donationRequirement")}</p>
+                      <p>{t("vipLevel.stepByStepUpgrade")}</p>
                       <p>{t("vipLevel.higherBenefits")}</p>
                     </div>
                   </div>

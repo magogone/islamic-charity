@@ -358,6 +358,7 @@
     "upgradeInstructions": "等级升级说明",
     "cumulativeUpgrade": "• 等级升级为累计制，一旦达到升级条件即可永久享受对应权益",
     "donationRequirement": "• 每个等级需要支付全额捐赠金额，而不仅仅是差额",
+    "stepByStepUpgrade": "• 每次提升只能提升1个等级，不能跳级提升",
     "higherBenefits": "• 高等级会员享有更多专属活动和优先参与权",
     "entryLevel": "入门级会员",
     "advancedMember": "进阶级会员",
@@ -384,6 +385,12 @@
     "premiumManager": "24小时专属高级客户经理",
     "charityGala": "优先参与高端慈善晚宴",
     "upgradeProgress": "升级进度",
-    "upgradeToV5": "一键升级至V5"
+    "upgradeToV5": "一键升级至V5",
+    "upgradeToNext": "升级至{level}",
+    "upgradeToLevel2": "升级至巴达尔",
+    "upgradeToLevel3": "升级至蒙塔哈",
+    "upgradeToLevel4": "升级至米尔贾",
+    "upgradeToLevel5": "升级至至善",
+    "maxLevel": "已达最高等级"
   }
 }

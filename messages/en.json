@@ -340,6 +340,7 @@
     "upgradeInstructions": "Grade Upgrade Instructions",
     "cumulativeUpgrade": "• Grade upgrades are cumulative. Once you meet the upgrade conditions, you can permanently enjoy the corresponding benefits",
     "donationRequirement": "• Each grade requires the full donation amount, not just the difference",
+    "stepByStepUpgrade": "• Each upgrade can only advance one level at a time, no level skipping allowed",
     "higherBenefits": "• Higher grade members enjoy more exclusive activities and priority participation",
     "entryLevel": "Entry-level member",
     "advancedMember": "Advanced member",
@@ -366,6 +367,12 @@
     "premiumManager": "24-Hour Exclusive Premium Customer Manager",
     "charityGala": "Priority Access to High-End Charity Galas",
     "upgradeProgress": "Upgrade Progress",
-    "upgradeToV5": "Upgrade to V5"
+    "upgradeToV5": "Upgrade to V5",
+    "upgradeToNext": "Upgrade to {level}",
+    "upgradeToLevel2": "Upgrade to Badar",
+    "upgradeToLevel3": "Upgrade to Muntaha",
+    "upgradeToLevel4": "Upgrade to Mirja",
+    "upgradeToLevel5": "Upgrade to Zhishan",
+    "maxLevel": "Maximum Level Reached"
   }
 }
