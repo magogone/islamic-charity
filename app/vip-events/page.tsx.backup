@@ -417,6 +417,158 @@ const VipBadge = ({ vipLevel }: { vipLevel: number }) => {
   );
 };
 
+// 临时占位符，稍后删除
+  {
+    id: 2,
+    title: "叙利亚难民紧急援助计划",
+    description:
+      "您正在参与为叙利亚难民提供紧急食品和医疗援助的活动。目前已筹集80%所需资金，感谢您的持续支持。",
+    image:
+      "https://images.unsplash.com/photo-1601972602237-8c79241e468b?w=600&q=80",
+    date: "进行中",
+    location: "叙利亚边境",
+    type: "member",
+    category: "正在参与",
+    isVideo: true,
+    videoUrl: "https://example.com/syria-aid-video.mp4",
+    likes: 456,
+    views: 3100,
+    status: "ongoing",
+    progress: 80,
+  },
+  {
+    id: 3,
+    title: "斋月食品包发放活动",
+    description:
+      "您参与了斋月期间为贫困家庭发放食品包的活动，成功帮助了150个家庭。愿真主回赐您的善举。",
+    image:
+      "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&q=80",
+    date: "2024-03-20",
+    location: "多个国家",
+    type: "member",
+    category: "已完成",
+    isVideo: false,
+    likes: 267,
+    views: 1890,
+    status: "completed",
+    donationAmount: 300,
+  },
+];
+
+const allianceEvents = [
+  {
+    id: 4,
+    title: "全球穆斯林慈善联盟年度大会",
+    description:
+      "即将举办的年度慈善大会，将邀请全球知名慈善组织代表参与，共同探讨2025年慈善计划。VIP会员优先报名参与。",
+    image:
+      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80",
+    date: "2025-02-15",
+    location: "迪拜",
+    type: "alliance",
+    category: "即将举办",
+    isVideo: false,
+    likes: 856,
+    views: 5100,
+    status: "upcoming",
+    registrationOpen: true,
+  },
+  {
+    id: 5,
+    title: "跨国慈善组织联合救援行动",
+    description:
+      "与国际红新月会、伊斯兰救援组织等联合开展的大型救援行动，为受灾地区提供紧急援助。",
+    image:
+      "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&q=80",
+    date: "进行中",
+    location: "多个受灾地区",
+    type: "alliance",
+    category: "联合行动",
+    isVideo: true,
+    videoUrl: "https://example.com/joint-relief.mp4",
+    likes: 567,
+    views: 4340,
+    status: "ongoing",
+    participants: 15,
+  },
+  {
+    id: 6,
+    title: "慈善透明化区块链技术研讨会",
+    description:
+      "已成功举办的技术研讨会，探讨如何利用区块链技术提升慈善捐赠的透明度和可追溯性。",
+    image:
+      "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&q=80",
+    date: "2024-11-20",
+    location: "线上",
+    type: "alliance",
+    category: "已完成",
+    isVideo: false,
+    likes: 234,
+    views: 1890,
+    status: "completed",
+  },
+];
+
+const ongoingEvents = [
+  {
+    id: 7,
+    title: "加沙地区紧急医疗援助",
+    description:
+      "为加沙地区医院提供紧急医疗物资和设备，目前急需您的支持。每一份捐赠都能拯救生命。",
+    image:
+      "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&q=80",
+    date: "紧急进行中",
+    progress: 65,
+    location: "加沙",
+    type: "ongoing",
+    category: "紧急援助",
+    targetAmount: 500000,
+    currentAmount: 325000,
+    participants: 3200,
+    likes: 1203,
+    views: 8670,
+    urgency: "high",
+  },
+  {
+    id: 8,
+    title: "孤儿教育资助计划",
+    description:
+      "长期资助孤儿接受教育，让他们有机会改变命运。目前已资助500名孤儿，目标1000名。",
+    image:
+      "https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=600&q=80",
+    date: "长期项目",
+    progress: 50,
+    location: "多个国家",
+    type: "ongoing",
+    category: "教育资助",
+    targetAmount: 1000000,
+    currentAmount: 500000,
+    participants: 5500,
+    likes: 2145,
+    views: 12980,
+    urgency: "medium",
+  },
+  {
+    id: 9,
+    title: "清真寺水井建设项目",
+    description:
+      "在缺水地区建设水井，为当地穆斯林社区提供清洁饮用水。一口水井可服务整个村庄。",
+    image:
+      "https://images.unsplash.com/photo-1595435742656-5272d0b3fa82?w=600&q=80",
+    date: "进行中",
+    progress: 40,
+    location: "非洲",
+    type: "ongoing",
+    category: "基础设施",
+    targetAmount: 200000,
+    currentAmount: 80000,
+    participants: 1800,
+    likes: 945,
+    views: 5680,
+    urgency: "normal",
+  },
+];
+
 export default function VipEventsPage() {
   const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] =
@@ -455,182 +607,15 @@ export default function VipEventsPage() {
           ),
     nextLevelName:
       user?.vipLevel === 5
-        ? t("vip.level5")
+        ? "至善"
         : user?.vipLevel === 4
-        ? t("vip.level5")
+        ? "至善"
         : user?.vipLevel === 3
-        ? t("vip.level4")
+        ? "米尔贾"
         : user?.vipLevel === 2
-        ? t("vip.level3")
-        : t("vip.level2"),
+        ? "蒙塔哈"
+        : "巴达尔",
   };
-
-  // 获取翻译后的事件数据
-  const getTranslatedEvents = () => {
-    const memberEvents = [
-      {
-        id: 1,
-        title: t("events.palestinianChildrenWinterClothes"),
-        description: t("events.palestinianChildrenWinterClothesDesc"),
-        image:
-          "https://images.unsplash.com/photo-1500916434205-0c77489c6cf7?w=600&q=80",
-        date: "2024-12-15",
-        location: t("events.palestine"),
-        type: "member",
-        category: t("events.participated"),
-        isVideo: false,
-        likes: 328,
-        views: 2520,
-        status: "completed",
-        donationAmount: 500,
-      },
-      {
-        id: 2,
-        title: t("events.syrianRefugeeAid"),
-        description: t("events.syrianRefugeeAidDesc"),
-        image:
-          "https://images.unsplash.com/photo-1601972602237-8c79241e468b?w=600&q=80",
-        date: t("events.ongoing"),
-        location: t("events.syriaBorder"),
-        type: "member",
-        category: t("events.participating"),
-        isVideo: true,
-        videoUrl: "https://example.com/syria-aid-video.mp4",
-        likes: 456,
-        views: 3100,
-        status: "ongoing",
-        progress: 80,
-      },
-      {
-        id: 3,
-        title: t("events.ramadanFoodPackages"),
-        description: t("events.ramadanFoodPackagesDesc"),
-        image:
-          "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&q=80",
-        date: "2024-03-20",
-        location: t("events.multipleCountries"),
-        type: "member",
-        category: t("events.completed"),
-        isVideo: false,
-        likes: 267,
-        views: 1890,
-        status: "completed",
-        donationAmount: 300,
-      },
-    ];
-
-    const allianceEvents = [
-      {
-        id: 4,
-        title: t("events.globalMuslimCharityConference"),
-        description: t("events.globalMuslimCharityConferenceDesc"),
-        image:
-          "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80",
-        date: "2025-02-15",
-        location: t("events.dubai"),
-        type: "alliance",
-        category: t("events.upcoming"),
-        isVideo: false,
-        likes: 856,
-        views: 5100,
-        status: "upcoming",
-        registrationOpen: true,
-      },
-      {
-        id: 5,
-        title: t("events.internationalReliefAction"),
-        description: t("events.internationalReliefActionDesc"),
-        image:
-          "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&q=80",
-        date: t("events.ongoing"),
-        location: t("events.multipleCountries"),
-        type: "alliance",
-        category: t("events.jointAction"),
-        isVideo: true,
-        videoUrl: "https://example.com/joint-relief.mp4",
-        likes: 567,
-        views: 4340,
-        status: "ongoing",
-        participants: 15,
-      },
-      {
-        id: 6,
-        title: t("events.blockchainCharityWorkshop"),
-        description: t("events.blockchainCharityWorkshopDesc"),
-        image:
-          "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&q=80",
-        date: "2024-11-20",
-        location: t("events.online"),
-        type: "alliance",
-        category: t("events.completed"),
-        isVideo: false,
-        likes: 234,
-        views: 1890,
-        status: "completed",
-      },
-    ];
-
-    const ongoingEvents = [
-      {
-        id: 7,
-        title: t("events.gazaMedicalAid"),
-        description: t("events.gazaMedicalAidDesc"),
-        image:
-          "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&q=80",
-        date: t("events.emergencyOngoing"),
-        progress: 65,
-        location: t("events.gaza"),
-        type: "ongoing",
-        category: t("events.emergencyAid"),
-        targetAmount: 500000,
-        currentAmount: 325000,
-        participants: 3200,
-        likes: 1203,
-        views: 8670,
-        urgency: "high",
-      },
-      {
-        id: 8,
-        title: t("events.orphanEducationSupport"),
-        description: t("events.orphanEducationSupportDesc"),
-        image:
-          "https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=600&q=80",
-        date: t("events.longTerm"),
-        progress: 50,
-        location: t("events.multipleCountries"),
-        type: "ongoing",
-        category: t("events.educationSupport"),
-        targetAmount: 1000000,
-        currentAmount: 500000,
-        participants: 5500,
-        likes: 2145,
-        views: 12980,
-        urgency: "medium",
-      },
-      {
-        id: 9,
-        title: t("events.mosqueWellConstruction"),
-        description: t("events.mosqueWellConstructionDesc"),
-        image:
-          "https://images.unsplash.com/photo-1595435742656-5272d0b3fa82?w=600&q=80",
-        date: t("events.ongoing"),
-        progress: 40,
-        location: t("events.africa"),
-        type: "ongoing",
-        category: t("events.infrastructure"),
-        targetAmount: 200000,
-        currentAmount: 80000,
-        participants: 1800,
-        likes: 945,
-        views: 5680,
-        urgency: "normal",
-      },
-    ];
-
-    return { memberEvents, allianceEvents, ongoingEvents };
-  };
-
-  const { memberEvents, allianceEvents, ongoingEvents } = getTranslatedEvents();
 
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>
@@ -645,7 +630,7 @@ export default function VipEventsPage() {
       <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-2 text-[#d4b96e]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
       </svg>
-      <span class="text-xs text-[#d4b96e]">${t("vipEvents.loading")}</span>
+      <span class="text-xs text-[#d4b96e]">加载中...</span>
     </div>`;
   };
 
@@ -845,10 +830,10 @@ export default function VipEventsPage() {
               {/* 分类标题 */}
               <div className="text-center">
                 <h3 className="text-lg font-bold text-[#d4b96e] mb-2">
-                  {t("vipEvents.myCharityFootprint")}
+                  {t("vipLevel.myCharityFootprint")}
                 </h3>
                 <p className="text-sm text-[#f5efe0]/70">
-                  {t("vipEvents.viewAllCharityActivities")}
+                  {t("vipLevel.viewAllCharityActivities")}
                 </p>
               </div>
 
@@ -900,8 +885,7 @@ export default function VipEventsPage() {
                                 ></div>
                               </div>
                               <p className="text-xs text-[#d4b96e] mt-1 text-center">
-                                {event.progress}%{" "}
-                                {t("vipEvents.percentComplete")}
+                                {event.progress}% {t("vipLevel.completed")}
                               </p>
                             </div>
                           )}
@@ -918,7 +902,7 @@ export default function VipEventsPage() {
                             <div className="flex items-center space-x-2 mb-3">
                               <Heart className="h-4 w-4 text-[#d4b96e]" />
                               <span className="text-sm font-medium text-[#d4b96e] flex items-baseline">
-                                {t("vipEvents.yourDonation")}:{" "}
+                                {t("vipLevel.yourDonation")}:{" "}
                                 {event.donationAmount}
                                 <span className="text-xs ml-1">USD</span>
                               </span>
@@ -948,10 +932,10 @@ export default function VipEventsPage() {
               {/* 分类标题 */}
               <div className="text-center">
                 <h3 className="text-lg font-bold text-[#d4b96e] mb-2">
-                  {t("vipEvents.allianceCharityActivities")}
+                  {t("vipLevel.allianceCharityActivities")}
                 </h3>
                 <p className="text-sm text-[#f5efe0]/70">
-                  {t("vipEvents.foundationJointActivities")}
+                  {t("vipLevel.foundationJointActivities")}
                 </p>
               </div>
 
@@ -997,7 +981,7 @@ export default function VipEventsPage() {
                           {event.registrationOpen && (
                             <div className="absolute top-2 left-2">
                               <Badge className="bg-red-500 text-white shadow-lg animate-pulse">
-                                {t("vipEvents.openRegistration")}
+                                {t("vipLevel.openRegistration")}
                               </Badge>
                             </div>
                           )}
@@ -1015,7 +999,7 @@ export default function VipEventsPage() {
                               <Users className="h-4 w-4 text-[#d4b96e]" />
                               <span className="text-sm text-[#d4b96e]">
                                 {event.participants}{" "}
-                                {t("vipEvents.organizationsParticipating")}
+                                {t("vipLevel.organizationsParticipating")}
                               </span>
                             </div>
                           )}
@@ -2030,10 +2014,10 @@ export default function VipEventsPage() {
               {/* 分类标题 */}
               <div className="text-center">
                 <h3 className="text-lg font-bold text-[#d4b96e] mb-2">
-                  {t("vipEvents.ongoingProjects")}
+                  {t("vipLevel.ongoingProjects")}
                 </h3>
                 <p className="text-sm text-[#f5efe0]/70">
-                  {t("vipEvents.projectsNeedSupport")}
+                  {t("vipLevel.projectsNeedSupport")}
                 </p>
               </div>
 
@@ -2073,7 +2057,7 @@ export default function VipEventsPage() {
                             <div className="absolute top-2 left-2">
                               <Badge className="bg-red-600 text-white shadow-lg flex items-center space-x-1">
                                 <Zap className="h-3 w-3" />
-                                <span>{t("vipEvents.urgent")}</span>
+                                <span>{t("vipLevel.urgent")}</span>
                               </Badge>
                             </div>
                           )}
@@ -2089,7 +2073,7 @@ export default function VipEventsPage() {
 
                           <div className="mb-4">
                             <div className="flex justify-between text-xs text-[#f5efe0]/60 mb-1">
-                              <span>{t("vipEvents.fundraisingProgress")}</span>
+                              <span>{t("vipLevel.fundraisingProgress")}</span>
                               <span className="font-medium text-[#d4b96e]">
                                 {event.progress}%
                               </span>
@@ -2106,12 +2090,12 @@ export default function VipEventsPage() {
                             </div>
                             <div className="flex justify-between text-xs text-[#f5efe0]/60 mt-1">
                               <span>
-                                {t("vipEvents.raised")}:{" "}
+                                {t("vipLevel.raised")}:{" "}
                                 {event.currentAmount.toLocaleString()}
                                 <span className="text-xs ml-1">USD</span>
                               </span>
                               <span>
-                                {t("vipEvents.target")}:{" "}
+                                {t("vipLevel.target")}:{" "}
                                 {event.targetAmount.toLocaleString()}
                                 <span className="text-xs ml-1">USD</span>
                               </span>
@@ -2123,11 +2107,11 @@ export default function VipEventsPage() {
                               <Users className="h-4 w-4" />
                               <span>
                                 {event.participants.toLocaleString()}{" "}
-                                {t("vipEvents.peopleParticipated")}
+                                {t("vipLevel.peopleParticipated")}
                               </span>
                             </div>
                             <Button className="h-7 px-3 bg-gradient-to-r from-[#d4b96e] to-[#b39339] text-[#0a0a0f] hover:opacity-90 text-xs">
-                              {t("vipEvents.participateNow")}
+                              {t("vipLevel.participateNow")}
                             </Button>
                           </div>
                         </div>

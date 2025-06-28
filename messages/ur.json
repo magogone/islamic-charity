@@ -430,5 +430,32 @@
     "ongoing": "جاری",
     "longTerm": "طویل مدتی منصوبہ",
     "emergencyOngoing": "ہنگامی جاری"
+  },
+  "vipEvents": {
+    "myCharityFootprint": "میرا خیراتی نقش قدم",
+    "viewAllCharityActivities": "آپ کی تمام خیراتی سرگرمیوں کو دیکھیں",
+    "allianceCharityActivities": "اتحادی خیراتی سرگرمیاں",
+    "foundationJointActivities": "فاؤنڈیشن کی مشترکہ بڑی خیراتی سرگرمیاں",
+    "ongoingProjects": "جاری منصوبے",
+    "projectsNeedSupport": "یہ منصوبے آپ کی فوری حمایت کے محتاج ہیں",
+    "yourDonation": "آپ کا عطیہ",
+    "openRegistration": "رجسٹریشن کھلی ہے",
+    "organizationsParticipating": "تنظیمیں شریک",
+    "fundraisingProgress": "فنڈ ریزنگ کی پیش قدمی",
+    "raised": "اکٹھا کیا گیا",
+    "target": "ہدف",
+    "peopleParticipated": "لوگوں نے حصہ لیا",
+    "participateNow": "ابھی حصہ لیں",
+    "urgent": "فوری",
+    "completed": "مکمل",
+    "loading": "لوڈ ہو رہا ہے...",
+    "percentComplete": "مکمل"
+  },
+  "vip": {
+    "level1": "بولاق",
+    "level2": "بدر",
+    "level3": "منتہیٰ",
+    "level4": "معراج",
+    "level5": "خیر اعظم"
   }
 }

@@ -428,5 +428,32 @@
     "ongoing": "جاري",
     "longTerm": "مشروع طويل الأمد",
     "emergencyOngoing": "طارئ جاري"
+  },
+  "vipEvents": {
+    "myCharityFootprint": "بصمتي الخيرية",
+    "viewAllCharityActivities": "اعرض جميع الأنشطة الخيرية التي شاركت فيها",
+    "allianceCharityActivities": "أنشطة التحالف الخيري",
+    "foundationJointActivities": "الأنشطة الخيرية الكبيرة التي تنظمها المؤسسة مشتركة",
+    "ongoingProjects": "المشاريع الجارية",
+    "projectsNeedSupport": "هذه المشاريع تحتاج دعمكم بشكل عاجل",
+    "yourDonation": "تبرعك",
+    "openRegistration": "التسجيل مفتوح",
+    "organizationsParticipating": "منظمة تشارك",
+    "fundraisingProgress": "تقدم جمع التبرعات",
+    "raised": "تم جمع",
+    "target": "الهدف",
+    "peopleParticipated": "شخص شارك",
+    "participateNow": "شارك الآن",
+    "urgent": "عاجل",
+    "completed": "مكتمل",
+    "loading": "جاري التحميل...",
+    "percentComplete": "مكتمل"
+  },
+  "vip": {
+    "level1": "بولاق",
+    "level2": "بدر",
+    "level3": "منتهى",
+    "level4": "معراج",
+    "level5": "خير أعظم"
   }
 }
