@@ -739,26 +739,6 @@ export default function VipEventsPage() {
                 </div>
               </div>
 
-              {/* 底部进度条 */}
-              <div className="mt-3">
-                <div className="flex items-center justify-between mb-1">
-                  <div className="flex items-center text-xs">
-                    <span className="text-[#f5efe0]/60">
-                      {t("vipLevel.upgradeProgress")}
-                    </span>
-                    <span className="text-[#d4b96e] ml-2">
-                      {userData.upgradeProgress}%
-                    </span>
-                  </div>
-                </div>
-                <div className="relative h-1.5 bg-[#2a2f3c] rounded-full overflow-hidden">
-                  <div
-                    className="absolute left-0 top-0 h-full bg-gradient-to-r from-[#d4b96e] to-[#b39339] rounded-full transition-all duration-300"
-                    style={{ width: `${userData.upgradeProgress}%` }}
-                  ></div>
-                </div>
-              </div>
-
               {/* 升级按钮 */}
               <div className="mt-3">
                 {userData.vipLevel < 5 ? (
