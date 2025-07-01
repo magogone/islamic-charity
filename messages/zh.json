@@ -236,7 +236,7 @@
     "donateButton": "立即捐赠"
   },
   "units": {
-    "u": "U"
+    "u": "USD"
   },
   "donationOverview": {
     "myDonations": "我的捐赠",
@@ -360,6 +360,12 @@
     "donationRequirement": "• 每个等级需要支付全额捐赠金额，而不仅仅是差额",
     "stepByStepUpgrade": "• 每次提升只能提升1个等级，不能跳级提升",
     "higherBenefits": "• 高等级会员享有更多专属活动和优先参与权",
+    "vipLevelAdjustment": "VIP等级调整",
+    "vip1Requirement": "• VIP1可以直接购买",
+    "vip2Requirement": "• VIP2需要团队里最少3个人才可以购买VIP2",
+    "vip3Requirement": "• VIP3需要团队里最少2个VIP2才可以购买VIP3",
+    "vip4Requirement": "• VIP4需要团队里最少2个VIP3才可以购买VIP4",
+    "vip5Requirement": "• VIP5需要团队里最少2个VIP4才可以购买VIP5",
     "entryLevel": "入门级会员",
     "advancedMember": "进阶级会员",
     "intermediateMember": "中级会员",

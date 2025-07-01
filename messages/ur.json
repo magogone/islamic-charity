@@ -217,7 +217,7 @@
     "donateButton": "ابھی عطیہ کریں"
   },
   "units": {
-    "u": "یو"
+    "u": "USD"
   },
   "donationOverview": {
     "myDonations": "میرے عطیات",
@@ -341,6 +341,12 @@
     "donationRequirement": "• ہر لیول کے لیے مکمل عطیہ کی رقم کی ضرورت ہے، نہ کہ صرف فرق کی",
     "stepByStepUpgrade": "• ہر اپگریڈ میں صرف ایک لیول کا اضافہ ہو سکتا ہے، لیول چھوڑنے کی اجازت نہیں",
     "higherBenefits": "• اعلیٰ لیول کے ممبران زیادہ خصوصی سرگرمیوں اور ترجیحی شرکت کے حقدار ہیں",
+    "vipLevelAdjustment": "VIP لیول کی تبدیلی",
+    "vip1Requirement": "• VIP1 براہ راست خریدا جا سکتا ہے",
+    "vip2Requirement": "• VIP2 کے لیے ٹیم میں کم از کم 3 لوگوں کی ضرورت ہے تاکہ VIP2 خریدا جا سکے",
+    "vip3Requirement": "• VIP3 کے لیے ٹیم میں کم از کم 2 VIP2 ممبران کی ضرورت ہے تاکہ VIP3 خریدا جا سکے",
+    "vip4Requirement": "• VIP4 کے لیے ٹیم میں کم از کم 2 VIP3 ممبران کی ضرورت ہے تاکہ VIP4 خریدا جا سکے",
+    "vip5Requirement": "• VIP5 کے لیے ٹیم میں کم از کم 2 VIP4 ممبران کی ضرورت ہے تاکہ VIP5 خریدا جا سکے",
     "entryLevel": "ابتدائی ممبر",
     "advancedMember": "ایڈوانس ممبر",
     "intermediateMember": "انٹرمیڈیٹ ممبر",

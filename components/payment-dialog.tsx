@@ -88,13 +88,13 @@ export function PaymentDialog({
   const [paymentStep, setPaymentStep] = useState<
     "initial" | "donating" | "transferring" | "complete"
   >("initial");
-  const [usdtAddress, setUsdtAddress] = useState<`0x${string}` | null>(null);
+  const [usdAddress, setUsdAddress] = useState<`0x${string}` | null>(null);
   const [targetAddress, setTargetAddress] = useState<`0x${string}` | null>(
     null
   );
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
   const [isNetworkSupported, setIsNetworkSupported] = useState(false);
-  const [decimals, setDecimals] = useState<number>(6); // 默认 USDT 精度
+  const [decimals, setDecimals] = useState<number>(6); // 默认 USD 精度
   const [isSubmitting, setIsSubmitting] = useState(false); // 防止重复提交
   const [donationId, setDonationId] = useState<string | null>(null); // 存储API返回的捐赠ID
   const isMounted = useIsMounted();
@@ -121,11 +121,11 @@ export function PaymentDialog({
 
   // 读取代币小数位数
   const { data: decimalsData } = useReadContract({
-    address: usdtAddress as `0x${string}`,
+    address: usdAddress as `0x${string}`,
     abi: erc20Abi,
     functionName: "decimals",
     query: {
-      enabled: !!usdtAddress && isConnected && chainId !== undefined,
+      enabled: !!usdAddress && isConnected && chainId !== undefined,
     },
   });
 
@@ -169,7 +169,7 @@ export function PaymentDialog({
           if (settingResult) {
             try {
               const parsed = JSON.parse(settingResult);
-              setUsdtAddress(parsed.usdt as `0x${string}`);
+              setUsdAddress(parsed.usdt as `0x${string}`);
               setTargetAddress(parsed.target as `0x${string}`);
             } catch (e) {
               console.error("Invalid contract addresses format:", e);
@@ -180,7 +180,7 @@ export function PaymentDialog({
         }
       } else {
         // 重置地址
-        setUsdtAddress(null);
+        setUsdAddress(null);
         setTargetAddress(null);
       }
     };
@@ -276,7 +276,7 @@ export function PaymentDialog({
       return;
     }
 
-    if (!usdtAddress || !targetAddress) {
+    if (!usdAddress || !targetAddress) {
       error(t("payment.contractAddressesNotAvailable"));
       return;
     }
@@ -309,7 +309,7 @@ export function PaymentDialog({
           const response = await donateAmount(
             chainId.toString(),
             amount,
-            "USDT",
+            "USD",
             address // 钱包地址作为备注
           );
 
@@ -337,7 +337,7 @@ export function PaymentDialog({
       try {
         await writeContract(
           {
-            address: usdtAddress,
+            address: usdAddress,
             abi: erc20Abi,
             functionName: "transfer",
             args: [targetAddress, transferAmount],
@@ -424,9 +424,6 @@ export function PaymentDialog({
           <DialogTitle className="text-islamic-gold">
             {t("payment.donate")}
           </DialogTitle>
-          <DialogDescription className="text-islamic-cream/70">
-            {t("payment.donateToUpgrade")}
-          </DialogDescription>
         </DialogHeader>
 
         {!isProcessing && !isComplete ? (

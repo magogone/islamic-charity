@@ -217,7 +217,7 @@
     "donateButton": "تبرع الآن"
   },
   "units": {
-    "u": "ي"
+    "u": "USD"
   },
   "donationOverview": {
     "myDonations": "تبرعاتي",
@@ -341,6 +341,12 @@
     "donationRequirement": "• كل مستوى يتطلب دفع مبلغ التبرع الكامل، وليس فقط الفرق",
     "stepByStepUpgrade": "• كل ترقية لا يمكن أن ترتقي إلا مستوى واحد في كل مرة، لا يُسمح بتخطي المستويات",
     "higherBenefits": "• أعضاء المستويات العليا يتمتعون بأنشطة حصرية أكثر وحق المشاركة المُقدم",
+    "vipLevelAdjustment": "تعديل مستوى VIP",
+    "vip1Requirement": "• يمكن شراء VIP1 مباشرة",
+    "vip2Requirement": "• VIP2 يتطلب على الأقل 3 أشخاص في الفريق لشراء VIP2",
+    "vip3Requirement": "• VIP3 يتطلب على الأقل 2 من أعضاء VIP2 في الفريق لشراء VIP3",
+    "vip4Requirement": "• VIP4 يتطلب على الأقل 2 من أعضاء VIP3 في الفريق لشراء VIP4",
+    "vip5Requirement": "• VIP5 يتطلب على الأقل 2 من أعضاء VIP4 في الفريق لشراء VIP5",
     "entryLevel": "عضو مبتدئ",
     "advancedMember": "عضو متقدم",
     "intermediateMember": "عضو متوسط",

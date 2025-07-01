@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Wallet, ArrowUpRight, Clock, CheckCircle2 } from "lucide-react"
-import { WithdrawDialog } from "./withdraw-dialog"
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Wallet, ArrowUpRight, Clock, CheckCircle2 } from "lucide-react";
+import { WithdrawDialog } from "./withdraw-dialog";
 
 interface WithdrawCardProps {
-  availableAmount: number
-  pendingAmount?: number
-  completedAmount?: number
-  className?: string
+  availableAmount: number;
+  pendingAmount?: number;
+  completedAmount?: number;
+  className?: string;
 }
 
 export function WithdrawCard({
@@ -19,7 +19,7 @@ export function WithdrawCard({
   completedAmount = 0,
   className = "",
 }: WithdrawCardProps) {
-  const [withdrawOpen, setWithdrawOpen] = useState(false)
+  const [withdrawOpen, setWithdrawOpen] = useState(false);
 
   return (
     <>
@@ -37,7 +37,9 @@ export function WithdrawCard({
           {/* Available to withdraw */}
           <div className="bg-islamic-medium/70 backdrop-blur-sm rounded-lg p-4 mb-4">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-islamic-cream/70">Available to Withdraw</span>
+              <span className="text-sm text-islamic-cream/70">
+                Available to Withdraw
+              </span>
               <Button
                 variant="outline"
                 size="sm"
@@ -49,8 +51,12 @@ export function WithdrawCard({
                 Withdraw
               </Button>
             </div>
-            <div className="text-3xl font-bold text-[#8dc63f] mb-1">{availableAmount} USDT</div>
-            <div className="text-xs text-islamic-cream/60">Minimum withdrawal: 10 USDT</div>
+            <div className="text-3xl font-bold text-[#8dc63f] mb-1">
+              {availableAmount} USD
+            </div>
+            <div className="text-xs text-islamic-cream/60">
+              Minimum withdrawal: 10 USD
+            </div>
           </div>
 
           {/* Withdrawal history */}
@@ -62,12 +68,18 @@ export function WithdrawCard({
                     <Clock className="h-4 w-4 text-islamic-cream/70" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-islamic-cream">Pending Withdrawal</div>
-                    <div className="text-xs text-islamic-cream/60">Processing</div>
+                    <div className="text-sm font-medium text-islamic-cream">
+                      Pending Withdrawal
+                    </div>
+                    <div className="text-xs text-islamic-cream/60">
+                      Processing
+                    </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-medium text-islamic-cream">{pendingAmount} USDT</div>
+                  <div className="text-sm font-medium text-islamic-cream">
+                    {pendingAmount} USD
+                  </div>
                   <div className="text-xs text-islamic-cream/60">~30 min</div>
                 </div>
               </div>
@@ -80,18 +92,29 @@ export function WithdrawCard({
                     <CheckCircle2 className="h-4 w-4 text-[#8dc63f]" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-islamic-cream">Last Withdrawal</div>
-                    <div className="text-xs text-islamic-cream/60">Completed</div>
+                    <div className="text-sm font-medium text-islamic-cream">
+                      Last Withdrawal
+                    </div>
+                    <div className="text-xs text-islamic-cream/60">
+                      Completed
+                    </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-medium text-islamic-cream">{completedAmount} USDT</div>
-                  <div className="text-xs text-islamic-cream/60">2 days ago</div>
+                  <div className="text-sm font-medium text-islamic-cream">
+                    {completedAmount} USD
+                  </div>
+                  <div className="text-xs text-islamic-cream/60">
+                    2 days ago
+                  </div>
                 </div>
               </div>
             )}
 
-            <Button variant="outline" className="w-full mt-2 border-islamic-medium/50 text-islamic-cream/70">
+            <Button
+              variant="outline"
+              className="w-full mt-2 border-islamic-medium/50 text-islamic-cream/70"
+            >
               View All Transactions
               <ArrowUpRight className="ml-2 h-4 w-4" />
             </Button>
@@ -99,7 +122,11 @@ export function WithdrawCard({
         </CardContent>
       </Card>
 
-      <WithdrawDialog open={withdrawOpen} onOpenChange={setWithdrawOpen} availableAmount={availableAmount} />
+      <WithdrawDialog
+        open={withdrawOpen}
+        onOpenChange={setWithdrawOpen}
+        availableAmount={availableAmount}
+      />
     </>
-  )
+  );
 }

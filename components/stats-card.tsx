@@ -1,16 +1,21 @@
-import { DollarSign, TrendingUp, User, Info } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { IconStatItem } from "./icon-stat-item"
-import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { DollarSign, TrendingUp, User, Info } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { IconStatItem } from "./icon-stat-item";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface StatsCardProps {
-  currentEarnings: number
-  maxEarnings: number
-  currentPercentage: number
-  maxPercentage: number
-  referrals?: number
-  className?: string
+  currentEarnings: number;
+  maxEarnings: number;
+  currentPercentage: number;
+  maxPercentage: number;
+  referrals?: number;
+  className?: string;
 }
 
 export function StatsCard({
@@ -34,7 +39,7 @@ export function StatsCard({
           iconBgColor="bg-islamic-gold/20"
           iconColor="text-islamic-gold"
           value={`${currentEarnings}`}
-          unit="USDT"
+          unit="USD"
           description="Currently Obtained"
           valueClassName="text-xl font-bold text-islamic-gold"
           unitClassName="text-xs text-islamic-gold/80"
@@ -46,7 +51,7 @@ export function StatsCard({
           iconBgColor="bg-islamic-gold/20"
           iconColor="text-islamic-gold"
           value={`${maxEarnings}`}
-          unit="USDT"
+          unit="USD"
           description="Maximum Available"
           valueClassName="text-xl font-bold text-islamic-gold"
           unitClassName="text-xs text-islamic-gold/80"
@@ -76,7 +81,9 @@ export function StatsCard({
 
       <div className="mt-4 flex items-center justify-end">
         <User className="mr-1 h-3 w-3 text-islamic-cream/60" />
-        <span className="text-xs text-islamic-cream/60">已推荐 {referrals} 人</span>
+        <span className="text-xs text-islamic-cream/60">
+          已推荐 {referrals} 人
+        </span>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -92,5 +99,5 @@ export function StatsCard({
         </TooltipProvider>
       </div>
     </div>
-  )
+  );
 }

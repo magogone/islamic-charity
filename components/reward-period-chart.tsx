@@ -1,36 +1,49 @@
-"use client"
-import { useState } from "react"
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from "recharts"
-import { Card, CardContent } from "@/components/ui/card"
-import { X } from "lucide-react"
-import { useTranslation } from "@/lib/i18n"
+"use client";
+import { useState } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+  ReferenceLine,
+} from "recharts";
+import { Card, CardContent } from "@/components/ui/card";
+import { X } from "lucide-react";
+import { useTranslation } from "@/lib/i18n";
 
 interface RewardData {
-  date: string
-  actual: number
-  maximum: number
-  distributed: boolean // 添加标志表示是否已发放
+  date: string;
+  actual: number;
+  maximum: number;
+  distributed: boolean; // 添加标志表示是否已发放
 }
 
 interface RewardPeriodChartProps {
-  data: RewardData[]
-  startDate?: string
-  endDate?: string
+  data: RewardData[];
+  startDate?: string;
+  endDate?: string;
 }
 
-export function RewardPeriodChart({ data, startDate, endDate }: RewardPeriodChartProps) {
-  const { t } = useTranslation()
+export function RewardPeriodChart({
+  data,
+  startDate,
+  endDate,
+}: RewardPeriodChartProps) {
+  const { t } = useTranslation();
   const [activePoint, setActivePoint] = useState<null | {
-    date: string
-    actual: number
-    maximum: number
-    distributed: boolean
-  }>(null)
+    date: string;
+    actual: number;
+    maximum: number;
+    distributed: boolean;
+  }>(null);
 
   // 获取今天的日期字符串
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  const todayStr = today.toISOString().split("T")[0]
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayStr = today.toISOString().split("T")[0];
 
   // 处理数据，计算差值
   const chartData = data.map((item) => {
@@ -40,64 +53,76 @@ export function RewardPeriodChart({ data, startDate, endDate }: RewardPeriodChar
       potential: item.maximum - item.actual,
       maximum: item.maximum,
       distributed: item.distributed,
-    }
-  })
+    };
+  });
 
   // 自定义提示框
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
-      const actual = payload[0].value
-      const maximum = actual + (payload[1]?.value || 0)
-      const distributed = payload[0].payload.distributed
+      const actual = payload[0].value;
+      const maximum = actual + (payload[1]?.value || 0);
+      const distributed = payload[0].payload.distributed;
 
       return (
         <div className="bg-islamic-medium border border-islamic-gold/30 p-2 rounded-md shadow-md text-xs">
-          <p className="text-islamic-gold font-medium mb-1">{formatDate(label)}</p>
+          <p className="text-islamic-gold font-medium mb-1">
+            {formatDate(label)}
+          </p>
           <p className="text-islamic-cream flex justify-between">
-            <span>{distributed ? t('rewardPeriod.actualReward') : t('rewardPeriod.expectedReward')}: </span>
-            <span className="font-medium" style={{ color: distributed ? "#8dc63f" : "#4caf50" }}>
-              {actual} USDT
+            <span>
+              {distributed
+                ? t("rewardPeriod.actualReward")
+                : t("rewardPeriod.expectedReward")}
+              :{" "}
+            </span>
+            <span
+              className="font-medium"
+              style={{ color: distributed ? "#8dc63f" : "#4caf50" }}
+            >
+              {actual} <span className="text-xs">USD</span>
             </span>
           </p>
           <p className="text-islamic-cream/80 flex justify-between">
-            <span>{t('rewardPeriod.maximumReward')}: </span>
-            <span className="font-medium">{maximum} USDT</span>
+            <span>{t("rewardPeriod.maximumReward")}: </span>
+            <span className="font-medium">
+              {maximum} <span className="text-xs">USD</span>
+            </span>
           </p>
           <p className="text-islamic-cream/80 flex justify-between text-[10px] mt-1">
-            <span>{t('rewardPeriod.completionRate')}: </span>
+            <span>{t("rewardPeriod.completionRate")}: </span>
             <span>{Math.round((actual / maximum) * 100)}%</span>
           </p>
         </div>
-      )
+      );
     }
-    return null
-  }
+    return null;
+  };
 
   // 格式化日期
   const formatDate = (dateStr: string) => {
-    if (!dateStr) return ""
+    if (!dateStr) return "";
     try {
-      const date = new Date(dateStr)
-      return `${date.getMonth() + 1}月${date.getDate()}日`
+      const date = new Date(dateStr);
+      return `${date.getMonth() + 1}月${date.getDate()}日`;
     } catch (e) {
-      return dateStr
+      return dateStr;
     }
-  }
+  };
 
   // 自定义X轴刻度
   const CustomizedAxisTick = (props: any) => {
-    const { x, y, payload } = props
+    const { x, y, payload } = props;
 
     // 添加安全检查
     if (!payload || payload.value === undefined) {
-      return null
+      return null;
     }
 
     try {
-      const date = new Date(payload.value)
-      const month = date.getMonth() + 1
-      const day = date.getDate()
-      const isToday = date.toDateString() === today.toDateString()
+      const date = new Date(payload.value);
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const isToday = date.toDateString() === today.toDateString();
 
       return (
         <g transform={`translate(${x},${y})`}>
@@ -113,40 +138,52 @@ export function RewardPeriodChart({ data, startDate, endDate }: RewardPeriodChar
             {`${month}/${day}`}
           </text>
         </g>
-      )
+      );
     } catch (e) {
       // 如果日期解析失败，显示原始值
       return (
         <g transform={`translate(${x},${y})`}>
-          <text x={0} y={0} dy={16} textAnchor="middle" fill="#f5efe0" fontSize={10}>
+          <text
+            x={0}
+            y={0}
+            dy={16}
+            textAnchor="middle"
+            fill="#f5efe0"
+            fontSize={10}
+          >
             {String(payload.value).substring(0, 5)}
           </text>
         </g>
-      )
+      );
     }
-  }
+  };
 
   // 处理点击事件
   const handleClick = (data: any, index: number) => {
     if (data && data.activePayload && data.activePayload.length) {
-      const clickedData = data.activePayload[0].payload
+      const clickedData = data.activePayload[0].payload;
       setActivePoint({
         date: clickedData.date,
         actual: clickedData.actual,
-        maximum: clickedData.maximum || clickedData.actual + clickedData.potential,
+        maximum:
+          clickedData.maximum || clickedData.actual + clickedData.potential,
         distributed: clickedData.distributed,
-      })
+      });
     }
-  }
+  };
 
   // 关闭详情
   const closeDetails = () => {
-    setActivePoint(null)
-  }
+    setActivePoint(null);
+  };
 
   // 如果没有数据，显示空状态
   if (!data || data.length === 0) {
-    return <div className="flex items-center justify-center h-full text-islamic-cream/70">{t('rewardPeriod.noRewardData')}</div>
+    return (
+      <div className="flex items-center justify-center h-full text-islamic-cream/70">
+        {t("rewardPeriod.noRewardData")}
+      </div>
+    );
   }
 
   // 颜色定义
@@ -154,48 +191,70 @@ export function RewardPeriodChart({ data, startDate, endDate }: RewardPeriodChar
     distributed: "#8dc63f", // 已发放 - 亮绿色
     future: "#4caf50", // 将发放 - 浅绿色
     potential: "#555555", // 潜在奖励 - 灰色
-  }
+  };
 
   // 获取开始和结束日期
-  const periodStartDate = startDate || (data.length > 0 ? data[0].date : "")
-  const periodEndDate = endDate || (data.length > 0 ? data[data.length - 1].date : "")
+  const periodStartDate = startDate || (data.length > 0 ? data[0].date : "");
+  const periodEndDate =
+    endDate || (data.length > 0 ? data[data.length - 1].date : "");
 
   // 计算剩余天数
-  let remainingDays = 0
+  let remainingDays = 0;
   try {
-    const endDate = new Date(periodEndDate)
+    const endDate = new Date(periodEndDate);
     if (!isNaN(endDate.getTime())) {
-      remainingDays = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+      remainingDays = Math.ceil(
+        (endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+      );
 
       // 如果是过去的日期，显示已结束
       if (remainingDays < 0) {
-        remainingDays = 0
+        remainingDays = 0;
       }
     }
   } catch (e) {
-    console.error("Date calculation error:", e)
+    console.error("Date calculation error:", e);
   }
 
   return (
     <div className="relative">
       {/* 标题和图例 */}
       <div className="flex justify-between items-center text-xs mb-2">
-        <div className="text-islamic-cream/80">{t('rewardPeriod.start')}: {formatDate(periodStartDate)}</div>
+        <div className="text-islamic-cream/80">
+          {t("rewardPeriod.start")}: {formatDate(periodStartDate)}
+        </div>
         <div className="flex space-x-3">
           <div className="flex items-center">
-            <div className="w-3 h-3 mr-1" style={{ backgroundColor: colors.distributed }}></div>
-            <span className="text-islamic-cream/80">{t('rewardPeriod.distributed')}</span>
+            <div
+              className="w-3 h-3 mr-1"
+              style={{ backgroundColor: colors.distributed }}
+            ></div>
+            <span className="text-islamic-cream/80">
+              {t("rewardPeriod.distributed")}
+            </span>
           </div>
           <div className="flex items-center">
-            <div className="w-3 h-3 mr-1" style={{ backgroundColor: colors.future }}></div>
-            <span className="text-islamic-cream/80">{t('rewardPeriod.pending')}</span>
+            <div
+              className="w-3 h-3 mr-1"
+              style={{ backgroundColor: colors.future }}
+            ></div>
+            <span className="text-islamic-cream/80">
+              {t("rewardPeriod.pending")}
+            </span>
           </div>
           <div className="flex items-center">
-            <div className="w-3 h-3 mr-1" style={{ backgroundColor: colors.potential }}></div>
-            <span className="text-islamic-cream/80">{t('rewardPeriod.potentialReward')}</span>
+            <div
+              className="w-3 h-3 mr-1"
+              style={{ backgroundColor: colors.potential }}
+            ></div>
+            <span className="text-islamic-cream/80">
+              {t("rewardPeriod.potentialReward")}
+            </span>
           </div>
         </div>
-        <div className="text-islamic-cream/80">{t('rewardPeriod.end')}: {formatDate(periodEndDate)}</div>
+        <div className="text-islamic-cream/80">
+          {t("rewardPeriod.end")}: {formatDate(periodEndDate)}
+        </div>
       </div>
 
       {/* 图表容器 */}
@@ -216,10 +275,18 @@ export function RewardPeriodChart({ data, startDate, endDate }: RewardPeriodChar
               interval={Math.max(0, Math.floor(chartData.length / 15))}
             />
             <YAxis hide={true} />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(212, 185, 110, 0.1)" }} />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ fill: "rgba(212, 185, 110, 0.1)" }}
+            />
 
             {/* 添加今天的参考线 */}
-            <ReferenceLine x={todayStr} stroke="#d4b96e" strokeWidth={1} strokeDasharray="3 3" />
+            <ReferenceLine
+              x={todayStr}
+              stroke="#d4b96e"
+              strokeWidth={1}
+              strokeDasharray="3 3"
+            />
 
             <Bar dataKey="actual" stackId="a" fill={colors.distributed}>
               {chartData.map((entry, index) => (
@@ -232,7 +299,12 @@ export function RewardPeriodChart({ data, startDate, endDate }: RewardPeriodChar
             </Bar>
             <Bar dataKey="potential" stackId="a" fill={colors.potential}>
               {chartData.map((entry, index) => (
-                <Cell key={`cell-potential-${index}`} fill={colors.potential} cursor="pointer" opacity={0.3} />
+                <Cell
+                  key={`cell-potential-${index}`}
+                  fill={colors.potential}
+                  cursor="pointer"
+                  opacity={0.3}
+                />
               ))}
             </Bar>
           </BarChart>
@@ -252,41 +324,71 @@ export function RewardPeriodChart({ data, startDate, endDate }: RewardPeriodChar
               </div>
               <CardContent className="p-4">
                 <div className="text-base font-medium text-islamic-gold mb-3">
-                  {formatDate(activePoint.date)} {t('rewardPeriod.rewardDetails')}
+                  {formatDate(activePoint.date)}{" "}
+                  {t("rewardPeriod.rewardDetails")}
                 </div>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between items-center">
-                    <span className="text-islamic-cream/80">{activePoint.distributed ? t('rewardPeriod.actualReward') : t('rewardPeriod.expectedReward')}:</span>
+                    <span className="text-islamic-cream/80">
+                      {activePoint.distributed
+                        ? t("rewardPeriod.actualReward")
+                        : t("rewardPeriod.expectedReward")}
+                      :
+                    </span>
                     <span
                       className="font-medium text-lg"
-                      style={{ color: activePoint.distributed ? colors.distributed : colors.future }}
+                      style={{
+                        color: activePoint.distributed
+                          ? colors.distributed
+                          : colors.future,
+                      }}
                     >
-                      {activePoint.actual} USDT
+                      {activePoint.actual} USD
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-islamic-cream/80">{t('rewardPeriod.maximumReward')}:</span>
-                    <span className="font-medium text-lg text-islamic-cream">{activePoint.maximum} USDT</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-islamic-cream/80">{t('rewardPeriod.completionRate')}:</span>
+                    <span className="text-islamic-cream/80">
+                      {t("rewardPeriod.maximumReward")}:
+                    </span>
                     <span className="font-medium text-lg text-islamic-cream">
-                      {Math.round((activePoint.actual / activePoint.maximum) * 100)}%
+                      {activePoint.maximum} USD
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-islamic-cream/80">{t('rewardPeriod.difference')}:</span>
+                    <span className="text-islamic-cream/80">
+                      {t("rewardPeriod.completionRate")}:
+                    </span>
+                    <span className="font-medium text-lg text-islamic-cream">
+                      {Math.round(
+                        (activePoint.actual / activePoint.maximum) * 100
+                      )}
+                      %
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-islamic-cream/80">
+                      {t("rewardPeriod.difference")}:
+                    </span>
                     <span className="font-medium text-islamic-cream/80">
-                      {(activePoint.maximum - activePoint.actual).toFixed(2)} USDT
+                      {(activePoint.maximum - activePoint.actual).toFixed(2)}{" "}
+                      <span className="text-xs">USD</span>
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-islamic-cream/80">{t('rewardPeriod.status')}:</span>
+                    <span className="text-islamic-cream/80">
+                      {t("rewardPeriod.status")}:
+                    </span>
                     <span
                       className="font-medium"
-                      style={{ color: activePoint.distributed ? colors.distributed : colors.future }}
+                      style={{
+                        color: activePoint.distributed
+                          ? colors.distributed
+                          : colors.future,
+                      }}
                     >
-                      {activePoint.distributed ? t('rewardPeriod.distributed') : t('rewardPeriod.pending')}
+                      {activePoint.distributed
+                        ? t("rewardPeriod.distributed")
+                        : t("rewardPeriod.pending")}
                     </span>
                   </div>
                 </div>
@@ -296,5 +398,5 @@ export function RewardPeriodChart({ data, startDate, endDate }: RewardPeriodChar
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -2018,6 +2018,14 @@ export default function VipEventsPage() {
                       <p>{t("vipLevel.donationRequirement")}</p>
                       <p>{t("vipLevel.stepByStepUpgrade")}</p>
                       <p>{t("vipLevel.higherBenefits")}</p>
+
+                      <div className="mt-4 pt-3 border-t border-[#d4b96e]/20">
+                        <p>{t("vipLevel.vip1Requirement")}</p>
+                        <p>{t("vipLevel.vip2Requirement")}</p>
+                        <p>{t("vipLevel.vip3Requirement")}</p>
+                        <p>{t("vipLevel.vip4Requirement")}</p>
+                        <p>{t("vipLevel.vip5Requirement")}</p>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

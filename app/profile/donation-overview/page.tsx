@@ -377,7 +377,7 @@ export default function DonationOverviewPage() {
                 {t("donationOverview.withdrawableAmount")}
               </span>
               <span className="text-sm font-medium text-islamic-cream">
-                {user?.rewardAmount || "0"} USDT
+                {user?.rewardAmount || "0"} <span className="text-xs">USD</span>
               </span>
             </div>
 
@@ -386,7 +386,8 @@ export default function DonationOverviewPage() {
                 {t("donationOverview.withdrawnAmount")}
               </span>
               <span className="text-sm font-medium text-islamic-cream">
-                {user?.withdrawAmount || "0"} USDT
+                {user?.withdrawAmount || "0"}{" "}
+                <span className="text-xs">USD</span>
               </span>
             </div>
 

@@ -235,28 +235,28 @@ export function DonationOverview({
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                {/* Current USDT */}
+                {/* Current USD */}
                 <div className="flex items-center">
                   <Coins className="h-5 w-5 text-islamic-gold/90 mr-3" />
                   <div className="text-2xl font-bold text-islamic-gold/95">
                     {safeData.dailyFunds.current}
                   </div>
                   <div className="ml-3 flex flex-col">
-                    <span className="text-xs text-islamic-gold/90">USDT</span>
+                    <span className="text-xs text-islamic-gold/90">USD</span>
                     <span className="text-[10px] text-islamic-cream/60">
                       {t("donation.current")}
                     </span>
                   </div>
                 </div>
 
-                {/* Maximum USDT */}
+                {/* Maximum USD */}
                 <div className="flex items-center">
                   <Target className="h-5 w-5 text-islamic-gold/90 mr-3" />
                   <div className="text-2xl font-bold text-islamic-gold/95">
                     {safeData.dailyFunds.max}
                   </div>
                   <div className="ml-3 flex flex-col">
-                    <span className="text-xs text-islamic-gold/90">USDT</span>
+                    <span className="text-xs text-islamic-gold/90">USD</span>
                     <span className="text-[10px] text-islamic-cream/60">
                       {t("donation.maximum")}
                     </span>

@@ -218,7 +218,7 @@
     "donateButton": "Donate Now"
   },
   "units": {
-    "u": "U"
+    "u": "USD"
   },
   "donationOverview": {
     "myDonations": "My Donations",
@@ -342,6 +342,12 @@
     "donationRequirement": "• Each grade requires the full donation amount, not just the difference",
     "stepByStepUpgrade": "• Each upgrade can only advance one level at a time, no level skipping allowed",
     "higherBenefits": "• Higher grade members enjoy more exclusive activities and priority participation",
+    "vipLevelAdjustment": "VIP Level Adjustment",
+    "vip1Requirement": "• VIP1 can be purchased directly",
+    "vip2Requirement": "• VIP2 requires at least 3 people in the team to purchase VIP2",
+    "vip3Requirement": "• VIP3 requires at least 2 VIP2 members in the team to purchase VIP3",
+    "vip4Requirement": "• VIP4 requires at least 2 VIP3 members in the team to purchase VIP4",
+    "vip5Requirement": "• VIP5 requires at least 2 VIP4 members in the team to purchase VIP5",
     "entryLevel": "Entry-level member",
     "advancedMember": "Advanced member",
     "intermediateMember": "Intermediate member",
