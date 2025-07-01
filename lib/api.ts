@@ -1,4 +1,3 @@
-import { LoginCredentials, RegisterCredentials } from "@/store/auth-types";
 import { emitApiError } from "@/components/api-error-handler";
 import { ENV } from "@/lib/env-config";
 
@@ -59,7 +58,9 @@ export interface DonateRequest {
   chain: string;
   amount: string;
   token_type: string;
-  remark: string;
+  from_address: string;
+  to_address: string;
+  tx_hash: string;
 }
 
 /**
@@ -69,7 +70,7 @@ export interface WithdrawRequest {
   chain: string;
   amount: string;
   token_type: string;
-  remark: string;
+  to_address: string;
 }
 
 /**
@@ -301,16 +302,20 @@ export async function logoutUser(): Promise<ApiResponse<LogoutResponse>> {
  * User donate
  */
 export async function donateAmount(
-  chain: string,
-  amount: string,
-  tokenType: string = "USD",
-  remark: string = ""
+  chain: string, 
+  amount: string, 
+  tokenType: string, 
+  fromAddress: string, 
+  toAddress: string, 
+  txHash: string
 ): Promise<ApiResponse<DonateResponse>> {
   const donateData: DonateRequest = {
     chain,
     amount,
     token_type: tokenType,
-    remark,
+    from_address: fromAddress,
+    to_address: toAddress,
+    tx_hash: txHash
   };
 
   return apiRequest<DonateResponse>("/user/donate", "POST", donateData);
@@ -327,8 +332,8 @@ export async function withdrawAmount(
   const withdrawData: WithdrawRequest = {
     chain,
     amount,
-    token_type: "USD",
-    remark: walletAddress,
+    token_type: "USDT",
+    to_address: walletAddress,
   };
 
   return apiRequest<WithdrawResponse>("/user/withdraw", "POST", withdrawData);

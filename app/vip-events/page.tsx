@@ -7,6 +7,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/store/use-auth";
+import { useVipInfo } from "@/store/use-vip-info";
+import { useAuthContext } from "@/store/auth-context";
+import { PaymentDialog } from "@/components/payment-dialog";
 import {
   Play,
   Calendar,
@@ -421,48 +424,56 @@ export default function VipEventsPage() {
   const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryType>("member");
+  const [paymentOpen, setPaymentOpen] = useState(false);
 
-  // 获取真实用户数据
+  // 获取真实用户数据和VIP配置
   const { user, isAuthenticated } = useAuth();
+  const { openLoginModal } = useAuthContext();
+  const { 
+    getVipLevelDonationAmount, 
+    getDailyFundRangeForLevel,
+    getVipLevelRewardRates 
+  } = useVipInfo();
+  
+  // 计算升级所需金额和进度
+  const currentVipLevel = user?.vipLevel || 1;
+  const currentDonation = user?.donateAmount ? parseFloat(user.donateAmount) : 100;
+  const withdrawableAmount = user?.rewardAmount ? parseFloat(user.rewardAmount) : 0;
+  
+  // 从配置获取下一等级所需金额
+  const nextLevel = currentVipLevel < 5 ? currentVipLevel + 1 : 5;
+  const nextLevelAmount = getVipLevelDonationAmount(nextLevel);
+  
+  const upgradeProgress = currentVipLevel === 5
+    ? 100 // 已经是最高等级
+    : Math.min((currentDonation / nextLevelAmount) * 100, 100);
+  
   const userData = {
     username: user?.username || "艾哈迈德",
-    vipLevel: user?.vipLevel || 1,
-    currentDonation: user?.donateAmount ? parseFloat(user.donateAmount) : 100,
-    nextLevelAmount:
-      user?.vipLevel === 5
-        ? 1200
-        : user?.vipLevel === 4
-        ? 1200
-        : user?.vipLevel === 3
-        ? 800
-        : user?.vipLevel === 2
-        ? 500
-        : 300,
-    upgradeProgress:
-      user?.vipLevel === 5
-        ? 100
-        : Math.min(
-            ((user?.donateAmount ? parseFloat(user.donateAmount) : 100) /
-              (user?.vipLevel === 4
-                ? 1200
-                : user?.vipLevel === 3
-                ? 800
-                : user?.vipLevel === 2
-                ? 500
-                : 300)) *
-              100,
-            100
-          ),
+    vipLevel: currentVipLevel,
+    currentDonation,
+    withdrawableAmount,
+    nextLevelAmount,
+    upgradeProgress,
     nextLevelName:
-      user?.vipLevel === 5
+      currentVipLevel === 5
         ? t("vip.level5")
-        : user?.vipLevel === 4
+        : currentVipLevel === 4
         ? t("vip.level5")
-        : user?.vipLevel === 3
+        : currentVipLevel === 3
         ? t("vip.level4")
-        : user?.vipLevel === 2
+        : currentVipLevel === 2
         ? t("vip.level3")
         : t("vip.level2"),
+  };
+
+  // 处理升级按钮点击
+  const handleUpgrade = () => {
+    if (isAuthenticated) {
+      setPaymentOpen(true);
+    } else {
+      openLoginModal("/vip-events");
+    }
   };
 
   // 获取翻译后的事件数据
@@ -728,7 +739,8 @@ export default function VipEventsPage() {
                       </div>
                       <div>
                         <div className="text-base font-bold text-green-400 flex items-baseline">
-                          60<span className="text-xs ml-1">USD</span>
+                          {userData.withdrawableAmount}
+                          <span className="text-xs ml-1">USD</span>
                         </div>
                         <div className="text-xs text-[#f5efe0]/60">
                           {t("donationOverview.withdrawableAmount")}
@@ -742,7 +754,10 @@ export default function VipEventsPage() {
               {/* 升级按钮 */}
               <div className="mt-3">
                 {userData.vipLevel < 5 ? (
-                  <Button className="w-full bg-gradient-to-r from-[#d4b96e] to-[#b39339] text-[#1a1f2c] hover:opacity-90 transition-opacity py-1.5">
+                  <Button 
+                    className="w-full bg-gradient-to-r from-[#d4b96e] to-[#b39339] text-[#1a1f2c] hover:opacity-90 transition-opacity py-1.5"
+                    onClick={handleUpgrade}
+                  >
                     {userData.vipLevel === 1 && t("vipLevel.upgradeToLevel2")}
                     {userData.vipLevel === 2 && t("vipLevel.upgradeToLevel3")}
                     {userData.vipLevel === 3 && t("vipLevel.upgradeToLevel4")}
@@ -1043,7 +1058,7 @@ export default function VipEventsPage() {
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
                     <Badge className="absolute top-4 right-4 bg-[#D2691E]/20 text-[#D2691E] border-[#D2691E]/30 flex items-baseline">
-                      100<span className="text-xs ml-1">USD</span>
+                      {getVipLevelDonationAmount(1)}<span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -1159,7 +1174,7 @@ export default function VipEventsPage() {
                         <p className="text-xs text-[#f5efe0]/70">
                           {t("vipLevel.cumulativeDonation").replace(
                             "{amount}",
-                            "100"
+                            getVipLevelDonationAmount(1).toString()
                           )}
                           <span className="text-xs ml-1">USD</span>
                         </p>
@@ -1173,8 +1188,7 @@ export default function VipEventsPage() {
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#D2691E]" />
                             <span>
-                              {t("vipLevel.dailyReliefFund")}: 1.2-3
-                              <span className="text-xs ml-1">USD</span>
+                              {t("vipLevel.dailyReliefFund")}: {getDailyFundRangeForLevel(1)}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
@@ -1202,7 +1216,7 @@ export default function VipEventsPage() {
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
                     <Badge className="absolute top-4 right-4 bg-[#CD7F32]/20 text-[#CD7F32] border-[#CD7F32]/30 flex items-baseline">
-                      300<span className="text-xs ml-1">USD</span>
+                      {getVipLevelDonationAmount(2)}<span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -1319,7 +1333,7 @@ export default function VipEventsPage() {
                         <p className="text-xs text-[#f5efe0]/70">
                           {t("vipLevel.cumulativeDonation").replace(
                             "{amount}",
-                            "300"
+                            getVipLevelDonationAmount(2).toString()
                           )}
                           <span className="text-xs ml-1">USD</span>
                         </p>
@@ -1333,8 +1347,7 @@ export default function VipEventsPage() {
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#CD7F32]" />
                             <span>
-                              {t("vipLevel.dailyReliefFund")}: 3.6-9
-                              <span className="text-xs ml-1">USD</span>
+                              {t("vipLevel.dailyReliefFund")}: {getDailyFundRangeForLevel(2)}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
@@ -1363,7 +1376,7 @@ export default function VipEventsPage() {
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
                     <Badge className="absolute top-4 right-4 bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/30 flex items-baseline">
-                      500<span className="text-xs ml-1">USD</span>
+                      {getVipLevelDonationAmount(3)}<span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -1496,7 +1509,7 @@ export default function VipEventsPage() {
                         <p className="text-xs text-[#f5efe0]/70">
                           {t("vipLevel.cumulativeDonation").replace(
                             "{amount}",
-                            "500"
+                            getVipLevelDonationAmount(3).toString()
                           )}
                           <span className="text-xs ml-1">USD</span>
                         </p>
@@ -1510,8 +1523,7 @@ export default function VipEventsPage() {
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#E6E6FA]" />
                             <span>
-                              {t("vipLevel.dailyReliefFund")}: 14.4-36
-                              <span className="text-xs ml-1">USD</span>
+                              {t("vipLevel.dailyReliefFund")}: {getDailyFundRangeForLevel(3)}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
@@ -1553,7 +1565,7 @@ export default function VipEventsPage() {
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
                     <Badge className="absolute top-4 right-4 bg-[#B8860B]/20 text-[#B8860B] border-[#B8860B]/30 flex items-baseline">
-                      800<span className="text-xs ml-1">USD</span>
+                      {getVipLevelDonationAmount(4)}<span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -1708,7 +1720,7 @@ export default function VipEventsPage() {
                         <p className="text-xs text-[#f5efe0]/70">
                           {t("vipLevel.cumulativeDonation").replace(
                             "{amount}",
-                            "800"
+                            getVipLevelDonationAmount(4).toString()
                           )}
                           <span className="text-xs ml-1">USD</span>
                         </p>
@@ -1722,8 +1734,7 @@ export default function VipEventsPage() {
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#9370DB]" />
                             <span>
-                              {t("vipLevel.dailyReliefFund")}: 24-60
-                              <span className="text-xs ml-1">USD</span>
+                              {t("vipLevel.dailyReliefFund")}: {getDailyFundRangeForLevel(4)}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
@@ -1770,7 +1781,7 @@ export default function VipEventsPage() {
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
                     <Badge className="absolute top-4 right-4 bg-[#F8F8FF]/20 text-[#F8F8FF] border-[#F8F8FF]/30 flex items-baseline">
-                      1500<span className="text-xs ml-1">USD</span>
+                      {getVipLevelDonationAmount(5)}<span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -1922,7 +1933,7 @@ export default function VipEventsPage() {
                         <p className="text-xs text-[#f5efe0]/70">
                           {t("vipLevel.cumulativeDonation").replace(
                             "{amount}",
-                            "1200"
+                            getVipLevelDonationAmount(5).toString()
                           )}
                           <span className="text-xs ml-1">USD</span>
                         </p>
@@ -1936,8 +1947,7 @@ export default function VipEventsPage() {
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#F8F8FF]" />
                             <span>
-                              {t("vipLevel.dailyReliefFund")}: 45-120
-                              <span className="text-xs ml-1">USD</span>
+                              {t("vipLevel.dailyReliefFund")}: {getDailyFundRangeForLevel(5)}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
@@ -2128,6 +2138,14 @@ export default function VipEventsPage() {
           )}
         </div>
       </div>
+
+      {/* 支付对话框 */}
+      <PaymentDialog
+        open={paymentOpen}
+        onOpenChange={setPaymentOpen}
+        currentVipLevel={userData.vipLevel}
+        nextLevelAmount={userData.nextLevelAmount}
+      />
     </MainLayout>
   );
 }

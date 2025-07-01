@@ -94,8 +94,6 @@ export function useVipInfo() {
     return amountNeeded;
   };
 
-  // 兼容旧版API，保持向后兼容性
-
   /**
    * 获取指定VIP等级的每日基金范围（兼容旧版API）
    */

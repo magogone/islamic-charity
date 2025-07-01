@@ -18,7 +18,7 @@ export default function RegisterForm() {
   const [name, setName] = useState("")
   const [password, setPassword] = useState("")
   const [repeatPassword, setRepeatPassword] = useState("")
-  const [inviteCode, setInviteCode] = useState(searchParams.get('invite') || "")
+  const [inviteCode, setInviteCode] = useState("")
   
   // Email verification states
   const [verificationCode, setVerificationCode] = useState("")
@@ -41,6 +41,18 @@ export default function RegisterForm() {
       if (interval) clearInterval(interval)
     }
   }, [countdown])
+
+  // Get invite code from URL on component mount
+  useEffect(() => {
+    try {
+      const codeFromUrl = searchParams.get('code')
+      if (codeFromUrl) {
+        setInviteCode(codeFromUrl)
+      }
+    } catch (err) {
+      console.error("Error accessing URL parameters:", err)
+    }
+  }, [searchParams])
 
   // Handle sending verification code
   const handleSendVerificationCode = async () => {
