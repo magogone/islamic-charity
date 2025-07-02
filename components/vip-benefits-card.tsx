@@ -116,37 +116,8 @@ export function VipBenefitsCard({ vipLevel, className }: VipBenefitsCardProps) {
             <h4 className="text-sm font-medium text-islamic-gold mb-2">
               {t("donation.referralRewards")}
             </h4>
-            <div className="grid grid-cols-3 gap-2 text-xs">
-              <div className="flex flex-col items-center p-2 bg-islamic-dark/30 rounded-lg">
-                <span className="text-islamic-cream/70">
-                  {t("donation.generation1")}
-                </span>
-                <span className="text-[#8dc63f] font-medium mt-1">
-                  {rewardRates.level1}%
-                </span>
-              </div>
-              <div className="flex flex-col items-center p-2 bg-islamic-dark/30 rounded-lg">
-                <span className="text-islamic-cream/70">
-                  {t("donation.generation2")}
-                </span>
-                <span className="text-[#8dc63f] font-medium mt-1">
-                  {rewardRates.level2}%
-                </span>
-              </div>
-              <div className="flex flex-col items-center p-2 bg-islamic-dark/30 rounded-lg">
-                <span className="text-islamic-cream/70">
-                  {t("donation.generation3to5")}
-                </span>
-                <span className="text-[#8dc63f] font-medium mt-1">
-                  {rewardRates.level3}%
-                </span>
-              </div>
-            </div>
-            <div className="mt-2 text-xs text-right">
-              <span className="text-islamic-cream/70">
-                {t("donation.totalRewardRate")}:{" "}
-              </span>
-              <span className="text-[#8dc63f] font-medium">
+            <div className="flex items-center justify-center p-4 bg-islamic-dark/30 rounded-lg">
+              <span className="text-2xl font-bold text-[#8dc63f]">
                 {rewardRates.total}%
               </span>
             </div>

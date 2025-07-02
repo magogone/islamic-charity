@@ -279,7 +279,7 @@ const initialState: StoreState = {
         },
         donationAmount: 100,
         totalReturn: 120,
-        dailyFundRange: "1.2-3 USD",
+        dailyFundRange: "1.2-3.0 USD",
         period: 40,
       },
       2: {
@@ -293,7 +293,7 @@ const initialState: StoreState = {
         },
         donationAmount: 300,
         totalReturn: 360,
-        dailyFundRange: "3.6-9 USD",
+        dailyFundRange: "3.6-9.0 USD",
         period: 40,
       },
       3: {
@@ -307,7 +307,7 @@ const initialState: StoreState = {
         },
         donationAmount: 500,
         totalReturn: 600,
-        dailyFundRange: "6-15 USD",
+        dailyFundRange: "6.0-15.0 USD",
         period: 40,
       },
       4: {
@@ -321,7 +321,7 @@ const initialState: StoreState = {
         },
         donationAmount: 800,
         totalReturn: 960,
-        dailyFundRange: "9.6-24 USD",
+        dailyFundRange: "9.6-24.0 USD",
         period: 40,
       },
       5: {
@@ -335,7 +335,7 @@ const initialState: StoreState = {
         },
         donationAmount: 1200,
         totalReturn: 1440,
-        dailyFundRange: "14.4-36 USD",
+        dailyFundRange: "14.4-36.0 USD",
         period: 40,
       },
     },

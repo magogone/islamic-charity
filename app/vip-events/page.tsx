@@ -1319,12 +1319,7 @@ export default function VipEventsPage() {
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#D2691E]" />
-                            <span>
-                              {t("vipLevel.referralReward")}: 10%{" "}
-                              {t("vipLevel.generation1")} + 4%{" "}
-                              {t("vipLevel.generation2")} + 2%{" "}
-                              {t("vipLevel.generation3to5")}
-                            </span>
+                            <span>{t("vipLevel.referralReward")}: 20%</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#D2691E]" />
@@ -1482,12 +1477,7 @@ export default function VipEventsPage() {
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#CD7F32]" />
-                            <span>
-                              {t("vipLevel.referralReward")}: 12%{" "}
-                              {t("vipLevel.generation1")} + 4%{" "}
-                              {t("vipLevel.generation2")} + 2%{" "}
-                              {t("vipLevel.generation3to5")}
-                            </span>
+                            <span>{t("vipLevel.referralReward")}: 22%</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#CD7F32]" />
@@ -1661,12 +1651,7 @@ export default function VipEventsPage() {
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#E6E6FA]" />
-                            <span>
-                              {t("vipLevel.referralReward")}: 14%{" "}
-                              {t("vipLevel.generation1")} + 4%{" "}
-                              {t("vipLevel.generation2")} + 2%{" "}
-                              {t("vipLevel.generation3to5")}
-                            </span>
+                            <span>{t("vipLevel.referralReward")}: 24%</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#E6E6FA]" />
@@ -1874,12 +1859,7 @@ export default function VipEventsPage() {
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#9370DB]" />
-                            <span>
-                              {t("vipLevel.referralReward")}: 16%{" "}
-                              {t("vipLevel.generation1")} + 4%{" "}
-                              {t("vipLevel.generation2")} + 2%{" "}
-                              {t("vipLevel.generation3to5")}
-                            </span>
+                            <span>{t("vipLevel.referralReward")}: 26%</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#9370DB]" />
@@ -2088,12 +2068,7 @@ export default function VipEventsPage() {
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#F8F8FF]" />
-                            <span>
-                              {t("vipLevel.referralReward")}: 20%{" "}
-                              {t("vipLevel.generation1")} + 4%{" "}
-                              {t("vipLevel.generation2")} + 2%{" "}
-                              {t("vipLevel.generation3to5")}
-                            </span>
+                            <span>{t("vipLevel.referralReward")}: 30%</span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#F8F8FF]" />

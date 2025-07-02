@@ -129,61 +129,16 @@ export function VipLevelDetail({
             </TooltipProvider>
           </div>
           <div className="bg-islamic-medium/30 rounded-lg p-4">
-            <div className="grid grid-cols-5 gap-2 mb-3">
+            <div className="flex justify-center items-center">
               <div className="text-center">
-                <p className="text-sm text-islamic-cream/70 mb-1">1代</p>
-                <p className="text-xl font-semibold text-[#8bc34a]">
-                  {rewardRates.level1}%
+                <p className="text-sm text-islamic-cream/70 mb-2">总奖励比例</p>
+                <p className="text-3xl font-bold text-[#8bc34a]">
+                  {rewardRates.total}%
                 </p>
-                <p className="text-xs text-islamic-cream/60">
-                  / {maxRewardRates.level1}%
+                <p className="text-xs text-islamic-cream/60 mt-1">
+                  最高可达 {maxRewardRates.total}%
                 </p>
               </div>
-              <div className="text-center">
-                <p className="text-sm text-islamic-cream/70 mb-1">2代</p>
-                <p className="text-xl font-semibold text-[#8bc34a]">
-                  {rewardRates.level2}%
-                </p>
-                <p className="text-xs text-islamic-cream/60">
-                  / {maxRewardRates.level2}%
-                </p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-islamic-cream/70 mb-1">3代</p>
-                <p className="text-xl font-semibold text-[#8bc34a]">
-                  {rewardRates.level3}%
-                </p>
-                <p className="text-xs text-islamic-cream/60">
-                  / {maxRewardRates.level3}%
-                </p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-islamic-cream/70 mb-1">4代</p>
-                <p className="text-xl font-semibold text-[#8bc34a]">
-                  {rewardRates.level4}%
-                </p>
-                <p className="text-xs text-islamic-cream/60">
-                  / {maxRewardRates.level4}%
-                </p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-islamic-cream/70 mb-1">5代</p>
-                <p className="text-xl font-semibold text-[#8bc34a]">
-                  {rewardRates.level5}%
-                </p>
-                <p className="text-xs text-islamic-cream/60">
-                  / {maxRewardRates.level5}%
-                </p>
-              </div>
-            </div>
-            <div className="flex justify-end items-center mt-3">
-              <p className="text-sm text-islamic-cream/70">总奖励比例:</p>
-              <p className="text-lg font-semibold text-[#8bc34a] ml-2">
-                {rewardRates.total}%
-              </p>
-              <p className="text-xs text-islamic-cream/60 ml-1">
-                / {maxRewardRates.total}%
-              </p>
             </div>
           </div>
         </div>

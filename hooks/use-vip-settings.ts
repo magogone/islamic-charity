@@ -56,17 +56,17 @@ function calculateDerivedValues(
   threshold: number,
   reliefFundRates?: ReliefFundRates
 ) {
-  // Default values if reliefFundRates is not provided yet
-  const minRate = reliefFundRates?.noReferral || 1;
-  const maxRate = reliefFundRates?.referral5 || 2.5;
+  // New calculation: 捐款金额 * 1.2 * 1% to 捐款金额 * 1.2 * 2.5%
+  const baseAmount = threshold * 1.2;
+  const minDailyFund = baseAmount * 0.01; // 1%
+  const maxDailyFund = baseAmount * 0.025; // 2.5%
 
-  // Total return calculation based on the minimum percentage
-  // This represents what users will get over time with no referrals
+  // Total return calculation remains the same
   const totalReturn = threshold * 1.2;
 
   return {
     totalReturn,
-    dailyFundRange: `${minRate}-${maxRate} USD`,
+    dailyFundRange: `${minDailyFund.toFixed(1)}-${maxDailyFund.toFixed(1)} USD`,
   };
 }
 

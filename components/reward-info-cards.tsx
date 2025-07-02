@@ -124,43 +124,10 @@ export function RewardInfoCards({
             )}
           </div>
 
-          <div className="grid grid-cols-5 gap-1 mb-2">
-            <div className="text-center">
-              <div className="text-xs text-islamic-cream/70">1代</div>
-              <div className="text-sm font-medium text-islamic-gold">
-                {referralReward.current.level1}%
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-xs text-islamic-cream/70">2代</div>
-              <div className="text-sm font-medium text-islamic-gold">
-                {referralReward.current.level2}%
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-xs text-islamic-cream/70">3代</div>
-              <div className="text-sm font-medium text-islamic-gold">
-                {referralReward.current.level3}%
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-xs text-islamic-cream/70">4代</div>
-              <div className="text-sm font-medium text-islamic-gold">
-                {referralReward.current.level4}%
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-xs text-islamic-cream/70">5代</div>
-              <div className="text-sm font-medium text-islamic-gold">
-                {referralReward.current.level5}%
-              </div>
-            </div>
-          </div>
-
           <div className="flex items-center justify-between">
-            <span className="text-xs text-islamic-cream/70">总计</span>
+            <span className="text-sm text-islamic-cream/70">总奖励比例</span>
             <div className="flex items-center">
-              <span className="text-sm font-medium text-islamic-gold">
+              <span className="text-lg font-bold text-islamic-gold">
                 {referralReward.current.total}%
               </span>
               <span className="text-xs text-islamic-cream/60 ml-1">
