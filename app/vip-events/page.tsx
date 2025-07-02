@@ -65,7 +65,7 @@ const VipBadge = ({ vipLevel }: { vipLevel: number }) => {
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" />
                   </svg>
                 </div>
               </div>
@@ -468,40 +468,52 @@ export default function VipEventsPage() {
   const { user, isAuthenticated, getCurrentUser } = useAuth();
   const { openLoginModal } = useAuthContext();
   const { toast } = useToast();
-  const { 
-    getVipLevelDonationAmount, 
+  const {
+    getVipLevelDonationAmount,
     getDailyFundRangeForLevel,
-    getVipLevelRewardRates 
+    getVipLevelRewardRates,
   } = useVipInfo();
-  
+
   // 计算升级所需金额和进度
   const currentVipLevel = user?.vipLevel ?? 0; // 允许等级为0，表示未获取
-  const currentDonation = user?.donateAmount ? parseFloat(user.donateAmount) : 0;
-  const withdrawableAmount = user?.rewardAmount ? parseFloat(user.rewardAmount) : 0;
-  
+  const currentDonation = user?.donateAmount
+    ? parseFloat(user.donateAmount)
+    : 0;
+  const withdrawableAmount = user?.rewardAmount
+    ? parseFloat(user.rewardAmount)
+    : 0;
+
   // 从配置获取下一等级所需金额
   const nextLevel = currentVipLevel < 5 ? currentVipLevel + 1 : 5;
   const nextLevelAmount = getVipLevelDonationAmount(nextLevel);
-  
-  const upgradeProgress = currentVipLevel === 5
-    ? 100 // 已经是最高等级
-    : currentVipLevel === 0
-    ? 0 // 未获取等级时进度为0
-    : Math.min((currentDonation / nextLevelAmount) * 100, 100);
-  
+
+  const upgradeProgress =
+    currentVipLevel === 5
+      ? 100 // 已经是最高等级
+      : currentVipLevel === 0
+      ? 0 // 未获取等级时进度为0
+      : Math.min((currentDonation / nextLevelAmount) * 100, 100);
+
   // 获取等级显示名称
   const getVipLevelName = (level: number) => {
     switch (level) {
-      case 0: return t("vip.level0");
-      case 1: return t("vip.level1");
-      case 2: return t("vip.level2");
-      case 3: return t("vip.level3");
-      case 4: return t("vip.level4");
-      case 5: return t("vip.level5");
-      default: return t("vip.level0");
+      case 0:
+        return t("vip.level0");
+      case 1:
+        return t("vip.level1");
+      case 2:
+        return t("vip.level2");
+      case 3:
+        return t("vip.level3");
+      case 4:
+        return t("vip.level4");
+      case 5:
+        return t("vip.level5");
+      default:
+        return t("vip.level0");
     }
   };
-  
+
   const userData = {
     username: user?.username || "艾哈迈德",
     vipLevel: currentVipLevel,
@@ -526,43 +538,50 @@ export default function VipEventsPage() {
     try {
       setIsUpgrading(true);
       const response = await upgradeVipLevel();
-      
+
       if (response.success && response.data) {
-        const { success: upgradeSuccess, current_vip, new_vip, is_max_level } = response.data;
-        
+        const {
+          success: upgradeSuccess,
+          current_vip,
+          new_vip,
+          is_max_level,
+        } = response.data;
+
         if (upgradeSuccess) {
           // 构造成功消息
           let successMessage = `${t("vipLevel.upgradeSuccess")}`;
           if (new_vip > current_vip) {
-            successMessage += ` ${t("vipLevel.upgradeTo")} VIP ${new_vip}${t("vipLevel.level")}！`;
+            successMessage += ` ${t("vipLevel.upgradeTo")} VIP ${new_vip}${t(
+              "vipLevel.level"
+            )}！`;
           }
           if (is_max_level) {
             successMessage += ` ${t("vipLevel.reachedMaxLevel")}`;
           }
-          
+
           toast({
             description: successMessage,
-            variant: "default"
+            variant: "default",
           });
           // 刷新用户数据
           await getCurrentUser();
         } else {
           toast({
             description: t("vipLevel.upgradeFailed"),
-            variant: "destructive"
+            variant: "destructive",
           });
         }
       } else {
         toast({
           description: response.error?.message || t("vipLevel.upgradeFailed"),
-          variant: "destructive"
+          variant: "destructive",
         });
       }
     } catch (err) {
       console.error("VIP升级错误:", err);
       toast({
         description: t("vipLevel.upgradeNetworkError"),
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsUpgrading(false);
@@ -843,7 +862,7 @@ export default function VipEventsPage() {
               {/* 升级按钮 */}
               <div className="mt-3">
                 {userData.vipLevel < 5 ? (
-                  <Button 
+                  <Button
                     className="w-full bg-gradient-to-r from-[#d4b96e] to-[#b39339] text-[#1a1f2c] hover:opacity-90 transition-opacity py-1.5"
                     onClick={handleUpgrade}
                     disabled={isUpgrading}
@@ -855,11 +874,16 @@ export default function VipEventsPage() {
                       </>
                     ) : (
                       <>
-                        {userData.vipLevel === 0 && t("vipLevel.upgradeToLevel1")}
-                        {userData.vipLevel === 1 && t("vipLevel.upgradeToLevel2")}
-                        {userData.vipLevel === 2 && t("vipLevel.upgradeToLevel3")}
-                        {userData.vipLevel === 3 && t("vipLevel.upgradeToLevel4")}
-                        {userData.vipLevel === 4 && t("vipLevel.upgradeToLevel5")}
+                        {userData.vipLevel === 0 &&
+                          t("vipLevel.upgradeToLevel1")}
+                        {userData.vipLevel === 1 &&
+                          t("vipLevel.upgradeToLevel2")}
+                        {userData.vipLevel === 2 &&
+                          t("vipLevel.upgradeToLevel3")}
+                        {userData.vipLevel === 3 &&
+                          t("vipLevel.upgradeToLevel4")}
+                        {userData.vipLevel === 4 &&
+                          t("vipLevel.upgradeToLevel5")}
                       </>
                     )}
                   </Button>
@@ -1158,7 +1182,8 @@ export default function VipEventsPage() {
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
                     <Badge className="absolute top-4 right-4 bg-[#D2691E]/20 text-[#D2691E] border-[#D2691E]/30 flex items-baseline">
-                      {getVipLevelDonationAmount(1)}<span className="text-xs ml-1">USD</span>
+                      {getVipLevelDonationAmount(1)}
+                      <span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -1288,20 +1313,23 @@ export default function VipEventsPage() {
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#D2691E]" />
                             <span>
-                              {t("vipLevel.dailyReliefFund")}: {getDailyFundRangeForLevel(1)}
+                              {t("vipLevel.dailyReliefFund")}:{" "}
+                              {getDailyFundRangeForLevel(1)}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#D2691E]" />
                             <span>
                               {t("vipLevel.referralReward")}: 10%{" "}
-                              {t("vipLevel.generation1")}
+                              {t("vipLevel.generation1")} + 4%{" "}
+                              {t("vipLevel.generation2")} + 2%{" "}
+                              {t("vipLevel.generation3to5")}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#D2691E]" />
                             <span>
-                              {t("vipLevel.rewardCycle")}: 50
+                              {t("vipLevel.rewardCycle")}: 40
                               {t("vipLevel.days")}
                             </span>
                           </li>
@@ -1316,7 +1344,8 @@ export default function VipEventsPage() {
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
                     <Badge className="absolute top-4 right-4 bg-[#CD7F32]/20 text-[#CD7F32] border-[#CD7F32]/30 flex items-baseline">
-                      {getVipLevelDonationAmount(2)}<span className="text-xs ml-1">USD</span>
+                      {getVipLevelDonationAmount(2)}
+                      <span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -1447,21 +1476,23 @@ export default function VipEventsPage() {
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#CD7F32]" />
                             <span>
-                              {t("vipLevel.dailyReliefFund")}: {getDailyFundRangeForLevel(2)}
+                              {t("vipLevel.dailyReliefFund")}:{" "}
+                              {getDailyFundRangeForLevel(2)}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#CD7F32]" />
                             <span>
-                              {t("vipLevel.referralReward")}: 10%{" "}
+                              {t("vipLevel.referralReward")}: 12%{" "}
                               {t("vipLevel.generation1")} + 4%{" "}
-                              {t("vipLevel.generation2")}
+                              {t("vipLevel.generation2")} + 2%{" "}
+                              {t("vipLevel.generation3to5")}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#CD7F32]" />
                             <span>
-                              {t("vipLevel.rewardCycle")}: 50
+                              {t("vipLevel.rewardCycle")}: 40
                               {t("vipLevel.days")}
                             </span>
                           </li>
@@ -1476,7 +1507,8 @@ export default function VipEventsPage() {
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
                     <Badge className="absolute top-4 right-4 bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/30 flex items-baseline">
-                      {getVipLevelDonationAmount(3)}<span className="text-xs ml-1">USD</span>
+                      {getVipLevelDonationAmount(3)}
+                      <span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -1623,22 +1655,23 @@ export default function VipEventsPage() {
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#E6E6FA]" />
                             <span>
-                              {t("vipLevel.dailyReliefFund")}: {getDailyFundRangeForLevel(3)}
+                              {t("vipLevel.dailyReliefFund")}:{" "}
+                              {getDailyFundRangeForLevel(3)}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#E6E6FA]" />
                             <span>
-                              {t("vipLevel.referralReward")}: 15%{" "}
-                              {t("vipLevel.generation1")} + 6%{" "}
-                              {t("vipLevel.generation2")} + 3%{" "}
+                              {t("vipLevel.referralReward")}: 14%{" "}
+                              {t("vipLevel.generation1")} + 4%{" "}
+                              {t("vipLevel.generation2")} + 2%{" "}
                               {t("vipLevel.generation3to5")}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#E6E6FA]" />
                             <span>
-                              {t("vipLevel.rewardCycle")}: 50
+                              {t("vipLevel.rewardCycle")}: 40
                               {t("vipLevel.days")}
                             </span>
                           </li>
@@ -1665,7 +1698,8 @@ export default function VipEventsPage() {
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
                     <Badge className="absolute top-4 right-4 bg-[#B8860B]/20 text-[#B8860B] border-[#B8860B]/30 flex items-baseline">
-                      {getVipLevelDonationAmount(4)}<span className="text-xs ml-1">USD</span>
+                      {getVipLevelDonationAmount(4)}
+                      <span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -1834,23 +1868,23 @@ export default function VipEventsPage() {
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#9370DB]" />
                             <span>
-                              {t("vipLevel.dailyReliefFund")}: {getDailyFundRangeForLevel(4)}
+                              {t("vipLevel.dailyReliefFund")}:{" "}
+                              {getDailyFundRangeForLevel(4)}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#9370DB]" />
                             <span>
-                              {t("vipLevel.referralReward")}: 20%{" "}
-                              {t("vipLevel.generation1")} + 8%{" "}
-                              {t("vipLevel.generation2")} + 5%{" "}
-                              {t("vipLevel.generation3to5")} + 2%{" "}
-                              {t("vipLevel.generation6to10")}
+                              {t("vipLevel.referralReward")}: 16%{" "}
+                              {t("vipLevel.generation1")} + 4%{" "}
+                              {t("vipLevel.generation2")} + 2%{" "}
+                              {t("vipLevel.generation3to5")}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#9370DB]" />
                             <span>
-                              {t("vipLevel.rewardCycle")}: 50
+                              {t("vipLevel.rewardCycle")}: 40
                               {t("vipLevel.days")}
                             </span>
                           </li>
@@ -1881,7 +1915,8 @@ export default function VipEventsPage() {
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
                     <Badge className="absolute top-4 right-4 bg-[#F8F8FF]/20 text-[#F8F8FF] border-[#F8F8FF]/30 flex items-baseline">
-                      {getVipLevelDonationAmount(5)}<span className="text-xs ml-1">USD</span>
+                      {getVipLevelDonationAmount(5)}
+                      <span className="text-xs ml-1">USD</span>
                     </Badge>
 
                     <div className="flex items-start mb-4">
@@ -2047,24 +2082,23 @@ export default function VipEventsPage() {
                           <li className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3 text-[#F8F8FF]" />
                             <span>
-                              {t("vipLevel.dailyReliefFund")}: {getDailyFundRangeForLevel(5)}
+                              {t("vipLevel.dailyReliefFund")}:{" "}
+                              {getDailyFundRangeForLevel(5)}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Gift className="h-3 w-3 text-[#F8F8FF]" />
                             <span>
-                              {t("vipLevel.referralReward")}: 25%{" "}
-                              {t("vipLevel.generation1")} + 12%{" "}
-                              {t("vipLevel.generation2")} + 8%{" "}
-                              {t("vipLevel.generation3to5")} + 5%{" "}
-                              {t("vipLevel.generation6to10")} + 2%{" "}
-                              {t("vipLevel.unlimitedGen")}
+                              {t("vipLevel.referralReward")}: 20%{" "}
+                              {t("vipLevel.generation1")} + 4%{" "}
+                              {t("vipLevel.generation2")} + 2%{" "}
+                              {t("vipLevel.generation3to5")}
                             </span>
                           </li>
                           <li className="flex items-center space-x-2">
                             <Target className="h-3 w-3 text-[#F8F8FF]" />
                             <span>
-                              {t("vipLevel.rewardCycle")}: 50
+                              {t("vipLevel.rewardCycle")}: 40
                               {t("vipLevel.days")}
                             </span>
                           </li>
@@ -2238,7 +2272,6 @@ export default function VipEventsPage() {
           )}
         </div>
       </div>
-
     </MainLayout>
   );
 }
