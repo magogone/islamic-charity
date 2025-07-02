@@ -164,13 +164,6 @@
     "toVip": "{amount}USD إلى {level}",
     "fullAmountRequired": "المبلغ الكامل مطلوب لـ {level}، وليس فقط الفرق"
   },
-  "vip": {
-    "level1": "البراق",
-    "level2": "بدر",
-    "level3": "المنتهى",
-    "level4": "المعراج",
-    "level5": "الإحسان"
-  },
   "payment": {
     "paymentInformation": "معلومات الدفع",
     "connectWallet": "اربط المحفظة للتبرع",
@@ -374,10 +367,18 @@
     "upgradeProgress": "تقدم الترقية",
     "upgradeToV5": "ترقية بنقرة واحدة إلى المستوى الخامس",
     "upgradeToNext": "ترقية إلى {level}",
+    "upgradeToLevel1": "ترقية إلى البراق",
     "upgradeToLevel2": "ترقية إلى بدر",
     "upgradeToLevel3": "ترقية إلى منتهى",
     "upgradeToLevel4": "ترقية إلى معراج",
     "upgradeToLevel5": "ترقية إلى الخير الأعظم",
+    "upgrading": "جاري الترقية...",
+    "upgradeSuccess": "تمت الترقية بنجاح",
+    "upgradeTo": "تمت الترقية إلى",
+    "level": " مستوى",
+    "reachedMaxLevel": "تم الوصول إلى أعلى مستوى",
+    "upgradeFailed": "فشلت الترقية، يرجى المحاولة مرة أخرى",
+    "upgradeNetworkError": "فشلت الترقية، يرجى التحقق من الاتصال بالشبكة والمحاولة مرة أخرى",
     "maxLevel": "تم الوصول إلى أعلى مستوى",
     "myCharityFootprint": "بصمتي الخيرية",
     "viewAllCharityActivities": "عرض جميع الأنشطة الخيرية التي شاركت فيها",
@@ -456,10 +457,11 @@
     "percentComplete": "مكتمل"
   },
   "vip": {
-    "level1": "بولاق",
+    "level0": "غير محصل عليه",
+    "level1": "البراق",
     "level2": "بدر",
     "level3": "منتهى",
     "level4": "معراج",
-    "level5": "خير أعظم"
+    "level5": "إحسان"
   }
 }

@@ -9,7 +9,8 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/store/use-auth";
 import { useVipInfo } from "@/store/use-vip-info";
 import { useAuthContext } from "@/store/auth-context";
-import { PaymentDialog } from "@/components/payment-dialog";
+import { upgradeVipLevel } from "@/lib/api";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Play,
   Calendar,
@@ -27,8 +28,6 @@ import {
   Award,
   Diamond,
   Info,
-  X,
-  ChevronRight,
   Target,
   Clock,
 } from "lucide-react";
@@ -38,6 +37,45 @@ type CategoryType = "member" | "alliance" | "level" | "ongoing";
 
 // VIP徽章组件
 const VipBadge = ({ vipLevel }: { vipLevel: number }) => {
+  // V0 - 未获取等级徽章
+  if (vipLevel === 0) {
+    return (
+      <div className="absolute inset-x-0 top-0 w-16 h-16">
+        {/* V0 - 灰色系 - 未激活状态 */}
+        {/* 外部阴影系统 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#666666]/30 to-[#333333]/40 rounded-full blur-2xl scale-125"></div>
+        <div className="absolute inset-1 bg-gradient-to-b from-[#777777]/20 to-[#444444]/30 rounded-full blur-xl scale-115"></div>
+
+        {/* 徽章主体 - 简单灰色设计 */}
+        <div className="relative w-16 h-16 rounded-full bg-gradient-to-b from-[#666666] to-[#333333] p-[1px] shadow-[0_4px_12px_rgba(102,102,102,0.5),0_2px_6px_rgba(51,51,51,0.4)]">
+          {/* 外层边框 */}
+          <div className="w-full h-full rounded-full bg-gradient-to-b from-[#555555] to-[#333333] p-[1px] shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),inset_0_-1px_2px_rgba(0,0,0,0.4)]">
+            {/* 内圈灰色表面 */}
+            <div className="w-full h-full rounded-full bg-gradient-to-br from-[#888888] via-[#666666] to-[#444444] flex items-center justify-center relative overflow-hidden shadow-[inset_0_1px_3px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3)]">
+              {/* 简单光泽效果 */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-black/20 rounded-full"></div>
+              <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-4 bg-gradient-to-b from-white/60 to-transparent rounded-full blur-md"></div>
+              <div className="absolute bottom-1 right-1 w-6 h-3 bg-black/30 rounded-full blur-md"></div>
+
+              {/* 中心图标 - 问号 */}
+              <div className="relative z-10 bg-gradient-to-b from-[#555555] to-[#333333] rounded-full p-2 shadow-[0_2px_6px_rgba(0,0,0,0.6)] border border-[#666666]/60">
+                <div className="bg-gradient-to-b from-[#666666] to-[#444444] rounded-full p-0.5">
+                  <svg
+                    className="h-5 w-5 text-[#CCCCCC] drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // V1 - 布拉克等级徽章
   if (vipLevel === 1) {
     return (
@@ -424,11 +462,12 @@ export default function VipEventsPage() {
   const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryType>("member");
-  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [isUpgrading, setIsUpgrading] = useState(false);
 
   // 获取真实用户数据和VIP配置
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, getCurrentUser } = useAuth();
   const { openLoginModal } = useAuthContext();
+  const { toast } = useToast();
   const { 
     getVipLevelDonationAmount, 
     getDailyFundRangeForLevel,
@@ -436,8 +475,8 @@ export default function VipEventsPage() {
   } = useVipInfo();
   
   // 计算升级所需金额和进度
-  const currentVipLevel = user?.vipLevel || 1;
-  const currentDonation = user?.donateAmount ? parseFloat(user.donateAmount) : 100;
+  const currentVipLevel = user?.vipLevel ?? 0; // 允许等级为0，表示未获取
+  const currentDonation = user?.donateAmount ? parseFloat(user.donateAmount) : 0;
   const withdrawableAmount = user?.rewardAmount ? parseFloat(user.rewardAmount) : 0;
   
   // 从配置获取下一等级所需金额
@@ -446,7 +485,22 @@ export default function VipEventsPage() {
   
   const upgradeProgress = currentVipLevel === 5
     ? 100 // 已经是最高等级
+    : currentVipLevel === 0
+    ? 0 // 未获取等级时进度为0
     : Math.min((currentDonation / nextLevelAmount) * 100, 100);
+  
+  // 获取等级显示名称
+  const getVipLevelName = (level: number) => {
+    switch (level) {
+      case 0: return t("vip.level0");
+      case 1: return t("vip.level1");
+      case 2: return t("vip.level2");
+      case 3: return t("vip.level3");
+      case 4: return t("vip.level4");
+      case 5: return t("vip.level5");
+      default: return t("vip.level0");
+    }
+  };
   
   const userData = {
     username: user?.username || "艾哈迈德",
@@ -455,24 +509,63 @@ export default function VipEventsPage() {
     withdrawableAmount,
     nextLevelAmount,
     upgradeProgress,
-    nextLevelName:
-      currentVipLevel === 5
-        ? t("vip.level5")
-        : currentVipLevel === 4
-        ? t("vip.level5")
-        : currentVipLevel === 3
-        ? t("vip.level4")
-        : currentVipLevel === 2
-        ? t("vip.level3")
-        : t("vip.level2"),
+    nextLevelName: getVipLevelName(nextLevel),
   };
 
   // 处理升级按钮点击
-  const handleUpgrade = () => {
-    if (isAuthenticated) {
-      setPaymentOpen(true);
-    } else {
+  const handleUpgrade = async () => {
+    if (!isAuthenticated) {
       openLoginModal("/vip-events");
+      return;
+    }
+
+    if (isUpgrading) {
+      return; // 防止重复点击
+    }
+
+    try {
+      setIsUpgrading(true);
+      const response = await upgradeVipLevel();
+      
+      if (response.success && response.data) {
+        const { success: upgradeSuccess, current_vip, new_vip, is_max_level } = response.data;
+        
+        if (upgradeSuccess) {
+          // 构造成功消息
+          let successMessage = `${t("vipLevel.upgradeSuccess")}`;
+          if (new_vip > current_vip) {
+            successMessage += ` ${t("vipLevel.upgradeTo")} VIP ${new_vip}${t("vipLevel.level")}！`;
+          }
+          if (is_max_level) {
+            successMessage += ` ${t("vipLevel.reachedMaxLevel")}`;
+          }
+          
+          toast({
+            description: successMessage,
+            variant: "default"
+          });
+          // 刷新用户数据
+          await getCurrentUser();
+        } else {
+          toast({
+            description: t("vipLevel.upgradeFailed"),
+            variant: "destructive"
+          });
+        }
+      } else {
+        toast({
+          description: response.error?.message || t("vipLevel.upgradeFailed"),
+          variant: "destructive"
+        });
+      }
+    } catch (err) {
+      console.error("VIP升级错误:", err);
+      toast({
+        description: t("vipLevel.upgradeNetworkError"),
+        variant: "destructive"
+      });
+    } finally {
+      setIsUpgrading(false);
     }
   };
 
@@ -707,11 +800,7 @@ export default function VipEventsPage() {
                 <div className="flex-1 min-w-0">
                   {/* 等级名称 */}
                   <div className="text-xl font-bold text-[#d4b96e] mb-3 ml-4">
-                    {userData.vipLevel === 1 && t("vip.level1")}
-                    {userData.vipLevel === 2 && t("vip.level2")}
-                    {userData.vipLevel === 3 && t("vip.level3")}
-                    {userData.vipLevel === 4 && t("vip.level4")}
-                    {userData.vipLevel === 5 && t("vip.level5")}
+                    {getVipLevelName(userData.vipLevel)}
                   </div>
 
                   {/* 数据展示 */}
@@ -757,11 +846,22 @@ export default function VipEventsPage() {
                   <Button 
                     className="w-full bg-gradient-to-r from-[#d4b96e] to-[#b39339] text-[#1a1f2c] hover:opacity-90 transition-opacity py-1.5"
                     onClick={handleUpgrade}
+                    disabled={isUpgrading}
                   >
-                    {userData.vipLevel === 1 && t("vipLevel.upgradeToLevel2")}
-                    {userData.vipLevel === 2 && t("vipLevel.upgradeToLevel3")}
-                    {userData.vipLevel === 3 && t("vipLevel.upgradeToLevel4")}
-                    {userData.vipLevel === 4 && t("vipLevel.upgradeToLevel5")}
+                    {isUpgrading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-[#1a1f2c]/30 border-t-[#1a1f2c] rounded-full animate-spin mr-2"></div>
+                        {t("vipLevel.upgrading")}
+                      </>
+                    ) : (
+                      <>
+                        {userData.vipLevel === 0 && t("vipLevel.upgradeToLevel1")}
+                        {userData.vipLevel === 1 && t("vipLevel.upgradeToLevel2")}
+                        {userData.vipLevel === 2 && t("vipLevel.upgradeToLevel3")}
+                        {userData.vipLevel === 3 && t("vipLevel.upgradeToLevel4")}
+                        {userData.vipLevel === 4 && t("vipLevel.upgradeToLevel5")}
+                      </>
+                    )}
                   </Button>
                 ) : (
                   <Button
@@ -2139,13 +2239,6 @@ export default function VipEventsPage() {
         </div>
       </div>
 
-      {/* 支付对话框 */}
-      <PaymentDialog
-        open={paymentOpen}
-        onOpenChange={setPaymentOpen}
-        currentVipLevel={userData.vipLevel}
-        nextLevelAmount={userData.nextLevelAmount}
-      />
     </MainLayout>
   );
 }

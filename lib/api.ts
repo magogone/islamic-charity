@@ -135,6 +135,16 @@ export interface UserProfitResponse {
 }
 
 /**
+ * VIP upgrade response data
+ */
+export interface VipUpgradeResponse {
+  success: boolean;
+  current_vip: number;
+  new_vip: number;
+  is_max_level: boolean;
+}
+
+/**
  * 发出认证失败事件，用于在特定页面显示登录提示
  */
 export function emitAuthFailure(endpoint: string, statusCode: number) {
@@ -470,6 +480,25 @@ export async function getUserProfit(): Promise<
     console.error("[API] getUserProfit: Fatal error during API call:", error);
 
     // 重新抛出错误，确保调用者知道请求失败
+    throw error;
+  }
+}
+
+/**
+ * Upgrade user VIP level
+ */
+export async function upgradeVipLevel(): Promise<ApiResponse<VipUpgradeResponse>> {
+  try {
+    const result = await apiRequest<VipUpgradeResponse>(
+      "/user/vip/upgrade",
+      "POST",
+      undefined,
+      true
+    );
+
+    return result;
+  } catch (error) {
+    console.error("[API] upgradeVipLevel: Fatal error during API call:", error);
     throw error;
   }
 }

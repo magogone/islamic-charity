@@ -184,6 +184,7 @@
     "fullAmountRequired": "{level}需要全额费用，不仅仅是差额"
   },
   "vip": {
+    "level0": "未获取",
     "level1": "布拉克",
     "level2": "巴达尔",
     "level3": "蒙塔哈",
@@ -393,10 +394,18 @@
     "upgradeProgress": "升级进度",
     "upgradeToV5": "一键升级至V5",
     "upgradeToNext": "升级至{level}",
+    "upgradeToLevel1": "升级至布拉克",
     "upgradeToLevel2": "升级至巴达尔",
     "upgradeToLevel3": "升级至蒙塔哈",
     "upgradeToLevel4": "升级至米尔贾",
     "upgradeToLevel5": "升级至至善",
+    "upgrading": "升级中...",
+    "upgradeSuccess": "升级成功",
+    "upgradeTo": "升级到",
+    "level": "级",
+    "reachedMaxLevel": "已达到最高等级",
+    "upgradeFailed": "升级失败，请重试",
+    "upgradeNetworkError": "升级失败，请检查网络连接后重试",
     "maxLevel": "已达最高等级",
     "myCharityFootprint": "我的慈善足迹",
     "viewAllCharityActivities": "查看您参与过的所有慈善活动",
@@ -473,12 +482,5 @@
     "completed": "完成",
     "loading": "加载中...",
     "percentComplete": "完成"
-  },
-  "vip": {
-    "level1": "布拉克",
-    "level2": "巴达尔",
-    "level3": "蒙塔哈",
-    "level4": "米尔贾",
-    "level5": "至善"
   }
 }

@@ -434,7 +434,7 @@ export default function ProfilePage() {
                   {t("profile.teamTotalDonations")}
                 </span>
                 <span className="text-sm font-medium">
-                  {teamData.totalRewards || 0}{" "}
+                  {teamData.teamTotalDonations || 0}{" "}
                   <span className="text-xs">{t("units.u")}</span>
                 </span>
               </div>

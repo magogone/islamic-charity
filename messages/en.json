@@ -166,6 +166,7 @@
     "fullAmountRequired": "Full amount required for {level}, not just the difference"
   },
   "vip": {
+    "level0": "Not Obtained",
     "level1": "Buraq",
     "level2": "Badar",
     "level3": "Muntaha",
@@ -375,10 +376,18 @@
     "upgradeProgress": "Upgrade Progress",
     "upgradeToV5": "Upgrade to V5",
     "upgradeToNext": "Upgrade to {level}",
+    "upgradeToLevel1": "Upgrade to Buraq",
     "upgradeToLevel2": "Upgrade to Badar",
     "upgradeToLevel3": "Upgrade to Muntaha",
-    "upgradeToLevel4": "Upgrade to Mirja",
-    "upgradeToLevel5": "Upgrade to Zhishan",
+    "upgradeToLevel4": "Mi'raj",
+    "upgradeToLevel5": "Upgrade to Ihsan",
+    "upgrading": "Upgrading...",
+    "upgradeSuccess": "Upgrade Successful",
+    "upgradeTo": "Upgraded to",
+    "level": " Level",
+    "reachedMaxLevel": "Reached Maximum Level",
+    "upgradeFailed": "Upgrade failed, please try again",
+    "upgradeNetworkError": "Upgrade failed, please check your network connection and try again",
     "maxLevel": "Maximum Level Reached",
     "myCharityFootprint": "My Charity Footprint",
     "viewAllCharityActivities": "View all charity activities you have participated in",
@@ -455,12 +464,5 @@
     "completed": "Completed",
     "loading": "Loading...",
     "percentComplete": "Complete"
-  },
-  "vip": {
-    "level1": "Bulaq",
-    "level2": "Badr",
-    "level3": "Muntaha",
-    "level4": "Miraj",
-    "level5": "Khair Azam"
   }
 }
