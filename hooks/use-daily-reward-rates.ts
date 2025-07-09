@@ -23,22 +23,16 @@ export function useDailyRewardRates() {
   const { state, dispatch } = useStore()
   const [loading, setLoading] = useState(() => !isInitialized && !isInitializing)
   const [error, setError] = useState<Error | null>(initializationError)
-  const [mounted, setMounted] = useState(false)
   
-  // Set mounted status on client side
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
   // Load rates from API - only if not already initialized or initializing
   useEffect(() => {
-    if (mounted && !isInitialized && !isInitializing) {
+    if (!isInitialized && !isInitializing) {
       loadDailyRewardRates()
-    } else if (mounted && isInitialized) {
+    } else if (isInitialized) {
       // If already initialized, just update local loading state
       setLoading(false)
     }
-  }, [mounted])
+  }, [])
 
   /**
    * Load daily reward rates from the API

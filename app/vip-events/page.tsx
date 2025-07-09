@@ -10,7 +10,7 @@ import { useAuth } from "@/store/use-auth";
 import { useVipInfo } from "@/store/use-vip-info";
 import { useAuthContext } from "@/store/auth-context";
 import { upgradeVipLevel } from "@/lib/api";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/toast";
 import {
   Play,
   Calendar,
@@ -467,11 +467,10 @@ export default function VipEventsPage() {
   // 获取真实用户数据和VIP配置
   const { user, isAuthenticated, getCurrentUser } = useAuth();
   const { openLoginModal } = useAuthContext();
-  const { toast } = useToast();
+  const { success, error, info, ToastContainer } = useToast();
   const {
     getVipLevelDonationAmount,
     getDailyFundRangeForLevel,
-    getVipLevelRewardRates,
   } = useVipInfo();
 
   // 计算升级所需金额和进度
@@ -559,30 +558,24 @@ export default function VipEventsPage() {
             successMessage += ` ${t("vipLevel.reachedMaxLevel")}`;
           }
 
-          toast({
-            description: successMessage,
-            variant: "default",
-          });
+          success(successMessage);
           // 刷新用户数据
           await getCurrentUser();
         } else {
-          toast({
-            description: t("vipLevel.upgradeFailed"),
-            variant: "destructive",
-          });
+          // 检查是否已达到最高等级
+          if (is_max_level) {
+            info(t("vipLevel.reachedMaxLevel"));
+          } else {
+            // 升级条件未满足
+            info(`${t("vipLevel.upgradeConditionsNotMet")}: ${t("vipLevel.upgradeConditionsNotMetDesc")}`);
+          }
         }
       } else {
-        toast({
-          description: response.error?.message || t("vipLevel.upgradeFailed"),
-          variant: "destructive",
-        });
+        error(response.error?.message || t("vipLevel.upgradeFailed"));
       }
     } catch (err) {
       console.error("VIP升级错误:", err);
-      toast({
-        description: t("vipLevel.upgradeNetworkError"),
-        variant: "destructive",
-      });
+      error(t("vipLevel.upgradeNetworkError"));
     } finally {
       setIsUpgrading(false);
     }
@@ -2247,6 +2240,7 @@ export default function VipEventsPage() {
           )}
         </div>
       </div>
+      <ToastContainer />
     </MainLayout>
   );
 }

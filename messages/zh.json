@@ -406,6 +406,8 @@
     "reachedMaxLevel": "已达到最高等级",
     "upgradeFailed": "升级失败，请重试",
     "upgradeNetworkError": "升级失败，请检查网络连接后重试",
+    "upgradeConditionsNotMet": "升级条件未满足",
+    "upgradeConditionsNotMetDesc": "您暂未满足升级到下一等级的条件，请查看等级要求或联系客服了解详情",
     "maxLevel": "已达最高等级",
     "myCharityFootprint": "我的慈善足迹",
     "viewAllCharityActivities": "查看您参与过的所有慈善活动",

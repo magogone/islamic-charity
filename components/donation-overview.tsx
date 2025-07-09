@@ -108,31 +108,19 @@ export function DonationOverview({
   const {
     getCurrentRate,
     rateConfigs,
-    loading: ratesLoading,
   } = useDailyRewardRates();
-  const [mounted, setMounted] = useState(false);
   const { t } = useTranslation();
-
-  // Handle client-side mounting
-  useEffect(() => {
-    setMounted(true);
-    // 组件挂载完成
-  }, [data]);
 
   // 使用用户真实的捐款金额和VIP等级（如果存在）
   const userDonation = user?.donateAmount ? parseFloat(user.donateAmount) : 0;
   const userVipLevel = user?.vipLevel || 0;
   const userReferrals = user?.referrals || 0;
 
-  // Calculate current rate based on user referrals - only when rates are loaded
-  const calculatedCurrentRate =
-    mounted && !ratesLoading
-      ? getCurrentRate(userReferrals)
-      : defaultData.currentRate;
+  // Calculate current rate based on user referrals - always use store values (with defaults)
+  const calculatedCurrentRate = getCurrentRate(userReferrals);
 
   // Maximum rate is always the highest rate from configs
-  const calculatedMaxRate =
-    mounted && !ratesLoading ? rateConfigs.referral5 : defaultData.maxRate;
+  const calculatedMaxRate = rateConfigs.referral5;
 
   // Calculate daily funds based on donation amount and rates
   const calculatedDailyFunds = {
@@ -157,8 +145,6 @@ export function DonationOverview({
       max: calculatedDailyFunds.max,
     },
   };
-
-  // 数据处理完成
 
   // 获取下一级VIP的全额费用
   const nextVipLevel = safeData.vipLevel < 5 ? safeData.vipLevel + 1 : 5;

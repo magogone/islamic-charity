@@ -388,6 +388,8 @@
     "reachedMaxLevel": "Reached Maximum Level",
     "upgradeFailed": "Upgrade failed, please try again",
     "upgradeNetworkError": "Upgrade failed, please check your network connection and try again",
+    "upgradeConditionsNotMet": "Upgrade Conditions Not Met",
+    "upgradeConditionsNotMetDesc": "You do not currently meet the requirements to upgrade to the next level. Please check the level requirements or contact customer service for details",
     "maxLevel": "Maximum Level Reached",
     "myCharityFootprint": "My Charity Footprint",
     "viewAllCharityActivities": "View all charity activities you have participated in",
