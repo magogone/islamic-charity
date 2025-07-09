@@ -326,7 +326,7 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
               <Star className="h-5 w-5" />
               <span className="text-xs mt-1 vip-level-text">
                 {isAuthenticated && user?.vipLevel
-                  ? `V${user.vipLevel}`
+                  ? t(`vip.level${user.vipLevel}`)
                   : "等级"}
               </span>
             </button>

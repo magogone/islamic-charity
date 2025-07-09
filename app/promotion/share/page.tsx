@@ -607,7 +607,7 @@ export default function SharePage() {
                 <span className="text-xs font-medium text-islamic-gold">
                   {mounted && !ratesLoading
                     ? `${rateConfigs.referral5}%`
-                    : "2.5%"}
+                    : "3%"}
                 </span>
               </div>
             </div>

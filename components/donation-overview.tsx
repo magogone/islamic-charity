@@ -85,7 +85,7 @@ const defaultData = {
   endDate: "2023-02-01",
   currentRate: 1,
   totalAccumulated: 15,
-  maxRate: 2.5,
+  maxRate: 3,
   totalExpectedReward: 120,
   totalMaxReward: 180,
   withdrawnAmount: 50,
@@ -105,10 +105,7 @@ export function DonationOverview({
   const { getVipLevelDonationAmount } = useVipInfo();
   const { isAuthenticated, user } = useAuth();
   const { openLoginModal } = useAuthContext();
-  const {
-    getCurrentRate,
-    rateConfigs,
-  } = useDailyRewardRates();
+  const { getCurrentRate, rateConfigs } = useDailyRewardRates();
   const { t } = useTranslation();
 
   // 使用用户真实的捐款金额和VIP等级（如果存在）

@@ -1,4 +1,4 @@
-import { VipLevelDetail } from "@/components/vip-level-detail"
+import { VipLevelDetail } from "@/components/vip-level-detail";
 
 export default function VipLevelPage() {
   // This data should be fetched from API for the user's VIP level information
@@ -7,6 +7,7 @@ export default function VipLevelPage() {
     vipLevel: 1,
     currentDailyFund: 1.2,
     maxDailyFund: 3,
+    currentReferrals: 0,
     referralRewards: {
       level1: 10,
       level2: 4,
@@ -31,11 +32,11 @@ export default function VipLevelPage() {
       referral3: 4,
       referral5: 5,
     },
-  }
+  };
 
   return (
     <div className="min-h-screen bg-islamic-dark py-8 px-4 max-w-lg mx-auto">
       <VipLevelDetail {...vipData} />
     </div>
-  )
+  );
 }

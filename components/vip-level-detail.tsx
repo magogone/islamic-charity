@@ -33,7 +33,8 @@ export function VipLevelDetail({
   className,
 }: VipLevelDetailProps) {
   const [showExplanation, setShowExplanation] = useState(false);
-  const { getRewardRatesForLevel, getAllReliefFundRates } = useVipInfo();
+  const { getRewardRatesForLevel, getAllReliefFundRates, getVipLevelName } =
+    useVipInfo();
 
   // 获取当前 VIP 等级的奖励比例
   const rewardRates = getRewardRatesForLevel(vipLevel);
@@ -59,7 +60,7 @@ export function VipLevelDetail({
       <div className="bg-islamic-dark/80 backdrop-blur-sm rounded-xl p-6 mb-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold text-islamic-gold">
-            VIP {vipLevel} 特权
+            {getVipLevelName(vipLevel)} 特权
           </h3>
         </div>
 

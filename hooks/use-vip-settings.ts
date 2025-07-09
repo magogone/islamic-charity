@@ -56,17 +56,33 @@ function calculateDerivedValues(
   threshold: number,
   reliefFundRates?: ReliefFundRates
 ) {
-  // New calculation: 捐款金额 * 1.2 * 1% to 捐款金额 * 1.2 * 2.5%
-  const baseAmount = threshold * 1.2;
-  const minDailyFund = baseAmount * 0.01; // 1%
-  const maxDailyFund = baseAmount * 0.025; // 2.5%
+  // 根据新的每日回馈金额计算
+  const defaultRanges = [
+    { min: 0, max: 0 },
+    { min: 1.0, max: 3.0 }, // 等级1 - 布拉克
+    { min: 3.05, max: 9.15 }, // 等级2 - 巴达尔
+    { min: 5.15, max: 15.5 }, // 等级3 - 蒙塔哈
+    { min: 8.4, max: 25.2 }, // 等级4 - 米尔贾
+    { min: 13.0, max: 39.0 }, // 等级5 - 至善
+  ];
 
-  // Total return calculation remains the same
-  const totalReturn = threshold * 1.2;
+  // 根据捐款金额确定等级
+  let level = 1;
+  if (threshold >= 1200) level = 5;
+  else if (threshold >= 800) level = 4;
+  else if (threshold >= 500) level = 3;
+  else if (threshold >= 300) level = 2;
+  else level = 1;
+
+  const range = defaultRanges[level];
+
+  // 使用固定的总回报值，不再使用计算公式
+  const fixedTotalReturns = [0, 120, 366, 620, 1008, 1560]; // 索引0不使用，1-5对应等级1-5
+  const totalReturn = fixedTotalReturns[level];
 
   return {
     totalReturn,
-    dailyFundRange: `${minDailyFund.toFixed(1)}-${maxDailyFund.toFixed(1)} USD`,
+    dailyFundRange: `${range.min.toFixed(2)}-${range.max.toFixed(2)} USD`,
   };
 }
 
@@ -176,7 +192,7 @@ export function useVipSettings() {
               donationAmount: threshold,
               totalReturn: totalReturn,
               dailyFundRange: dailyFundRange,
-              period: 40, // 保持期间不变
+              period: 120, // 更新期间为120天
             };
           }
         });

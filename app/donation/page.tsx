@@ -286,7 +286,7 @@ export default function DonationPage() {
         <div className="mt-4 space-y-6">
           <VipBenefitsCard vipLevel={safeUserData.vipLevel} />
 
-          {/* 添加 VIP 支付信息组件 */}
+          {/* 添加 VIP 捐赠信息组件 */}
           <VipPaymentInfo />
 
           {/* 添加额外的内容以确保可以滚动 */}

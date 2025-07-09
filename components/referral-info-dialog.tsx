@@ -110,7 +110,7 @@ export function ReferralInfoDialog({
                   <span>5</span>
                 </span>
                 <span className="font-medium">
-                  {mounted && !ratesLoading ? rateConfigs.referral5 : 2.5}%
+                  {mounted && !ratesLoading ? rateConfigs.referral5 : 3}%
                 </span>
               </div>
             </div>

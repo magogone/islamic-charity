@@ -182,27 +182,27 @@ export function RewardInfoCards({
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
-                  <span className="text-sm">VIP 1</span>
+                  <span className="text-sm">布拉克</span>
                   <span className="font-medium">1%</span>
                 </div>
 
                 <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
-                  <span className="text-sm">VIP 2</span>
+                  <span className="text-sm">巴达尔</span>
                   <span className="font-medium">1.2%</span>
                 </div>
 
                 <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
-                  <span className="text-sm">VIP 3</span>
+                  <span className="text-sm">蒙塔哈</span>
                   <span className="font-medium">1.5%</span>
                 </div>
 
                 <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
-                  <span className="text-sm">VIP 4</span>
+                  <span className="text-sm">米尔贾</span>
                   <span className="font-medium">1.8%</span>
                 </div>
 
                 <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
-                  <span className="text-sm">VIP 5</span>
+                  <span className="text-sm">至善</span>
                   <span className="font-medium">2.5%</span>
                 </div>
               </div>
@@ -264,17 +264,17 @@ export function RewardInfoCards({
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
-                  <span className="text-sm">VIP 5 - 1代推荐</span>
+                  <span className="text-sm">至善 - 1代推荐</span>
                   <span className="font-medium">15%</span>
                 </div>
 
                 <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
-                  <span className="text-sm">VIP 5 - 2代推荐</span>
+                  <span className="text-sm">至善 - 2代推荐</span>
                   <span className="font-medium">6%</span>
                 </div>
 
                 <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/30">
-                  <span className="text-sm">VIP 5 - 3-5代推荐</span>
+                  <span className="text-sm">至善 - 3-5代推荐</span>
                   <span className="font-medium">3%</span>
                 </div>
               </div>

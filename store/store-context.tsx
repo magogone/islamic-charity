@@ -279,8 +279,8 @@ const initialState: StoreState = {
         },
         donationAmount: 100,
         totalReturn: 120,
-        dailyFundRange: "1.2-3.0 USD",
-        period: 40,
+        dailyFundRange: "1.00-3.00 USD",
+        period: 120,
       },
       2: {
         rewardRates: {
@@ -292,9 +292,9 @@ const initialState: StoreState = {
           total: 22,
         },
         donationAmount: 300,
-        totalReturn: 360,
-        dailyFundRange: "3.6-9.0 USD",
-        period: 40,
+        totalReturn: 366,
+        dailyFundRange: "3.05-9.15 USD",
+        period: 120,
       },
       3: {
         rewardRates: {
@@ -306,9 +306,9 @@ const initialState: StoreState = {
           total: 24,
         },
         donationAmount: 500,
-        totalReturn: 600,
-        dailyFundRange: "6.0-15.0 USD",
-        period: 40,
+        totalReturn: 620,
+        dailyFundRange: "5.15-15.50 USD",
+        period: 120,
       },
       4: {
         rewardRates: {
@@ -320,9 +320,9 @@ const initialState: StoreState = {
           total: 26,
         },
         donationAmount: 800,
-        totalReturn: 960,
-        dailyFundRange: "9.6-24.0 USD",
-        period: 40,
+        totalReturn: 1008,
+        dailyFundRange: "8.40-25.20 USD",
+        period: 120,
       },
       5: {
         rewardRates: {
@@ -334,16 +334,16 @@ const initialState: StoreState = {
           total: 30,
         },
         donationAmount: 1200,
-        totalReturn: 1440,
-        dailyFundRange: "14.4-36.0 USD",
-        period: 40,
+        totalReturn: 1560,
+        dailyFundRange: "13.00-39.00 USD",
+        period: 120,
       },
     },
     reliefFundRates: {
       noReferral: 1,
       referral1: 1.5,
       referral3: 2,
-      referral5: 2.5,
+      referral5: 3,
     },
   },
   news: [

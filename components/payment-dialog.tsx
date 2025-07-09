@@ -112,8 +112,8 @@ export function PaymentDialog({
     useWallet();
 
   // 写入合约状态
-  const { writeContract } = useWriteContract()
-  
+  const { writeContract } = useWriteContract();
+
   // 读取代币小数位数
   const { data: decimalsData } = useReadContract({
     address: usdtAddress as `0x${string}`,
@@ -202,7 +202,7 @@ export function PaymentDialog({
       setDonationId(null); // 重置捐赠ID
     }
   }, [open]);
-  
+
   // 检查是否有待处理的交易（页面刷新后恢复）
   useEffect(() => {
     const checkPendingTransactions = async () => {
@@ -210,21 +210,21 @@ export function PaymentDialog({
         // 检查localStorage中是否有待处理的交易
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
-          if (key && key.startsWith('pending_tx_')) {
-            const txHash = key.replace('pending_tx_', '');
+          if (key && key.startsWith("pending_tx_")) {
+            const txHash = key.replace("pending_tx_", "");
             const txInfo = JSON.parse(localStorage.getItem(key)!);
-            
+
             // 检查交易是否属于当前用户
             if (txInfo.fromAddress === address) {
-              console.log('Found pending transaction:', txHash);
+              console.log("Found pending transaction:", txHash);
               // 可以选择自动设置交易哈希来触发监听
               // setTransactionHash(txHash);
-              
+
               // 或者清理超过24小时的旧交易记录
               const isOld = Date.now() - txInfo.timestamp > 24 * 60 * 60 * 1000;
               if (isOld) {
                 localStorage.removeItem(key);
-                console.log('Removed old pending transaction:', txHash);
+                console.log("Removed old pending transaction:", txHash);
               }
             }
           }
@@ -234,7 +234,7 @@ export function PaymentDialog({
 
     checkPendingTransactions();
   }, [isMounted, isConnected, address]);
-  
+
   // 当交易确认成功时调用API
   useEffect(() => {
     const callDonateAPI = async () => {
@@ -243,34 +243,37 @@ export function PaymentDialog({
         const pendingTx = localStorage.getItem(`pending_tx_${transactionHash}`);
         if (pendingTx) {
           const txInfo = JSON.parse(pendingTx);
-          
+
           try {
             const response = await donateAmount(
-              txInfo.chainId,       // chain
-              txInfo.amount,        // amount  
-              "USDT",              // tokenType
-              txInfo.fromAddress,  // fromAddress
-              txInfo.toAddress,    // toAddress
-              transactionHash      // txHash (真实交易哈希)
+              txInfo.chainId, // chain
+              txInfo.amount, // amount
+              "USDT", // tokenType
+              txInfo.fromAddress, // fromAddress
+              txInfo.toAddress, // toAddress
+              transactionHash // txHash (真实交易哈希)
             );
-            
+
             if (response.success) {
               setDonationId(response.data?.order_id || Date.now().toString());
               // 清除localStorage中的记录
               localStorage.removeItem(`pending_tx_${transactionHash}`);
-              
+
               // API调用成功后才设置完成状态
-              setPaymentStep('complete');
+              setPaymentStep("complete");
               setIsComplete(true);
-              
+
               // 延迟关闭对话框
               setTimeout(() => {
                 setIsComplete(false);
-                setPaymentStep('initial');
+                setPaymentStep("initial");
                 onOpenChange(false);
               }, 3000);
             } else {
-              console.error("Donate API failed after transaction confirmation:", response.error);
+              console.error(
+                "Donate API failed after transaction confirmation:",
+                response.error
+              );
             }
           } catch (apiError) {
             console.error("Donate API call failed:", apiError);
@@ -281,10 +284,10 @@ export function PaymentDialog({
 
     callDonateAPI();
   }, [isTransactionSuccess, transactionHash, donationId, onOpenChange]);
-  
+
   // 当交易成功时更新状态 - 移除自动完成逻辑，只在API成功后才完成
   useEffect(() => {
-    if (isTransactionSuccess && paymentStep === 'transferring') {
+    if (isTransactionSuccess && paymentStep === "transferring") {
       // 交易成功但保持在transferring状态，等待API调用完成
       console.info("Transaction confirmed, waiting for API call to complete");
     }
@@ -355,8 +358,8 @@ export function PaymentDialog({
     // 设置状态防止重复点击
     setIsSubmitting(true);
     setIsProcessing(true);
-    setPaymentStep('transferring');
-    
+    setPaymentStep("transferring");
+
     try {
       if (!address) {
         throw new Error(t("payment.walletAddressNotAvailable"));
@@ -368,13 +371,13 @@ export function PaymentDialog({
 
       // 计算转账金额
       const transferAmount = parseUnits(amount, decimals);
-      
+
       // 构造交易数据
       const transactionData = {
         address: usdtAddress,
         abi: erc20Abi,
-        functionName: 'transfer' as const,
-        args: [targetAddress, transferAmount] as const
+        functionName: "transfer" as const,
+        args: [targetAddress, transferAmount] as const,
       };
 
       // 执行区块链转账
@@ -383,14 +386,14 @@ export function PaymentDialog({
           onSuccess: async (hash: `0x${string}`) => {
             setTransactionHash(hash);
             console.info("Transaction submitted with hash:", hash);
-            
+
             // 将交易信息保存到localStorage，等待交易确认后调用API
             const txInfo = {
               chainId: chainId.toString(),
               amount,
               fromAddress: address,
               toAddress: targetAddress,
-              timestamp: Date.now()
+              timestamp: Date.now(),
             };
             localStorage.setItem(`pending_tx_${hash}`, JSON.stringify(txInfo));
           },
@@ -398,18 +401,18 @@ export function PaymentDialog({
             // 检查是否为用户拒绝交易的错误
             const errorMessage = err.message.toLowerCase();
             if (
-              errorMessage.includes("user rejected") || 
+              errorMessage.includes("user rejected") ||
               errorMessage.includes("user denied") ||
               errorMessage.includes("user cancelled")
             ) {
               // 用户拒绝交易，重置状态但不显示error toast
               setIsProcessing(false);
               setIsSubmitting(false);
-              setPaymentStep('initial');
+              setPaymentStep("initial");
               // 不抛出错误，因为这是用户主动取消，不是真正的错误
               return;
             }
-            
+
             throw err; // 其他类型的错误，继续抛出以被外层catch捕获
           },
         });
@@ -584,7 +587,7 @@ export function PaymentDialog({
                 )}
               </div>
 
-              {/* 添加支付说明 */}
+              {/* 添加捐赠说明 */}
               <div className="flex items-start space-x-2 rounded-md border border-islamic-gold/20 p-3 bg-islamic-gold/10">
                 <Info className="h-5 w-5 text-islamic-gold mt-0.5 flex-shrink-0" />
                 <div className="text-xs text-islamic-cream/90">
@@ -616,9 +619,11 @@ export function PaymentDialog({
           <div className="py-8 flex flex-col items-center justify-center">
             <div className="w-12 h-12 rounded-full border-4 border-islamic-gold/30 border-t-islamic-gold animate-spin mb-4"></div>
             <p className="text-islamic-cream">
-              {paymentStep === 'transferring' && !isTransactionSuccess ? t('payment.waitingConfirmation') :
-               paymentStep === 'transferring' && isTransactionSuccess ? t('payment.processingDonation') : 
-               t('payment.processingPlease')}
+              {paymentStep === "transferring" && !isTransactionSuccess
+                ? t("payment.waitingConfirmation")
+                : paymentStep === "transferring" && isTransactionSuccess
+                ? t("payment.processingDonation")
+                : t("payment.processingPlease")}
             </p>
             {paymentStep === "transferring" && transactionHash && (
               <div className="mt-4 text-center">
@@ -635,7 +640,7 @@ export function PaymentDialog({
                 </a>
                 {isTransactionSuccess && (
                   <p className="text-xs text-green-400 mt-2">
-                    {t('payment.transactionConfirmed')}
+                    {t("payment.transactionConfirmed")}
                   </p>
                 )}
               </div>

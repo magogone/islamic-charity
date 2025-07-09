@@ -99,9 +99,16 @@ export function useVipInfo() {
    */
   const getDailyFundRangeForLevel = (level: number): string => {
     const safeLevel = Math.min(Math.max(1, level), 5); // 确保等级在1-5之间
+    const defaultRanges = [
+      "",
+      "1.00-3.00 USD", // 等级1 - 布拉克
+      "3.05-9.15 USD", // 等级2 - 巴达尔
+      "5.15-15.50 USD", // 等级3 - 蒙塔哈
+      "8.40-25.20 USD", // 等级4 - 米尔贾
+      "13.00-39.00 USD", // 等级5 - 至善
+    ];
     return (
-      vipInfo.levels[safeLevel]?.dailyFundRange ||
-      `${safeLevel * 1.2}-${safeLevel * 3} USD`
+      vipInfo.levels[safeLevel]?.dailyFundRange || defaultRanges[safeLevel]
     );
   };
 
@@ -121,7 +128,7 @@ export function useVipInfo() {
         noReferral: 1,
         referral1: 1.5,
         referral3: 2,
-        referral5: 2.5,
+        referral5: 3,
       }
     );
   };
@@ -131,15 +138,32 @@ export function useVipInfo() {
    */
   const getVipLevelTotalReturn = (level: number): number => {
     const safeLevel = Math.min(Math.max(1, level), 5); // 确保等级在1-5之间
-    return vipInfo.levels[safeLevel]?.totalReturn || safeLevel * 120;
+    const defaultReturns = [0, 120, 366, 620, 1008, 1560]; // 索引0不使用，1-5对应等级1-5
+    return vipInfo.levels[safeLevel]?.totalReturn || defaultReturns[safeLevel];
   };
 
   /**
    * 获取指定VIP等级的期间（兼容旧版API）
    */
-  const getVipLevelPeriod = (level: number): number => {
+  const getVipLevelPeriod = (level: number): string => {
     const safeLevel = Math.min(Math.max(1, level), 5); // 确保等级在1-5之间
-    return vipInfo.levels[safeLevel]?.period || 40;
+    return "40-120"; // 统一返回期间范围
+  };
+
+  /**
+   * 获取指定VIP等级的名称
+   */
+  const getVipLevelName = (level: number): string => {
+    const safeLevel = Math.min(Math.max(1, level), 5); // 确保等级在1-5之间
+    const levelNames = [
+      "",
+      "布拉克", // 等级1
+      "巴达尔", // 等级2
+      "蒙塔哈", // 等级3
+      "米尔贾", // 等级4
+      "至善", // 等级5
+    ];
+    return levelNames[safeLevel];
   };
 
   /**
@@ -164,6 +188,7 @@ export function useVipInfo() {
     getAllReliefFundRates,
     getVipLevelTotalReturn,
     getVipLevelPeriod,
+    getVipLevelName,
     getAllVipLevels,
   };
 }

@@ -25,7 +25,8 @@ export function VipUpgradeCard({
   className,
   onUpgrade,
 }: VipUpgradeCardProps) {
-  const { getVipLevelTotalReturn, getDailyFundRangeForLevel } = useVipInfo();
+  const { getVipLevelTotalReturn, getDailyFundRangeForLevel, getVipLevelName } =
+    useVipInfo();
 
   // 计算升级进度 - 基于当前捐赠占下一级要求的百分比
   const upgradeProgress = Math.min(
@@ -65,11 +66,11 @@ export function VipUpgradeCard({
 
         {/* VIP等级标签 */}
         <div className="absolute top-2 left-2 px-3 py-1 bg-islamic-gold text-islamic-dark text-sm font-medium rounded-full">
-          当前: VIP {currentVip}
+          当前: {getVipLevelName(currentVip)}
         </div>
         <div className="absolute top-2 right-2 px-3 py-1 bg-islamic-gold/80 text-islamic-dark text-sm font-medium rounded-full flex items-center">
           <ChevronUp className="mr-1 h-4 w-4" />
-          VIP {currentVip + 1}
+          {getVipLevelName(currentVip + 1)}
         </div>
 
         {/* 升级进度 */}
@@ -91,7 +92,7 @@ export function VipUpgradeCard({
         <div className="flex justify-between items-center mb-3">
           <div>
             <h3 className="text-base font-medium text-[#d4b96e]">
-              VIP {currentVip} → VIP {currentVip + 1}
+              {getVipLevelName(currentVip)} → {getVipLevelName(currentVip + 1)}
             </h3>
             <p className="text-xs text-[#f5efe0]/70 mt-1">
               升级后获得更多扶贫资金
@@ -99,7 +100,7 @@ export function VipUpgradeCard({
           </div>
           <div className="text-right">
             <p className="text-xs text-[#f5efe0]/70">
-              VIP {currentVip + 1} 费用
+              {getVipLevelName(currentVip + 1)} 费用
             </p>
             <p className="text-lg font-medium text-islamic-gold flex items-baseline">
               {fullAmount}
@@ -110,7 +111,7 @@ export function VipUpgradeCard({
 
         <div className="bg-islamic-medium/50 backdrop-blur-sm rounded-lg p-3 mb-3">
           <h4 className="text-sm font-medium text-islamic-gold mb-2">
-            VIP {currentVip + 1} 特权
+            {getVipLevelName(currentVip + 1)} 特权
           </h4>
           <div className="grid grid-cols-2 gap-2 mb-2">
             <div className="flex flex-col p-2 bg-islamic-dark/30 rounded-lg">
@@ -132,11 +133,11 @@ export function VipUpgradeCard({
           </p>
         </div>
 
-        {/* 支付说明 */}
+        {/* 捐赠说明 */}
         <div className="flex items-start space-x-2 rounded-md border border-islamic-gold/20 p-2 bg-islamic-gold/10 mb-3">
           <Info className="h-4 w-4 text-islamic-gold mt-0.5 flex-shrink-0" />
           <p className="text-xs text-islamic-cream/90">
-            升级需支付VIP {currentVip + 1} 的全部费用 {fullAmount}
+            升级需捐赠{getVipLevelName(currentVip + 1)}的全部费用 {fullAmount}
             <span className="text-xs ml-1">USD</span>，而非差价。
           </p>
         </div>

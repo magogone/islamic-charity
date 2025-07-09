@@ -5,6 +5,7 @@ import { DonationOverview } from "@/components/donation-overview";
 import { useDonation } from "@/store/use-donation";
 import { useTeamInfo } from "@/hooks/use-team-info";
 import { useAuth } from "@/store/use-auth";
+import { useVipInfo } from "@/store/use-vip-info";
 import { useEffect, useRef, useState } from "react";
 import { getUserInfo, getUserTeamInfo, getUserProfit } from "@/lib/api";
 import { useTranslation } from "@/lib/i18n";
@@ -14,6 +15,7 @@ export default function DonationOverviewPage() {
   const { donationData, updateDonation } = useDonation();
   const { teamInfo, refresh: refreshTeamInfo, refreshUserInfo } = useTeamInfo();
   const { user, isAuthenticated, getCurrentUser } = useAuth();
+  const { getVipLevelPeriod, getVipLevelName } = useVipInfo();
   const { t } = useTranslation();
   // 使用ref来保存上一次的totalReferrals值
   const prevTotalReferralsRef = useRef<number | undefined>(undefined);
@@ -350,7 +352,8 @@ export default function DonationOverviewPage() {
                 {t("donationOverview.donationPeriod")}
               </span>
               <span className="text-sm font-medium text-islamic-cream">
-                40 {t("donationOverview.days")}
+                {getVipLevelPeriod(donationData.vipLevel || 1)}
+                {t("donationOverview.days")}
               </span>
             </div>
 
@@ -359,7 +362,7 @@ export default function DonationOverviewPage() {
                 {t("donationOverview.vipLevel")}
               </span>
               <span className="text-sm font-medium text-islamic-cream">
-                VIP {donationData.vipLevel || 0}
+                {getVipLevelName(donationData.vipLevel || 1)}
               </span>
             </div>
 

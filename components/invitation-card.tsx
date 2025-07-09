@@ -199,7 +199,7 @@ export function InvitationCard({
     if (!mounted || ratesLoading) {
       // Default values when not mounted or rates are loading
       if (referrals === 0) return "1%";
-      if (referrals >= 5) return "2.5%";
+      if (referrals >= 5) return "3%";
       if (referrals >= 3) return "2%";
       if (referrals >= 1) return "1.5%";
       return "1%";
@@ -214,7 +214,7 @@ export function InvitationCard({
 
   // Get the basic reward rates from the configuration
   const basicRewardMin = mounted && !ratesLoading ? rateConfigs.noReferral : 1;
-  const basicRewardMax = mounted && !ratesLoading ? rateConfigs.referral5 : 2.5;
+  const basicRewardMax = mounted && !ratesLoading ? rateConfigs.referral5 : 3;
   const currentBasicReward =
     mounted && !ratesLoading
       ? getCurrentRateText(user?.referrals || 0).replace("%", "")
@@ -249,7 +249,7 @@ export function InvitationCard({
       if (referrals === 0) return "1%";
       if (referrals === 1) return "1.5%";
       if (referrals === 3) return "2%";
-      if (referrals === 5) return "2.5%";
+      if (referrals === 5) return "3%";
       return "1%";
     }
 
@@ -623,7 +623,7 @@ export function InvitationCard({
                           : "text-islamic-cream/70"
                       }`}
                     >
-                      VIP 1
+                      布拉克
                     </th>
                     <th
                       className={`p-2 text-center text-xs font-medium ${
@@ -632,7 +632,7 @@ export function InvitationCard({
                           : "text-islamic-cream/70"
                       }`}
                     >
-                      VIP 2
+                      巴达尔
                     </th>
                     <th
                       className={`p-2 text-center text-xs font-medium ${
@@ -641,7 +641,7 @@ export function InvitationCard({
                           : "text-islamic-cream/70"
                       }`}
                     >
-                      VIP 3
+                      蒙塔哈
                     </th>
                     <th
                       className={`p-2 text-center text-xs font-medium ${
@@ -650,7 +650,7 @@ export function InvitationCard({
                           : "text-islamic-cream/70"
                       }`}
                     >
-                      VIP 4
+                      米尔贾
                     </th>
                     <th
                       className={`p-2 text-center text-xs font-medium ${
@@ -659,7 +659,7 @@ export function InvitationCard({
                           : "text-islamic-cream/70"
                       }`}
                     >
-                      VIP 5
+                      至善
                     </th>
                   </tr>
                 </thead>
