@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { InfoIcon, Users } from "lucide-react";
+import { useTranslation } from "@/lib/i18n";
 import { Card } from "@/components/ui/card";
 import {
   Dialog,
@@ -50,6 +51,7 @@ export function RewardInfoCards({
   referralReward,
   className = "",
 }: RewardInfoCardsProps) {
+  const { t } = useTranslation();
   const [basicInfoOpen, setBasicInfoOpen] = useState(false);
   const [referralInfoOpen, setReferralInfoOpen] = useState(false);
 
@@ -61,7 +63,9 @@ export function RewardInfoCards({
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center">
               <Users className="h-4 w-4 text-islamic-gold mr-2" />
-              <span className="text-sm text-islamic-gold">基础奖励</span>
+              <span className="text-sm text-islamic-gold">
+                {t("invitation.basicRewards")}
+              </span>
             </div>
             {basicReward.totalEarned !== undefined && (
               <span className="text-sm font-medium text-[#8dc63f] flex items-baseline">
