@@ -299,7 +299,7 @@
     "viewBasicRewardDetails": "查看基础奖励详情",
     "viewReferralRewardDetails": "查看回馈奖励详情",
     "inviteNow": "立即邀请",
-    "inviteTip": "邀请朋友捐赠，可获得其捐赠金额最高{maxRate}%的奖励，同时提升您的每日基础捐赠奖励率！每人首次邀请满5人之后，可以获得50美元额外回馈奖励。",
+    "inviteTip": "邀请朋友捐赠，可获得其捐赠金额10%的奖励，同时提升您的每日基础捐赠奖励率！每人首次邀请满5人之后，可以获得50美元额外回馈奖励。",
     "invitationLevel": "邀请等级{level}",
     "currentlyEarn": "您目前在直接推荐上获得{rate}%的奖励。",
     "basicRewardDetails": "基础奖励详情",

@@ -299,7 +299,7 @@
     "viewBasicRewardDetails": "View basic reward details",
     "viewReferralRewardDetails": "View reward benefit details",
     "inviteNow": "Invite Now",
-    "inviteTip": "Invite members to donate and receive up to {maxRate}% of their donation amount as rewards, while also increasing your daily basic donation reward rate! Each person can receive an additional $50 reward bonus after successfully inviting 5 people for the first time.",
+    "inviteTip": "Invite members to donate and receive 10% of their donation amount as rewards, while also increasing your daily basic donation reward rate! Each person can receive an additional $50 reward bonus after successfully inviting 5 people for the first time.",
     "invitationLevel": "Invitation Level {level}",
     "currentlyEarn": "You currently earn {rate}% on direct referrals.",
     "basicRewardDetails": "Basic Reward Details",
