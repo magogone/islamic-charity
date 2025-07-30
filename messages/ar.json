@@ -402,6 +402,8 @@
     "upgradeConditionsNotMet": "شروط الترقية غير مستوفاة",
     "upgradeConditionsNotMetDesc": "أنت لا تستوفي حالياً متطلبات الترقية إلى المستوى التالي. يرجى مراجعة متطلبات المستوى أو الاتصال بخدمة العملاء للحصول على التفاصيل",
     "maxLevel": "تم الوصول إلى أعلى مستوى",
+    "locked": "مقفل",
+    "unlockCondition": "يتم فتحه بعد الوصول للمستوى السابق",
     "myCharityFootprint": "بصمتي الخيرية",
     "viewAllCharityActivities": "عرض جميع الأنشطة الخيرية التي شاركت فيها",
     "allianceCharityActivities": "أنشطة التحالف الخيرية",

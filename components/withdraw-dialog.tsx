@@ -155,8 +155,8 @@ export function WithdrawDialog({
     }
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(transactionId);
+  const copyToClipboard = async () => {
+    await navigator.clipboard.writeText(transactionId);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

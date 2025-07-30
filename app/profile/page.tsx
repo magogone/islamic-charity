@@ -296,7 +296,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold text-[#d4b96e]">
+                <h2 className="text-lg font-bold text-[#d4b96e] truncate max-w-[140px] sm:max-w-[200px]">
                   {isDataLoading ? t("common.loading") : displayData.username}
                 </h2>
                 <div className="flex items-center gap-2">
@@ -323,10 +323,10 @@ export default function ProfilePage() {
                   </Button>
                 </div>
               </div>
-              <p className="text-xs text-islamic-cream/70 mt-1">
+              <p className="text-xs text-islamic-cream/70 mt-1 truncate max-w-[250px] sm:max-w-[350px]">
                 {displayData.email}
               </p>
-              <p className="text-sm text-islamic-cream/70 mt-1">
+              <p className="text-sm text-islamic-cream/70 mt-1 truncate max-w-[280px] sm:max-w-[380px]">
                 {isDataLoading ? "..." : t(`vip.level${displayData.vipLevel}`)}{" "}
                 ·{" "}
                 {displayData.isVerified

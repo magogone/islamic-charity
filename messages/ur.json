@@ -402,6 +402,8 @@
     "upgradeConditionsNotMet": "اپگریڈ کی شرائط پوری نہیں ہوئیں",
     "upgradeConditionsNotMetDesc": "آپ فی الوقت اگلی سطح میں اپگریڈ کرنے کی ضروریات پوری نہیں کرتے۔ براہ کرم سطح کی ضروریات چیک کریں یا تفصیلات کے لیے کسٹمر سروس سے رابطہ کریں",
     "maxLevel": "زیادہ سے زیادہ سطح تک پہنچ گئے",
+    "locked": "بند",
+    "unlockCondition": "پچھلی سطح تک پہنچنے کے بعد کھلے گا",
     "myCharityFootprint": "میرا خیراتی نقش قدم",
     "viewAllCharityActivities": "آپ کی تمام خیراتی سرگرمیوں کو دیکھیں",
     "allianceCharityActivities": "اتحادی خیراتی سرگرمیاں",

@@ -410,6 +410,8 @@
     "upgradeConditionsNotMet": "升级条件未满足",
     "upgradeConditionsNotMetDesc": "您暂未满足升级到下一等级的条件，请查看等级要求或联系客服了解详情",
     "maxLevel": "已达最高等级",
+    "locked": "已锁定",
+    "unlockCondition": "达到上一等级后解锁",
     "myCharityFootprint": "我的慈善足迹",
     "viewAllCharityActivities": "查看您参与过的所有慈善活动",
     "allianceCharityActivities": "联盟慈善活动",
