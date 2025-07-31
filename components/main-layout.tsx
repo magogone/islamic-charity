@@ -38,10 +38,13 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
   useEffect(() => {
     setMounted(true);
 
-    // 确保页面可以正常滚动
+    // 确保页面可以正常滚动，包括水平滚动
     document.body.style.overflow = "auto";
+    document.body.style.overflowX = "auto";
     document.documentElement.style.overflow = "auto";
+    document.documentElement.style.overflowX = "auto";
     document.body.style.height = "auto";
+    document.body.style.minWidth = "420px";
 
     // 监听滚动事件
     const handleScroll = () => {
@@ -86,6 +89,11 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.onwheel = originalWheelHandler;
+      
+      // 清理body样式
+      document.body.style.minWidth = "";
+      document.body.style.overflowX = "";
+      document.documentElement.style.overflowX = "";
     };
   }, [currentPath]);
 
@@ -254,7 +262,7 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
   return (
     <div
       ref={mainLayoutRef}
-      className="min-h-screen bg-islamic-dark text-white overflow-visible"
+      className="min-h-screen bg-islamic-dark text-white overflow-visible min-w-[420px]"
     >
       {/* Header */}
       <header className="px-6 py-4 border-b border-islamic-medium/50 bg-islamic-dark/70 backdrop-blur-sm sticky top-0 z-20">

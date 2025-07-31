@@ -1494,6 +1494,20 @@ export default function VipEventsPage() {
 
                 {/* V3 - 蒙塔哈等级 */}
                 <Card className="bg-gradient-to-br from-[#0a0a0f] to-[#151515] border-[#d4b96e]/20 overflow-hidden relative">
+                  {/* 遮罩层 - 当用户VIP等级小于2时显示 */}
+                  {currentVipLevel < 2 && (
+                    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center rounded-lg">
+                      <div className="text-center p-4">
+                        <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#d4b96e]/20 flex items-center justify-center">
+                          <svg className="w-6 h-6 text-[#d4b96e]" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <p className="text-sm font-medium text-[#d4b96e] mb-1">{t("vipLevel.locked")}</p>
+                        <p className="text-xs text-[#f5efe0]/60">{t("vipLevel.unlockCondition")}</p>
+                      </div>
+                    </div>
+                  )}
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
                     <Badge className="absolute top-4 right-4 bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/30 flex items-baseline">
@@ -1681,6 +1695,20 @@ export default function VipEventsPage() {
 
                 {/* V4 - 米尔贾等级 */}
                 <Card className="bg-gradient-to-br from-[#0a0a0f] to-[#151515] border-[#d4b96e]/20 overflow-hidden relative">
+                  {/* 遮罩层 - 当用户VIP等级小于3时显示 */}
+                  {currentVipLevel < 3 && (
+                    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center rounded-lg">
+                      <div className="text-center p-4">
+                        <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#d4b96e]/20 flex items-center justify-center">
+                          <svg className="w-6 h-6 text-[#d4b96e]" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <p className="text-sm font-medium text-[#d4b96e] mb-1">{t("vipLevel.locked")}</p>
+                        <p className="text-xs text-[#f5efe0]/60">{t("vipLevel.unlockCondition")}</p>
+                      </div>
+                    </div>
+                  )}
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
                     <Badge className="absolute top-4 right-4 bg-[#B8860B]/20 text-[#B8860B] border-[#B8860B]/30 flex items-baseline">
@@ -1894,6 +1922,20 @@ export default function VipEventsPage() {
 
                 {/* V5 - 至善等级 */}
                 <Card className="bg-gradient-to-br from-[#0a0a0f] to-[#151515] border-[#d4b96e]/20 overflow-hidden relative">
+                  {/* 遮罩层 - 当用户VIP等级小于4时显示 */}
+                  {currentVipLevel < 4 && (
+                    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center rounded-lg">
+                      <div className="text-center p-4">
+                        <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#d4b96e]/20 flex items-center justify-center">
+                          <svg className="w-6 h-6 text-[#d4b96e]" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <p className="text-sm font-medium text-[#d4b96e] mb-1">{t("vipLevel.locked")}</p>
+                        <p className="text-xs text-[#f5efe0]/60">{t("vipLevel.unlockCondition")}</p>
+                      </div>
+                    </div>
+                  )}
                   <CardContent className="p-6">
                     {/* 右上角金额 */}
                     <Badge className="absolute top-4 right-4 bg-[#F8F8FF]/20 text-[#F8F8FF] border-[#F8F8FF]/30 flex items-baseline">

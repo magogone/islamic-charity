@@ -98,7 +98,7 @@ export function PaymentDialog({
   const [isSubmitting, setIsSubmitting] = useState(false); // 防止重复提交
   const [donationId, setDonationId] = useState<string | null>(null); // 存储API返回的捐赠ID
   const isMounted = useIsMounted();
-  const { getVipLevelDonationAmount } = useVipInfo();
+  const { getVipLevelDonationAmount, getVipLevelName } = useVipInfo();
   const { success, error, ToastContainer } = useToast();
   const { t } = useTranslation();
 
@@ -308,10 +308,10 @@ export function PaymentDialog({
   const suggestedAmount =
     nextLevelAmount || getVipLevelDonationAmount(nextLevel);
 
-  // 验证输入是否为整数
+  // 验证输入是否为有效金额（最小100）
   const validateInput = (value: string) => {
     const num = parseFloat(value);
-    if (isNaN(num) || num <= 0) {
+    if (isNaN(num) || num < 100) {
       return false;
     }
     return true;
@@ -339,8 +339,19 @@ export function PaymentDialog({
     }
 
     // 改进的金额验证
-    if (!amount || !validateInput(amount)) {
+    if (!amount) {
       error(t("payment.invalidAmount"));
+      return;
+    }
+    
+    const amountNum = parseFloat(amount);
+    if (isNaN(amountNum) || amountNum <= 0) {
+      error(t("payment.invalidAmount"));
+      return;
+    }
+    
+    if (amountNum < 100) {
+      error(t("payment.minimumAmount"));
       return;
     }
 
@@ -496,7 +507,7 @@ export function PaymentDialog({
                 </div>
                 <p className="text-xs text-islamic-cream/60 mt-2">
                   {t("payment.suggestedAmount")
-                    .replace("{level}", nextLevel.toString())
+                    .replace("{level}", getVipLevelName(nextLevel))
                     .replace("{amount}", suggestedAmount.toString())}
                 </p>
               </div>
@@ -603,7 +614,7 @@ export function PaymentDialog({
                 type="button"
                 className="bg-islamic-gold text-islamic-dark hover:bg-islamic-gold/90 w-full"
                 onClick={handlePayment}
-                disabled={!isConnected || !isNetworkSupported || isSubmitting}
+                disabled={!isConnected || !isNetworkSupported || isSubmitting || !validateInput(amount)}
               >
                 {!isConnected
                   ? t("payment.connectWallet")
