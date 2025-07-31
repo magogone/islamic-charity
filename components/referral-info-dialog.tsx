@@ -79,7 +79,7 @@ export function ReferralInfoDialog({
               >
                 <span className="text-sm flex items-center">
                   <Users className="h-4 w-4 mr-2 opacity-70" />
-                  <span>1</span>
+                  <span>1-2</span>
                 </span>
                 <span className="font-medium">
                   {mounted && !ratesLoading ? rateConfigs.referral1 : 1.5}%
@@ -93,7 +93,7 @@ export function ReferralInfoDialog({
               >
                 <span className="text-sm flex items-center">
                   <Users className="h-4 w-4 mr-2 opacity-70" />
-                  <span>3</span>
+                  <span>3-4</span>
                 </span>
                 <span className="font-medium">
                   {mounted && !ratesLoading ? rateConfigs.referral3 : 2}%
@@ -107,7 +107,7 @@ export function ReferralInfoDialog({
               >
                 <span className="text-sm flex items-center">
                   <Users className="h-4 w-4 mr-2 opacity-70" />
-                  <span>5</span>
+                  <span>5+</span>
                 </span>
                 <span className="font-medium">
                   {mounted && !ratesLoading ? rateConfigs.referral5 : 3}%

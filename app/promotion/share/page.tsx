@@ -580,7 +580,7 @@ export default function SharePage() {
               <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/20">
                 <span className="text-xs flex items-center">
                   <Users className="h-3 w-3 mr-1 opacity-70" />
-                  <span>1 {t("share.person")}</span>
+                  <span>1-2 {t("share.people")}</span>
                 </span>
                 <span className="text-xs font-medium text-islamic-gold">
                   {mounted && !ratesLoading
@@ -591,7 +591,7 @@ export default function SharePage() {
               <div className="flex justify-between items-center p-2 rounded-md border border-islamic-medium/50 bg-islamic-medium/20">
                 <span className="text-xs flex items-center">
                   <Users className="h-3 w-3 mr-1 opacity-70" />
-                  <span>2-4 {t("share.people")}</span>
+                  <span>3-4 {t("share.people")}</span>
                 </span>
                 <span className="text-xs font-medium text-islamic-gold">
                   {mounted && !ratesLoading

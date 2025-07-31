@@ -542,7 +542,7 @@ export function InvitationCard({
                 >
                   <span className="text-sm flex items-center">
                     <Users className="h-4 w-4 mr-2 opacity-70" />
-                    <span>1</span>
+                    <span>1-2</span>
                   </span>
                   <span className="font-medium">{getRateText(1)}</span>
                 </div>
@@ -554,7 +554,7 @@ export function InvitationCard({
                 >
                   <span className="text-sm flex items-center">
                     <Users className="h-4 w-4 mr-2 opacity-70" />
-                    <span>3</span>
+                    <span>3-4</span>
                   </span>
                   <span className="font-medium">{getRateText(3)}</span>
                 </div>
@@ -566,7 +566,7 @@ export function InvitationCard({
                 >
                   <span className="text-sm flex items-center">
                     <Users className="h-4 w-4 mr-2 opacity-70" />
-                    <span>5</span>
+                    <span>5+</span>
                   </span>
                   <span className="font-medium">{getRateText(5)}</span>
                 </div>

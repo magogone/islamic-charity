@@ -52,7 +52,7 @@ export function ReliefFundRateCard({
           <div className="flex justify-between items-center p-2 rounded-md bg-islamic-medium/30">
             <span className="text-sm flex items-center">
               <Users className="h-4 w-4 mr-2 opacity-70" />
-              <span>1</span>
+              <span>1-2</span>
             </span>
             <span className={cn("font-medium", getRateClass(1))}>
               {reliefFundRates.referral1}%
@@ -62,7 +62,7 @@ export function ReliefFundRateCard({
           <div className="flex justify-between items-center p-2 rounded-md bg-islamic-medium/30">
             <span className="text-sm flex items-center">
               <Users className="h-4 w-4 mr-2 opacity-70" />
-              <span>3</span>
+              <span>3-4</span>
             </span>
             <span className={cn("font-medium", getRateClass(3))}>
               {reliefFundRates.referral3}%
@@ -72,7 +72,7 @@ export function ReliefFundRateCard({
           <div className="flex justify-between items-center p-2 rounded-md bg-islamic-medium/30">
             <span className="text-sm flex items-center">
               <Users className="h-4 w-4 mr-2 opacity-70" />
-              <span>5</span>
+              <span>5+</span>
             </span>
             <span className={cn("font-medium", getRateClass(5))}>
               {reliefFundRates.referral5}%
