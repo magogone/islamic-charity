@@ -218,7 +218,7 @@ export function PaymentDialog({
             if (txInfo.fromAddress === address) {
               console.log("Found pending transaction:", txHash);
               // 可以选择自动设置交易哈希来触发监听
-              // setTransactionHash(txHash);
+              setTransactionHash(txHash);
 
               // 或者清理超过24小时的旧交易记录
               const isOld = Date.now() - txInfo.timestamp > 24 * 60 * 60 * 1000;
