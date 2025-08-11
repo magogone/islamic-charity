@@ -49,12 +49,14 @@ export default function RootLayout({
           <ClientProviders>
             <RTLProvider>
               <StoreProvider>
+                {/* AuthProvider 保留但内部登录检查逻辑已禁用 */}
                 <AuthProvider>
                   <ApiErrorHandler>
                     <VipSettingsInitializer />
                     <DailyRewardInitializer />
-                    <AuthSessionChecker />
-                    <SessionRefreshChecker />
+                    {/* 临时注释掉认证检查组件 */}
+                    {/* <AuthSessionChecker /> */}
+                    {/* <SessionRefreshChecker /> */}
                     {children}
                   </ApiErrorHandler>
                 </AuthProvider>

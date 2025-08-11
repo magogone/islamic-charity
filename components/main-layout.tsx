@@ -89,7 +89,7 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.onwheel = originalWheelHandler;
-      
+
       // 清理body样式
       document.body.style.minWidth = "";
       document.body.style.overflowX = "";
@@ -126,11 +126,16 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
         donateButton.addEventListener("click", (e) => {
           e.stopPropagation(); // 阻止事件冒泡
 
+          // 临时注释掉登录检查，允许直接访问
+          router.push("/donation");
+
+          /* 原登录检查逻辑已临时注释
           if (isAuthenticated) {
             router.push("/donation");
           } else {
             openLoginModal("/donation");
           }
+          */
         });
       }
 
@@ -138,33 +143,51 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
       if (vipEventsButton) {
         vipEventsButton.addEventListener("click", (e) => {
           e.stopPropagation(); // 阻止事件冒泡
+
+          // 临时注释掉登录检查，允许直接访问
+          router.push("/vip-events");
+
+          /* 原登录检查逻辑已临时注释
           if (isAuthenticated) {
             router.push("/vip-events");
           } else {
             openLoginModal("/vip-events");
           }
+          */
         });
       }
 
       if (inviteButton) {
         inviteButton.addEventListener("click", (e) => {
           e.stopPropagation(); // 阻止事件冒泡
+
+          // 临时注释掉登录检查，允许直接访问
+          router.push("/promotion");
+
+          /* 原登录检查逻辑已临时注释
           if (isAuthenticated) {
             router.push("/promotion");
           } else {
             openLoginModal("/promotion");
           }
+          */
         });
       }
 
       if (profileButton) {
         profileButton.addEventListener("click", (e) => {
           e.stopPropagation(); // 阻止事件冒泡
+
+          // 临时注释掉登录检查，允许直接访问
+          router.push("/profile");
+
+          /* 原登录检查逻辑已临时注释
           if (isAuthenticated) {
             router.push("/profile");
           } else {
             openLoginModal("/profile");
           }
+          */
         });
       }
     };
@@ -222,14 +245,19 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
     sessionStorage.setItem("last_activity", currentTime.toString());
   }, [checkSession, isAuthenticated]);
 
-  // Function to handle navigation with auth check
+  // Function to handle navigation with auth check - 临时注释掉登录限制
   const handleNavigation = (path: string) => {
+    // 临时允许所有页面访问，不检查登录状态
+    router.push(path);
+
+    /* 原登录检查逻辑已临时注释
     if (path === "/" || isAuthenticated) {
       router.push(path);
     } else {
       // Open login modal with target path
       openLoginModal(path);
     }
+    */
   };
 
   // 渲染用户信息或登录按钮的函数 - 暂时简化
