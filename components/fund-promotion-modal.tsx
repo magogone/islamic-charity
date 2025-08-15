@@ -19,9 +19,14 @@ export function FundPromotionModal({
   onPurchase,
 }: FundPromotionModalProps) {
   const { t } = useTranslation();
-  // 优化：预加载donation页面相关资源
+  
+  // 管理背景滚动锁定
   useEffect(() => {
     if (isOpen) {
+      // 锁定背景滚动
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = 'hidden';
+      
       // 预加载donation页面
       const link = document.createElement("link");
       link.rel = "prefetch";
@@ -29,7 +34,9 @@ export function FundPromotionModal({
       document.head.appendChild(link);
 
       return () => {
-        // 清理
+        // 恢复背景滚动
+        document.body.style.overflow = originalStyle;
+        // 清理预加载链接
         if (document.head.contains(link)) {
           document.head.removeChild(link);
         }
@@ -40,9 +47,22 @@ export function FundPromotionModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-sm mx-auto">
-        <Card className="bg-gradient-to-br from-[#2d1b40] to-[#1a0f2e] border-[#d4b96e]/20 overflow-hidden">
+    <div 
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+      onClick={(e) => {
+        // 点击背景区域关闭弹窗
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+      style={{ touchAction: 'none' }} // 防止背景滚动
+    >
+      <div 
+        className="w-full max-w-sm mx-auto max-h-[90vh] overflow-y-auto rounded-lg"
+        style={{ touchAction: 'pan-y' }} // 只允许垂直滚动
+        onClick={(e) => e.stopPropagation()} // 防止事件冒泡到背景
+      >
+        <Card className="bg-gradient-to-br from-[#2d1b40] to-[#1a0f2e] border-[#d4b96e]/20 overflow-hidden shadow-xl">
           <CardContent className="p-0">
             <div className="relative">
               {/* 图片区域 */}
