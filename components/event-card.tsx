@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { cn } from "@/lib/utils"
-import { Calendar } from "lucide-react"
-import { FallbackImage } from "./fallback-image"
+import { cn } from "@/lib/utils";
+import { Calendar } from "lucide-react";
+import { FallbackImage } from "./fallback-image";
 
 interface EventCardProps {
-  imageUrl: string
-  title: string
-  description?: string
-  date?: string
-  time?: string
-  location?: string
-  language?: string
-  isFeatured?: boolean
-  className?: string
-  onClick?: () => void
-  fullWidth?: boolean
+  imageUrl: string;
+  title: string;
+  description?: string;
+  date?: string;
+  time?: string;
+  location?: string;
+  language?: string;
+  isFeatured?: boolean;
+  className?: string;
+  onClick?: () => void;
+  fullWidth?: boolean;
 }
 
 export function EventCard({
@@ -36,7 +36,7 @@ export function EventCard({
       className={cn(
         "rounded-xl overflow-hidden bg-islamic-cardBg/90 backdrop-blur-sm shadow-md flex flex-col",
         fullWidth ? "w-full" : "w-[280px]",
-        className,
+        className
       )}
       onClick={onClick}
     >
@@ -72,24 +72,34 @@ export function EventCard({
 
       {/* Content area */}
       <div className="p-3 flex-1 flex flex-col">
-        <h3 className="text-base font-medium text-[#d4b96e] line-clamp-1">{title}</h3>
-        {description && <p className="text-xs text-[#f5efe0]/70 mt-1 line-clamp-4">{description}</p>}
+        <h3 className="text-base font-medium text-[#d4b96e] line-clamp-1">
+          {title}
+        </h3>
+        {description && (
+          <p className="text-xs text-[#f5efe0]/70 mt-1 line-clamp-6 leading-relaxed">
+            {description}
+          </p>
+        )}
 
         <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-1 text-xs">
           {time && (
             <>
               <div className="text-[#f5efe0]/70">Time</div>
-              <div className="font-medium text-[#f5efe0] text-right">{time}</div>
+              <div className="font-medium text-[#f5efe0] text-right">
+                {time}
+              </div>
             </>
           )}
           {location && (
             <>
               <div className="text-[#f5efe0]/70">Location</div>
-              <div className="font-medium text-[#f5efe0] text-right">{location}</div>
+              <div className="font-medium text-[#f5efe0] text-right">
+                {location}
+              </div>
             </>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }

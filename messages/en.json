@@ -7,8 +7,9 @@
     "invite": "Invite",
     "profile": "Profile",
     "member": "Member",
-    "alliance": "Alliance",
-    "ongoing": "Ongoing"
+    "alliance": "Fund",
+    "ongoing": "Live",
+    "overseas": "Global"
   },
   "common": {
     "loading": "Loading...",
@@ -153,6 +154,12 @@
     "donationAndReturns": "Donation & Returns",
     "donation": "Donation",
     "totalReturn": "Total Return",
+    "voucher": "Voucher Reward",
+    "currentVoucher": "Current Voucher",
+    "upgradeCompleteReward": "Received After Upgrade",
+    "voucherSuffix": "Voucher",
+    "nextLevelVoucherReward": "Get voucher",
+    "maxLevel": "Max Level",
     "period": "Period",
     "days": "days",
     "adjustedBasedOnReferrals": "Adjusted based on referrals",
@@ -179,6 +186,7 @@
     "importantNote": "Important Note",
     "upgradeNote": "When upgrading from one grade to another, you need to pay the full amount for the new grade, not just the difference between grades.",
     "upgradeExample": "For example, to upgrade from Buraq Grade (100 USD) to Badar Grade (300 USD), you need to pay the full 300 USD, not just the 200 USD difference.",
+    "voucherRewardNote": "After donation upgrade, you will receive vouchers for the next level.",
     "currentVip": "{level}",
     "toVip": "{amount}USD to {level}",
     "fullAmountRequired": "Full amount required for {level}, not just the difference"
@@ -374,6 +382,10 @@
     "seniorMember": "Senior member",
     "eliteMember": "Elite member",
     "cumulativeDonation": "Cumulative donation reaches {amount}",
+    "originalPrice": "Original Price",
+    "actualPrice": "Actual Payment",
+    "voucherDiscount": "Use V{level} Voucher",
+    "rewardAfterUpgrade": "🎁 Get V{level} Voucher after Upgrade",
     "generation1": "(1st Gen)",
     "generation2": "(2nd Gen)",
     "generation3to5": "(3-5th Gen)",
@@ -448,6 +460,25 @@
     "orphanEducationSupportDesc": "Long-term support for orphans to receive education, giving them opportunities to change their destiny. Currently supporting 500 orphans, target 1000.",
     "mosqueWellConstruction": "Mosque Well Construction Project",
     "mosqueWellConstructionDesc": "Building wells in water-scarce areas to provide clean drinking water for local Muslim communities. One well can serve an entire village.",
+    "charityPromotionRewardFund": "Charity Promotion Reward Fund",
+    "charityPromotionRewardFundDesc": "Providing reward incentives for volunteers who actively promote charity concepts and participate in public welfare activities. Spreading good deeds and continuing love.",
+    "entrepreneurshipFund": "Entrepreneurship Support Fund",
+    "entrepreneurshipFundDesc": "Providing financial support for young Muslims with entrepreneurial dreams, helping them achieve their business goals and create more job opportunities.",
+    "dreamFund": "Dream Realization Fund",
+    "dreamFundDesc": "Supporting children from disadvantaged families to pursue their educational dreams, providing comprehensive assistance including tuition and living expenses.",
+    "pensionFund": "Pension Security Fund",
+    "pensionFundDesc": "Providing basic living support for elderly Muslims lacking security, ensuring their later years are dignified and secure.",
+    "fundScale": "Fund Scale",
+    "beneficiaryCount": "Beneficiaries",
+    "notYetOpen": "Not Yet Open",
+    "fundRelease": "Fund Release",
+    "releaseProgress": "Release Progress",
+    "fundraisingProgress": "Fundraising Progress",
+    "released": "Released",
+    "totalScale": "Total Scale",
+    "target": "Target",
+    "completionDate": "Completion Date",
+    "participantsCount": "participants",
     "palestine": "Palestine",
     "syria": "Syria",
     "syriaBorder": "Syria Border",
@@ -487,5 +518,134 @@
     "completed": "Completed",
     "loading": "Loading...",
     "percentComplete": "Complete"
+  },
+  "modal": {
+    "title": "[Barakat Alliance] Prophet Muhammad's Birthday Gratitude Event",
+    "badge": "Gratitude Reward",
+    "description": "To celebrate Prophet Muhammad's Birthday Gratitude Event, millions of dollars membership cashback reward. Pay $20 membership fee now, and the foundation will immediately return membership fees in 3 days, $7 per day.",
+    "activityDetails": "Event Details",
+    "membershipFee": "Membership Fee: $20 USD",
+    "dailyReturn": "Daily Return: $7 USD",
+    "returnPeriod": "Return Period: 3 days",
+    "totalReward": "Total Reward: $2,000,000 USD",
+    "noConditions": "No Additional Conditions",
+    "startTime": "Start Time: To Be Determined",
+    "activityIntro": "Event Introduction:",
+    "introText": "Become a member of the Foundation at no cost and enjoy full access to our welfare funds and support programs. Act now to claim your extra $20 Blessing as our gift of gratitude.",
+    "remainingQuota": "Remaining Quota: 100,000 / 100,000",
+    "joinNow": "In the Name of Allah · Join Now"
+  },
+  "overseas": {
+    "title": "Overseas Employment Opportunities",
+    "subtitle": "Global employment applications and opportunities showcase",
+    "apply": "Apply Now",
+    "available": "Available",
+    "salaryTreatment": "Salary",
+    "housingInsurance": "Housing",
+    "religiousEnvironment": "Religious",
+    "monthlySalary": "Salary:",
+    "workingHours": "Hours:",
+    "overtime": "Overtime:",
+    "countries": {
+      "uae": {
+        "name": "UAE",
+        "salary": "$500-800 (General) / $800-1,500 (Technical/Drivers) / $1,500-2,500+ (IT)",
+        "hours": "48 hours/week",
+        "overtime": "Overtime pay + ≥1 day rest/week",
+        "housing": "Employer housing and transport common; Medical insurance; Emirates ID/Work permit",
+        "religious": "Halal food and prayer spaces widespread; Ramadan arrangements thoughtful"
+      },
+      "saudi": {
+        "name": "Saudi Arabia",
+        "salary": "$400-700 (General) / $900-1,800 (Technical/Drivers)",
+        "hours": "48 hours/week",
+        "overtime": "1.5x overtime+; 21-30 days annual leave",
+        "housing": "Most positions include accommodation/transport; Medical insurance and Iqama",
+        "religious": "Muslim majority; Halal/prayer everywhere"
+      },
+      "malaysia": {
+        "name": "Malaysia",
+        "salary": "$450-700 (Factory/Service) / $600-900 (Technical)",
+        "hours": "48 hours/week",
+        "overtime": "1.5x overtime",
+        "housing": "Dormitory/allowance common; Employer medical insurance",
+        "religious": "Very Muslim-friendly"
+      },
+      "korea": {
+        "name": "South Korea",
+        "salary": "$1,200-1,800+ (Manufacturing/Fishing; depends on overtime)",
+        "hours": "40 hours/week",
+        "overtime": "1.5x overtime; Severance after 1 year",
+        "housing": "Dormitory (small deduction); Four major insurances",
+        "religious": "Halal food available in cities; Prayer/fasting coordination"
+      },
+      "japan": {
+        "name": "Japan",
+        "salary": "$1,200-2,000 (Care/Food/Construction; includes overtime)",
+        "hours": "40 hours/week",
+        "overtime": "1.25x+ overtime",
+        "housing": "Dormitory (deduction); Social insurance",
+        "religious": "Halal/prayer facilities increasing"
+      },
+      "germany": {
+        "name": "Germany",
+        "salary": "$2,000-2,800 (Entry logistics/warehouse/care); skilled trades higher",
+        "hours": "~40 hours/week",
+        "overtime": "Collective agreement overtime; 20-30 days annual leave",
+        "housing": "Full social insurance; Self-arranged housing",
+        "religious": "Religious accommodation arrangements common"
+      },
+      "italy": {
+        "name": "Italy",
+        "salary": "$1,400-2,200 (Per CCNL; some 13th salary)",
+        "hours": "~40 hours/week",
+        "overtime": "Per CCNL agreement",
+        "housing": "Full social insurance and medical",
+        "religious": "Halal/prayer convenient in major cities"
+      },
+      "canada": {
+        "name": "Canada",
+        "salary": "CAD 20-35+/hour → ~$3,200-5,600+/month",
+        "hours": ">40-44 hours",
+        "overtime": "1.5x overtime (provincial regulations)",
+        "housing": "Provincial medical; Employer benefits vary",
+        "religious": "Religious accommodation obligations"
+      },
+      "china": {
+        "name": "China",
+        "salary": "$1,200-3,000+ (Education/Technical/Support)",
+        "hours": "~40 hours/week",
+        "overtime": "Local regulations",
+        "housing": "Housing allowance/insurance common",
+        "religious": "Confirm halal/prayer arrangements"
+      },
+      "australia": {
+        "name": "Australia",
+        "salary": "~$3,000-5,500+ (Trades/Trucking/Fishing/IT varies)",
+        "hours": "38 hours/week standard",
+        "overtime": "1.5-2x overtime; ≥20 days annual leave",
+        "housing": "Employer superannuation (~11%); Most visa OVHC; Self-arranged housing",
+        "religious": "Religious accommodation expected; Halal food common in cities"
+      }
+    }
+  },
+  "customerService": {
+    "welcome": "Hello! Welcome to Barakat Alliance Customer Service Center! 👋",
+    "introduction": "I am your dedicated customer service assistant. Barakat Alliance provides comprehensive charitable financial services, including charitable donations, investment management, VIP membership, overseas employment, and more.",
+    "services": "🏆 Our Core Services:\n💰 Charitable Donations - Various charity project donations\n📈 Investment Management - Fund investment and profit distribution\n👑 VIP Membership - Exclusive benefits and premium services\n🌍 Overseas Employment - Global job opportunity applications\n🎁 Reward Withdrawal - Profit withdrawal and benefit collection",
+    "helpPrompt": "Please tell me which service you would like to know about, or what questions you need help with? I will provide detailed answers for you! 😊",
+    "reply": "Thank you for your inquiry! I have received your information, and our professional consultant will contact you within 5 minutes.",
+    "quickReplies": {
+      "donation": "Charity Donation Inquiry",
+      "investment": "Investment Services",
+      "vip": "VIP Member Benefits",
+      "overseas": "Overseas Job Application",
+      "rewards": "Reward Withdrawal Issues",
+      "account": "Account Related Issues",
+      "human": "Contact Human Agent"
+    },
+    "inputPlaceholder": "Please enter your question...",
+    "send": "Send",
+    "back": "Back"
   }
 }

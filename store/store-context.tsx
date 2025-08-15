@@ -12,6 +12,17 @@ import {
 import type { NewsAnnouncementItemProps } from "@/components/news-announcement-item";
 import type { AuthState, AuthUser } from "./auth-types";
 
+// 回馈券类型定义
+export interface VoucherItem {
+  id: string;
+  type: "V1" | "V2" | "V3" | "V4" | "V5";
+  amount: number;
+  status: "active" | "used";
+  createdAt: string;
+  usedAt?: string;
+  usedForLevel?: number;
+}
+
 // Define storage keys
 const STORAGE_KEYS = {
   AUTH_TOKEN: "barkat_auth_token",
@@ -133,7 +144,11 @@ export interface StoreState {
           level5: number;
           total: number;
         };
-        donationAmount: number;
+        donationAmount: number; // 实付金额（使用回馈券后的价格）
+        originalPrice: number; // 原价
+        voucherDiscount: number; // 回馈券抵扣金额
+        currentLevelVoucher: number; // 当前等级的回馈券
+        nextLevelVoucher: number; // 升级后获得的下级回馈券
         totalReturn: number;
         dailyFundRange: string;
         period: number;
@@ -145,6 +160,12 @@ export interface StoreState {
       referral3: number;
       referral5: number;
     };
+  };
+
+  // 回馈券数据
+  vouchers: {
+    available: VoucherItem[];
+    totalValue: number;
   };
 
   // News data
@@ -161,6 +182,12 @@ type ActionType =
   | { type: "UPDATE_INVITATION"; payload: Partial<StoreState["invitation"]> }
   | { type: "UPDATE_NEWS"; payload: NewsAnnouncementItemProps[] }
   | { type: "UPDATE_VIP_INFO"; payload: Partial<StoreState["vipInfo"]> }
+  | { type: "UPDATE_VOUCHERS"; payload: Partial<StoreState["vouchers"]> }
+  | { type: "ADD_VOUCHER"; payload: VoucherItem }
+  | {
+      type: "USE_VOUCHER";
+      payload: { voucherId: string; usedForLevel: number };
+    }
   | {
       type: "UPDATE_TEAM";
       payload: {
@@ -200,9 +227,9 @@ const initialState: StoreState = {
   user: {
     id: "user123",
     username: "User123456",
-    vipLevel: 1,
-    totalDonation: 100,
-    referrals: 2,
+    vipLevel: 0,
+    totalDonation: 0,
+    referrals: 0,
   },
   donation: {
     dailyFunds: {
@@ -215,14 +242,14 @@ const initialState: StoreState = {
     endDate: "2023-05-10",
     currentRate: 2,
     maxRate: 2.5,
-    totalAccumulated: 120,
-    totalExpectedReward: 120,
+    totalAccumulated: 100,
+    totalExpectedReward: 100,
     totalMaxReward: 180,
     withdrawnAmount: 50,
     withdrawableAmount: 30,
-    referrals: 2,
-    totalDonation: 100,
-    vipLevel: 1,
+    referrals: 0,
+    totalDonation: 0,
+    vipLevel: 0,
     dailyRewards: [
       {
         date: "2023-04-01",
@@ -277,8 +304,12 @@ const initialState: StoreState = {
           level5: 2,
           total: 20,
         },
-        donationAmount: 100,
-        totalReturn: 120,
+        donationAmount: 80, // V1等级捐款金额
+        originalPrice: 80, // 原价
+        voucherDiscount: 0, // 无抵扣概念
+        currentLevelVoucher: 20, // 当前等级的回馈券（从20USD入会获得）
+        nextLevelVoucher: 66, // 升级后获得V2回馈券
+        totalReturn: 100, // 80USD捐赠+20USD回馈券=100USD总价值
         dailyFundRange: "1.00-3.00 USD",
         period: 120,
       },
@@ -291,7 +322,11 @@ const initialState: StoreState = {
           level5: 2,
           total: 22,
         },
-        donationAmount: 300,
+        donationAmount: 300, // V2等级原价付款
+        originalPrice: 300, // 原价
+        voucherDiscount: 0, // 无抵扣概念
+        currentLevelVoucher: 66, // 当前等级的回馈券（从V1升级获得）
+        nextLevelVoucher: 122, // 升级后获得V3回馈券
         totalReturn: 366,
         dailyFundRange: "3.05-9.15 USD",
         period: 120,
@@ -305,8 +340,12 @@ const initialState: StoreState = {
           level5: 2,
           total: 24,
         },
-        donationAmount: 500,
-        totalReturn: 620,
+        donationAmount: 500, // V3等级原价付款
+        originalPrice: 500, // 原价
+        voucherDiscount: 0, // 无抵扣概念
+        currentLevelVoucher: 122, // 当前等级的回馈券（从V2升级获得）
+        nextLevelVoucher: 200, // 升级后获得V4回馈券
+        totalReturn: 622,
         dailyFundRange: "5.15-15.50 USD",
         period: 120,
       },
@@ -319,8 +358,12 @@ const initialState: StoreState = {
           level5: 2,
           total: 26,
         },
-        donationAmount: 800,
-        totalReturn: 1008,
+        donationAmount: 800, // V4等级原价付款
+        originalPrice: 800, // 原价
+        voucherDiscount: 0, // 无抵扣概念
+        currentLevelVoucher: 200, // 当前等级的回馈券（从V3升级获得）
+        nextLevelVoucher: 360, // 升级后获得V5回馈券
+        totalReturn: 1000,
         dailyFundRange: "8.40-25.20 USD",
         period: 120,
       },
@@ -333,7 +376,11 @@ const initialState: StoreState = {
           level5: 2,
           total: 30,
         },
-        donationAmount: 1200,
+        donationAmount: 1200, // V5等级原价付款
+        originalPrice: 1200, // 原价
+        voucherDiscount: 0, // 无抵扣概念
+        currentLevelVoucher: 360, // 当前等级的回馈券（从V4升级获得）
+        nextLevelVoucher: 0, // 最高等级，无下级回馈券
         totalReturn: 1560,
         dailyFundRange: "13.00-39.00 USD",
         period: 120,
@@ -345,6 +392,11 @@ const initialState: StoreState = {
       referral3: 2,
       referral5: 3,
     },
+  },
+  // 回馈券数据
+  vouchers: {
+    available: [],
+    totalValue: 0,
   },
   news: [
     {
@@ -373,8 +425,7 @@ const initialState: StoreState = {
       title: "Annual Charity Report Released",
       content:
         "Barkat Foundation releases its 2023 annual charity report, detailing charitable achievements, fund usage, and future plans over the past year. The report highlights the foundation's commitment to transparency and accountability in its operations. Key achievements include providing clean water to over 10,000 people and supporting the education of 500 children.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=600&auto=format&fit=crop",
+      imageUrl: "/images/news/annual-charity-report.jpg",
       date: "2023-04-05",
       type: "news",
     },
@@ -442,6 +493,51 @@ const reducer = (state: StoreState, action: ActionType): StoreState => {
         vipInfo: {
           ...state.vipInfo,
           ...action.payload,
+        },
+      };
+    case "UPDATE_VOUCHERS":
+      return {
+        ...state,
+        vouchers: {
+          ...state.vouchers,
+          ...action.payload,
+        },
+      };
+    case "ADD_VOUCHER":
+      const newVouchers = [...state.vouchers.available, action.payload];
+      const newTotalValue = newVouchers.reduce(
+        (total, voucher) =>
+          voucher.status === "active" ? total + voucher.amount : total,
+        0
+      );
+      return {
+        ...state,
+        vouchers: {
+          available: newVouchers,
+          totalValue: newTotalValue,
+        },
+      };
+    case "USE_VOUCHER":
+      const updatedVouchers = state.vouchers.available.map((voucher) =>
+        voucher.id === action.payload.voucherId
+          ? {
+              ...voucher,
+              status: "used" as const,
+              usedAt: new Date().toISOString(),
+              usedForLevel: action.payload.usedForLevel,
+            }
+          : voucher
+      );
+      const updatedTotalValue = updatedVouchers.reduce(
+        (total, voucher) =>
+          voucher.status === "active" ? total + voucher.amount : total,
+        0
+      );
+      return {
+        ...state,
+        vouchers: {
+          available: updatedVouchers,
+          totalValue: updatedTotalValue,
         },
       };
     case "AUTH_LOGIN_START":

@@ -199,32 +199,15 @@ export default function DonationPage() {
     };
   }, [isAuthenticated]); // 只依赖于认证状态
 
-  // 检查 URL 参数或 sessionStorage 以决定是否打开对话框
-  const shouldOpenDialog = (() => {
-    if (typeof window === "undefined") return false;
+  // 初始状态为 false，在 useEffect 中检查 URL 参数
+  const [paymentOpen, setPaymentOpen] = useState(false);
 
-    // 检查 URL 参数
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("openPayment") === "true") {
-      return true;
-    }
-
-    // 检查 sessionStorage
-    const storedFlag = sessionStorage.getItem("open_payment_dialog");
-    if (storedFlag === "true") {
-      sessionStorage.removeItem("open_payment_dialog");
-      return true;
-    }
-
-    return false;
-  })();
-
-  // 初始状态基于参数
-  const [paymentOpen, setPaymentOpen] = useState(shouldOpenDialog);
+  // 是否跳过VIP升级提示
+  const [skipVipPrompt, setSkipVipPrompt] = useState(false);
 
   // 创建安全的用户数据
   const safeUserData = {
-    vipLevel: userData?.vipLevel ?? 1,
+    vipLevel: userData?.vipLevel ?? 0,
     totalDonation: userData?.totalDonation ?? 0,
   };
 
@@ -232,17 +215,34 @@ export default function DonationPage() {
   const nextVipLevel = Math.min(safeUserData.vipLevel + 1, 5);
   const nextVipAmount = getVipLevelDonationAmount(nextVipLevel);
 
-  // 即时检查 URL 参数并打开对话框
+  // 优化：立即检查 URL 参数并预设状态
   useEffect(() => {
     if (typeof window !== "undefined") {
       // 检查 URL 参数
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get("openPayment") === "true") {
-        setPaymentOpen(true);
+        // 检查是否是先知诞辰活动
+        const activityType = urlParams.get("type");
+        const fixedAmount = urlParams.get("amount");
+        const skipVipPrompt = urlParams.get("skipVipPrompt");
+
+        if (activityType === "prophet_birthday" && fixedAmount === "20") {
+          // 设置固定金额并跳过VIP提示
+          updateDonation({ totalDonation: 20 });
+          setSkipVipPrompt(true);
+        }
+
+        // 优化：使用 requestAnimationFrame 确保DOM已准备就绪后再打开弹窗
+        requestAnimationFrame(() => {
+          setPaymentOpen(true);
+        });
 
         // 清除 URL 参数
         const url = new URL(window.location.href);
         url.searchParams.delete("openPayment");
+        url.searchParams.delete("type");
+        url.searchParams.delete("amount");
+        url.searchParams.delete("skipVipPrompt");
         window.history.replaceState({}, "", url);
       }
 
@@ -366,6 +366,8 @@ export default function DonationPage() {
         onOpenChange={setPaymentOpen}
         currentVipLevel={safeUserData.vipLevel}
         nextLevelAmount={nextVipAmount}
+        skipVipPrompt={skipVipPrompt}
+        targetLevel={skipVipPrompt ? undefined : nextVipLevel}
       />
     </MainLayout>
   );

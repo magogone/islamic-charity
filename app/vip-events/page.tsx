@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MainLayout } from "@/components/main-layout";
 import { useTranslation } from "@/lib/i18n";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,8 +9,10 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/store/use-auth";
 import { useVipInfo } from "@/store/use-vip-info";
 import { useAuthContext } from "@/store/auth-context";
+import { useVouchers } from "@/hooks/use-vouchers";
 import { upgradeVipLevel } from "@/lib/api";
 import { useToast } from "@/components/ui/toast";
+import { useRouter } from "next/navigation";
 import {
   Play,
   Calendar,
@@ -30,10 +32,11 @@ import {
   Info,
   Target,
   Clock,
+  Globe,
 } from "lucide-react";
 
 // 定义类型
-type CategoryType = "member" | "alliance" | "level" | "ongoing";
+type CategoryType = "member" | "alliance" | "level" | "ongoing" | "overseas";
 
 // VIP徽章组件
 const VipBadge = ({ vipLevel }: { vipLevel: number }) => {
@@ -460,9 +463,28 @@ const VipBadge = ({ vipLevel }: { vipLevel: number }) => {
 
 export default function VipEventsPage() {
   const { t } = useTranslation();
+  const router = useRouter();
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryType>("member");
   const [isUpgrading, setIsUpgrading] = useState(false);
+
+  // 动态点赞和观看数状态
+  const [dynamicStats, setDynamicStats] = useState<{
+    [key: number]: { likes: number; views: number };
+  }>({});
+
+  // 获取动态数据的函数
+  const getDynamicStats = (
+    cardId: number,
+    originalLikes: number,
+    originalViews: number
+  ) => {
+    const dynamic = dynamicStats[cardId];
+    return {
+      likes: dynamic?.likes || originalLikes || 0,
+      views: dynamic?.views || originalViews || 0,
+    };
+  };
 
   // 获取真实用户数据和VIP配置
   const { user, isAuthenticated, getCurrentUser } = useAuth();
@@ -472,6 +494,7 @@ export default function VipEventsPage() {
     getVipLevelDonationAmount,
     getDailyFundRangeForLevel,
     getVipLevelPeriod,
+    getVipLevelNextVoucher,
   } = useVipInfo();
 
   // 计算升级所需金额和进度
@@ -589,54 +612,57 @@ export default function VipEventsPage() {
   // 获取翻译后的事件数据
   const getTranslatedEvents = () => {
     const memberEvents = [
+      // 会员专享基金卡片 - 只显示不开放捐赠
       {
-        id: 1,
-        title: t("events.palestinianChildrenWinterClothes"),
-        description: t("events.palestinianChildrenWinterClothesDesc"),
-        image:
-          "https://images.unsplash.com/photo-1500916434205-0c77489c6cf7?w=600&q=80",
-        date: "2024-12-15",
-        location: t("events.palestine"),
-        type: "member",
-        category: t("events.participated"),
-        isVideo: false,
-        likes: 328,
-        views: 2520,
-        status: "completed",
-        donationAmount: 500,
-      },
-      {
-        id: 2,
-        title: t("events.syrianRefugeeAid"),
-        description: t("events.syrianRefugeeAidDesc"),
-        image:
-          "https://images.unsplash.com/photo-1601972602237-8c79241e468b?w=600&q=80",
-        date: t("events.ongoing"),
-        location: t("events.syriaBorder"),
-        type: "member",
-        category: t("events.participating"),
-        isVideo: true,
-        videoUrl: "https://example.com/syria-aid-video.mp4",
-        likes: 456,
-        views: 3100,
-        status: "ongoing",
-        progress: 80,
-      },
-      {
-        id: 3,
-        title: t("events.ramadanFoodPackages"),
-        description: t("events.ramadanFoodPackagesDesc"),
-        image:
-          "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&q=80",
-        date: "2024-03-20",
+        id: 11,
+        title: t("events.entrepreneurshipFund"),
+        description: t("events.entrepreneurshipFundDesc"),
+        image: "/images/events/entrepreneurship-fund-new.jpg",
+        date: "暂未开放",
         location: t("events.multipleCountries"),
         type: "member",
-        category: t("events.completed"),
+        category: "基金项目",
         isVideo: false,
-        likes: 267,
-        views: 1890,
-        status: "completed",
-        donationAmount: 300,
+        likes: 896,
+        views: 5640,
+        status: "display_only", // 只显示，不开放捐赠
+        fundAmount: 300000000,
+        beneficiaries: 320,
+        priority: "high",
+      },
+      {
+        id: 12,
+        title: t("events.dreamFund"),
+        description: t("events.dreamFundDesc"),
+        image: "/images/events/dream-fund.jpg",
+        date: "暂未开放",
+        location: t("events.multipleCountries"),
+        type: "member",
+        category: "基金项目",
+        isVideo: false,
+        likes: 1247,
+        views: 8950,
+        status: "display_only", // 只显示，不开放捐赠
+        fundAmount: 500000000,
+        beneficiaries: 580,
+        priority: "medium",
+      },
+      {
+        id: 13,
+        title: t("events.pensionFund"),
+        description: t("events.pensionFundDesc"),
+        image: "/images/events/pension-fund.jpg",
+        date: "暂未开放",
+        location: t("events.multipleCountries"),
+        type: "member",
+        category: "基金项目",
+        isVideo: false,
+        likes: 734,
+        views: 4280,
+        status: "display_only", // 只显示，不开放捐赠
+        fundAmount: 100000000,
+        beneficiaries: 1200,
+        priority: "high",
       },
     ];
 
@@ -667,7 +693,7 @@ export default function VipEventsPage() {
         location: t("events.multipleCountries"),
         type: "alliance",
         category: t("events.jointAction"),
-        isVideo: true,
+        isVideo: false,
         videoUrl: "https://example.com/joint-relief.mp4",
         likes: 567,
         views: 4340,
@@ -692,6 +718,89 @@ export default function VipEventsPage() {
     ];
 
     const ongoingEvents = [
+      // 慈善公益推广回馈基金 - 基金释放形式
+      {
+        id: 10,
+        title: t("events.charityPromotionRewardFund"),
+        description: t("events.charityPromotionRewardFundDesc"),
+        image:
+          "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=600&q=80",
+        date: t("events.longTerm"),
+        progress: 14, // 已释放14%的资金
+        location: t("events.multipleCountries"),
+        type: "ongoing",
+        category: "基金释放",
+        totalFundAmount: 80000000, // 总规模8000万USD
+        releasedAmount: 11200000, // 已释放金额
+        beneficiaries: 800, // 受益人数
+        likes: 1680,
+        views: 12500,
+        urgency: "normal",
+        status: "fund_release", // 特殊状态：资金释放
+      },
+      // 从会员标签移动过来的三个卡片，状态改为已完成，结束时间设置为2025年8月前
+      {
+        id: 1,
+        title: t("events.palestinianChildrenWinterClothes"),
+        description: t("events.palestinianChildrenWinterClothesDesc"),
+        image: "/images/events/children-winter-clothes.jpg",
+        date: "2025-07-15", // 结束时间设置为2025年7月
+        location: t("events.palestine"),
+        type: "ongoing",
+        category: t("events.completed"), // 状态改为已完成
+        isVideo: false,
+        likes: 1285,
+        views: 8350,
+        status: "completed", // 状态改为已完成
+        donationAmount: 500,
+        progress: 100, // 完成度100%
+        targetAmount: 500,
+        currentAmount: 500,
+        participants: 250,
+        urgency: "normal",
+      },
+      {
+        id: 2,
+        title: t("events.syrianRefugeeAid"),
+        description: t("events.syrianRefugeeAidDesc"),
+        image: "/images/events/syrian-refugee-aid.jpg",
+        date: "2025-06-30", // 结束时间设置为2025年6月
+        location: t("events.syriaBorder"),
+        type: "ongoing",
+        category: t("events.completed"), // 状态改为已完成
+        isVideo: true,
+        videoUrl: "https://example.com/syria-aid-video.mp4",
+        likes: 2156,
+        views: 12700,
+        status: "completed", // 状态改为已完成
+        progress: 100, // 完成度100%
+        targetAmount: 800,
+        currentAmount: 800,
+        participants: 420,
+        urgency: "normal",
+      },
+      {
+        id: 3,
+        title: t("events.ramadanFoodPackages"),
+        description: t("events.ramadanFoodPackagesDesc"),
+        image:
+          "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&q=80",
+        date: "2025-08-15", // 结束时间设置为2025年8月
+        location: t("events.multipleCountries"),
+        type: "ongoing",
+        category: t("events.completed"), // 状态改为已完成
+        isVideo: false,
+        likes: 1867,
+        views: 9420,
+        status: "completed", // 状态改为已完成
+        donationAmount: 300,
+        progress: 100, // 完成度100%
+        targetAmount: 300,
+        currentAmount: 300,
+        participants: 6000,
+        urgency: "normal",
+      },
+      // 原有的进行中项目
       {
         id: 7,
         title: t("events.gazaMedicalAid"),
@@ -732,8 +841,7 @@ export default function VipEventsPage() {
         id: 9,
         title: t("events.mosqueWellConstruction"),
         description: t("events.mosqueWellConstructionDesc"),
-        image:
-          "https://images.unsplash.com/photo-1595435742656-5272d0b3fa82?w=600&q=80",
+        image: "/images/events/mosque-well-construction.jpg",
         date: t("events.ongoing"),
         progress: 40,
         location: t("events.africa"),
@@ -752,6 +860,69 @@ export default function VipEventsPage() {
   };
 
   const { memberEvents, allianceEvents, ongoingEvents } = getTranslatedEvents();
+
+  // 获取所有活跃卡片的函数（排除已完成的卡片）
+  const getAllActiveCards = () => {
+    const allCards = [...memberEvents, ...allianceEvents, ...ongoingEvents];
+    return allCards.filter((card) => card.status !== "completed");
+  };
+
+  // 初始化动态数据
+  useEffect(() => {
+    const activeCards = getAllActiveCards();
+    const initialStats: { [key: number]: { likes: number; views: number } } =
+      {};
+
+    activeCards.forEach((card) => {
+      initialStats[card.id] = {
+        likes: card.likes || 0,
+        views: card.views || 0,
+      };
+    });
+
+    setDynamicStats(initialStats);
+  }, []);
+
+  // 动态增长逻辑
+  useEffect(() => {
+    const activeCards = getAllActiveCards();
+
+    const scheduleRandomUpdate = () => {
+      // 随机选择一个活跃卡片
+      const randomCard =
+        activeCards[Math.floor(Math.random() * activeCards.length)];
+      if (!randomCard) return;
+
+      // 随机决定更新点赞还是观看数，或者两者都更新
+      const updateType = Math.random();
+      const likesIncrement =
+        updateType < 0.4 ? Math.floor(Math.random() * 3) + 1 : 0; // 40%概率增加1-3个点赞
+      const viewsIncrement =
+        updateType > 0.3 ? Math.floor(Math.random() * 8) + 1 : 0; // 70%概率增加1-8个观看
+
+      setDynamicStats((prev) => ({
+        ...prev,
+        [randomCard.id]: {
+          likes:
+            (prev[randomCard.id]?.likes || randomCard.likes || 0) +
+            likesIncrement,
+          views:
+            (prev[randomCard.id]?.views || randomCard.views || 0) +
+            viewsIncrement,
+        },
+      }));
+
+      // 设置下一次更新的随机时间间隔（2-8秒）
+      const nextUpdateDelay = Math.floor(Math.random() * 6000) + 2000;
+      setTimeout(scheduleRandomUpdate, nextUpdateDelay);
+    };
+
+    // 开始第一次更新
+    const initialDelay = Math.floor(Math.random() * 3000) + 1000; // 1-4秒后开始
+    const timeoutId = setTimeout(scheduleRandomUpdate, initialDelay);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>
@@ -782,7 +953,7 @@ export default function VipEventsPage() {
         }
       `}</style>
       <div className="space-y-8">
-        {/* VIP会员卡片 */}
+        {/* 会员卡片 */}
         <div className="p-3">
           <div className="relative bg-gradient-to-br from-[#0a0a0f] to-[#151515] rounded-2xl overflow-hidden border border-[#d4b96e]/20 shadow-lg">
             {/* 背景纹理 */}
@@ -902,7 +1073,7 @@ export default function VipEventsPage() {
         <div>
           {/* 水平标签组 */}
           <div className="border-b border-[#d4b96e]/20">
-            <div className="grid grid-cols-4 w-full">
+            <div className="grid grid-cols-5 w-full">
               {[
                 {
                   key: "member" as CategoryType,
@@ -923,6 +1094,11 @@ export default function VipEventsPage() {
                   key: "ongoing" as CategoryType,
                   label: t("navigation.ongoing"),
                   Icon: Clock,
+                },
+                {
+                  key: "overseas" as CategoryType,
+                  label: t("navigation.overseas"),
+                  Icon: Globe,
                 },
               ].map(({ key, label, Icon }) => (
                 <button
@@ -983,6 +1159,12 @@ export default function VipEventsPage() {
                             src={event.image}
                             alt={event.title}
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            style={{
+                              objectPosition:
+                                event.id === 11
+                                  ? "center bottom"
+                                  : "center center",
+                            }}
                             onError={handleImageError}
                           />
                           {event.isVideo && (
@@ -996,56 +1178,85 @@ export default function VipEventsPage() {
                             <Badge
                               className={`
                               ${
-                                event.status === "completed"
+                                event.status === "display_only"
+                                  ? "bg-purple-600"
+                                  : event.status === "completed"
                                   ? "bg-green-500"
                                   : event.status === "ongoing"
                                   ? "bg-[#d4b96e]"
                                   : "bg-blue-500"
                               } 
-                              text-[#0a0a0f] shadow-lg
+                              text-white shadow-lg
                             `}
                             >
-                              {event.category}
+                              {event.status === "display_only"
+                                ? t("events.notYetOpen")
+                                : event.category === "基金释放"
+                                ? t("events.fundRelease")
+                                : event.category}
                             </Badge>
                           </div>
-                          {event.progress && (
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-                              <div className="h-1 bg-[#2a2f3c]/80 rounded-full overflow-hidden">
-                                <div
-                                  className="h-full bg-gradient-to-r from-[#d4b96e] to-[#b39339] rounded-full"
-                                  style={{ width: `${event.progress}%` }}
-                                ></div>
-                              </div>
-                              <p className="text-xs text-[#d4b96e] mt-1 text-center">
-                                {event.progress}%{" "}
-                                {t("vipEvents.percentComplete")}
-                              </p>
-                            </div>
-                          )}
+                          {/* 会员专享基金不显示进度条 */}
                         </div>
 
                         <div className="p-4">
                           <h4 className="text-lg font-bold text-[#d4b96e] mb-2">
                             {event.title}
                           </h4>
-                          <p className="text-sm text-[#f5efe0]/80 mb-4 line-clamp-2">
+                          <p className="text-sm text-[#f5efe0]/80 mb-4 line-clamp-6 leading-relaxed">
                             {event.description}
                           </p>
-                          {event.donationAmount && (
-                            <div className="flex items-center space-x-2 mb-3">
-                              <Heart className="h-4 w-4 text-[#d4b96e]" />
-                              <span className="text-sm font-medium text-[#d4b96e] flex items-baseline">
-                                {t("vipEvents.yourDonation")}:{" "}
-                                {event.donationAmount}
-                                <span className="text-xs ml-1">USD</span>
-                              </span>
+                          {/* 会员专享基金的基金规模信息已在下方display_only部分显示 */}
+                          {event.status === "display_only" && (
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="space-y-2">
+                                <div className="flex items-center space-x-2">
+                                  <Heart className="h-4 w-4 text-[#d4b96e]" />
+                                  <span className="text-sm font-medium text-[#d4b96e] flex items-baseline">
+                                    {t("events.fundScale")}:{" "}
+                                    {event.fundAmount.toLocaleString()}
+                                    <span className="text-xs ml-1">USD</span>
+                                  </span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <Users className="h-4 w-4 text-[#d4b96e]" />
+                                  <span className="text-sm text-[#d4b96e]">
+                                    {t("events.beneficiaryCount")}:{" "}
+                                    {event.id === 10
+                                      ? event.beneficiaries.toLocaleString()
+                                      : t("events.notYetOpen")}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* 创业基金专用漏斗GIF动画 - 与基金信息同行 */}
+                              {event.id === 11 && (
+                                <div className="w-16 h-10 ml-4 flex items-center">
+                                  <img
+                                    src="/assets/funnel-animation.gif"
+                                    alt="漏斗动画"
+                                    className="w-full h-full object-contain"
+                                    style={{
+                                      filter: "brightness(0.9) saturate(0.8)",
+                                      backgroundColor: "transparent",
+                                    }}
+                                    loading="eager"
+                                    decoding="sync"
+                                    onLoad={(e) => {
+                                      // 确保GIF立即开始播放
+                                      const img = e.target as HTMLImageElement;
+                                      img.style.opacity = "1";
+                                    }}
+                                    onError={(e) => {
+                                      console.log("GIF加载失败");
+                                    }}
+                                  />
+                                </div>
+                              )}
                             </div>
                           )}
-                          <div className="flex items-center justify-between text-xs text-[#f5efe0]/60">
-                            <div className="flex items-center space-x-2">
-                              <Calendar className="h-4 w-4" />
-                              <span>{event.date}</span>
-                            </div>
+
+                          <div className="flex items-center justify-end text-xs text-[#f5efe0]/60">
                             <div className="flex items-center space-x-2">
                               <MapPin className="h-4 w-4" />
                               <span>{event.location}</span>
@@ -1103,12 +1314,14 @@ export default function VipEventsPage() {
                                   ? "bg-blue-500"
                                   : event.status === "ongoing"
                                   ? "bg-[#d4b96e]"
-                                  : "bg-green-500"
+                                  : "bg-[#d4b96e]"
                               } 
-                              text-white shadow-lg
+                              text-black shadow-lg
                             `}
                             >
-                              {event.category}
+                              {event.category === "基金释放"
+                                ? t("events.fundRelease")
+                                : event.category}
                             </Badge>
                           </div>
                           {event.registrationOpen && (
@@ -1124,7 +1337,7 @@ export default function VipEventsPage() {
                           <h4 className="text-lg font-bold text-[#d4b96e] mb-2">
                             {event.title}
                           </h4>
-                          <p className="text-sm text-[#f5efe0]/80 mb-4 line-clamp-2">
+                          <p className="text-sm text-[#f5efe0]/80 mb-4 line-clamp-6 leading-relaxed">
                             {event.description}
                           </p>
                           {event.participants && (
@@ -1144,11 +1357,27 @@ export default function VipEventsPage() {
                             <div className="flex items-center space-x-4">
                               <div className="flex items-center space-x-1">
                                 <Heart className="h-4 w-4" />
-                                <span>{event.likes}</span>
+                                <span>
+                                  {
+                                    getDynamicStats(
+                                      event.id,
+                                      event.likes,
+                                      event.views
+                                    ).likes
+                                  }
+                                </span>
                               </div>
                               <div className="flex items-center space-x-1">
                                 <Eye className="h-4 w-4" />
-                                <span>{event.views}</span>
+                                <span>
+                                  {
+                                    getDynamicStats(
+                                      event.id,
+                                      event.likes,
+                                      event.views
+                                    ).views
+                                  }
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -1178,7 +1407,7 @@ export default function VipEventsPage() {
                 {/* V1 - 布拉克等级 */}
                 <Card className="bg-gradient-to-br from-[#0a0a0f] to-[#151515] border-[#d4b96e]/20 overflow-hidden relative">
                   <CardContent className="p-6">
-                    {/* 右上角金额 */}
+                    {/* 右上角价格信息 */}
                     <Badge className="absolute top-4 right-4 bg-[#D2691E]/20 text-[#D2691E] border-[#D2691E]/30 flex items-baseline">
                       {getVipLevelDonationAmount(1)}
                       <span className="text-xs ml-1">USD</span>
@@ -1291,7 +1520,7 @@ export default function VipEventsPage() {
 
                     <div className="space-y-3 ml-4">
                       <div>
-                        <p className="text-sm font-medium text-[#f5efe0] mb-1">
+                        <p className="text-sm font-medium text-[#f5efe0] mb-2">
                           {t("vipLevel.upgradeConditions")}
                         </p>
                         <p className="text-xs text-[#f5efe0]/70">
@@ -1327,6 +1556,16 @@ export default function VipEventsPage() {
                               {t("vipLevel.days")}
                             </span>
                           </li>
+                          {getVipLevelNextVoucher(1) > 0 && (
+                            <li className="flex items-center space-x-2">
+                              <Gift className="h-3 w-3 text-[#d4b96e]" />
+                              <span className="text-[#d4b96e]">
+                                {t("donation.nextLevelVoucherReward")}{" "}
+                                {getVipLevelNextVoucher(1)} USD，升级到
+                                {t("vip.level2")}可用
+                              </span>
+                            </li>
+                          )}
                         </ul>
                       </div>
                     </div>
@@ -1336,7 +1575,7 @@ export default function VipEventsPage() {
                 {/* V2 - 巴达尔等级 */}
                 <Card className="bg-gradient-to-br from-[#0a0a0f] to-[#151515] border-[#d4b96e]/20 overflow-hidden relative">
                   <CardContent className="p-6">
-                    {/* 右上角金额 */}
+                    {/* 右上角价格信息 */}
                     <Badge className="absolute top-4 right-4 bg-[#CD7F32]/20 text-[#CD7F32] border-[#CD7F32]/30 flex items-baseline">
                       {getVipLevelDonationAmount(2)}
                       <span className="text-xs ml-1">USD</span>
@@ -1450,7 +1689,7 @@ export default function VipEventsPage() {
 
                     <div className="space-y-3 ml-4">
                       <div>
-                        <p className="text-sm font-medium text-[#f5efe0] mb-1">
+                        <p className="text-sm font-medium text-[#f5efe0] mb-2">
                           {t("vipLevel.upgradeConditions")}
                         </p>
                         <p className="text-xs text-[#f5efe0]/70">
@@ -1486,6 +1725,16 @@ export default function VipEventsPage() {
                               {t("vipLevel.days")}
                             </span>
                           </li>
+                          {getVipLevelNextVoucher(2) > 0 && (
+                            <li className="flex items-center space-x-2">
+                              <Gift className="h-3 w-3 text-[#d4b96e]" />
+                              <span className="text-[#d4b96e]">
+                                {t("donation.nextLevelVoucherReward")}{" "}
+                                {getVipLevelNextVoucher(2)} USD，升级到
+                                {t("vip.level3")}可用
+                              </span>
+                            </li>
+                          )}
                         </ul>
                       </div>
                     </div>
@@ -1499,12 +1748,24 @@ export default function VipEventsPage() {
                     <div className="absolute inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center rounded-lg">
                       <div className="text-center p-4">
                         <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#d4b96e]/20 flex items-center justify-center">
-                          <svg className="w-6 h-6 text-[#d4b96e]" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          <svg
+                            className="w-6 h-6 text-[#d4b96e]"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                         </div>
-                        <p className="text-sm font-medium text-[#d4b96e] mb-1">{t("vipLevel.locked")}</p>
-                        <p className="text-xs text-[#f5efe0]/60">{t("vipLevel.unlockCondition")}</p>
+                        <p className="text-sm font-medium text-[#d4b96e] mb-1">
+                          {t("vipLevel.locked")}
+                        </p>
+                        <p className="text-xs text-[#f5efe0]/60">
+                          {t("vipLevel.unlockCondition")}
+                        </p>
                       </div>
                     </div>
                   )}
@@ -1687,6 +1948,16 @@ export default function VipEventsPage() {
                             <Zap className="h-3 w-3 text-[#E6E6FA]" />
                             <span>{t("vipLevel.personalManager")}</span>
                           </li>
+                          {getVipLevelNextVoucher(3) > 0 && (
+                            <li className="flex items-center space-x-2">
+                              <Gift className="h-3 w-3 text-[#d4b96e]" />
+                              <span className="text-[#d4b96e]">
+                                {t("donation.nextLevelVoucherReward")}{" "}
+                                {getVipLevelNextVoucher(3)} USD，升级到
+                                {t("vip.level4")}可用
+                              </span>
+                            </li>
+                          )}
                         </ul>
                       </div>
                     </div>
@@ -1700,12 +1971,24 @@ export default function VipEventsPage() {
                     <div className="absolute inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center rounded-lg">
                       <div className="text-center p-4">
                         <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#d4b96e]/20 flex items-center justify-center">
-                          <svg className="w-6 h-6 text-[#d4b96e]" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          <svg
+                            className="w-6 h-6 text-[#d4b96e]"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                         </div>
-                        <p className="text-sm font-medium text-[#d4b96e] mb-1">{t("vipLevel.locked")}</p>
-                        <p className="text-xs text-[#f5efe0]/60">{t("vipLevel.unlockCondition")}</p>
+                        <p className="text-sm font-medium text-[#d4b96e] mb-1">
+                          {t("vipLevel.locked")}
+                        </p>
+                        <p className="text-xs text-[#f5efe0]/60">
+                          {t("vipLevel.unlockCondition")}
+                        </p>
                       </div>
                     </div>
                   )}
@@ -1914,6 +2197,16 @@ export default function VipEventsPage() {
                             <Diamond className="h-3 w-3 text-[#9370DB]" />
                             <span>{t("vipLevel.charityGala")}</span>
                           </li>
+                          {getVipLevelNextVoucher(4) > 0 && (
+                            <li className="flex items-center space-x-2">
+                              <Gift className="h-3 w-3 text-[#d4b96e]" />
+                              <span className="text-[#d4b96e]">
+                                {t("donation.nextLevelVoucherReward")}{" "}
+                                {getVipLevelNextVoucher(4)} USD，升级到
+                                {t("vip.level5")}可用
+                              </span>
+                            </li>
+                          )}
                         </ul>
                       </div>
                     </div>
@@ -1927,12 +2220,24 @@ export default function VipEventsPage() {
                     <div className="absolute inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center rounded-lg">
                       <div className="text-center p-4">
                         <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#d4b96e]/20 flex items-center justify-center">
-                          <svg className="w-6 h-6 text-[#d4b96e]" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          <svg
+                            className="w-6 h-6 text-[#d4b96e]"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                         </div>
-                        <p className="text-sm font-medium text-[#d4b96e] mb-1">{t("vipLevel.locked")}</p>
-                        <p className="text-xs text-[#f5efe0]/60">{t("vipLevel.unlockCondition")}</p>
+                        <p className="text-sm font-medium text-[#d4b96e] mb-1">
+                          {t("vipLevel.locked")}
+                        </p>
+                        <p className="text-xs text-[#f5efe0]/60">
+                          {t("vipLevel.unlockCondition")}
+                        </p>
                       </div>
                     </div>
                   )}
@@ -2189,104 +2494,463 @@ export default function VipEventsPage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {ongoingEvents.map((event) => (
-                  <Card
-                    key={event.id}
-                    className="bg-gradient-to-br from-[#0a0a0f] to-[#151515] border-[#d4b96e]/20 overflow-hidden hover:border-[#d4b96e]/40 transition-all duration-300 group"
-                  >
-                    <CardContent className="p-0">
-                      <div className="relative">
-                        <div className="relative h-48 overflow-hidden">
-                          <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0f] to-[#151515] opacity-50"></div>
-                          <img
-                            src={event.image}
-                            alt={event.title}
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            onError={handleImageError}
-                          />
-                          <div className="absolute top-2 right-2">
-                            <Badge
-                              className={`
-                              ${
-                                event.urgency === "high"
-                                  ? "bg-red-500 animate-pulse"
-                                  : event.urgency === "medium"
-                                  ? "bg-orange-500"
-                                  : "bg-[#d4b96e]"
-                              } 
-                              text-white shadow-lg
-                            `}
-                            >
-                              {event.category}
+              {/* 未完成的项目 - 放在上面 */}
+              {ongoingEvents.filter((event) => event.status !== "completed")
+                .length > 0 && (
+                <div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {ongoingEvents
+                      .filter((event) => event.status !== "completed")
+                      .map((event) => (
+                        <Card
+                          key={event.id}
+                          className="bg-gradient-to-br from-[#0a0a0f] to-[#151515] border-[#d4b96e]/20 overflow-hidden hover:border-[#d4b96e]/40 transition-all duration-300 group"
+                        >
+                          <CardContent className="p-0">
+                            <div className="relative">
+                              <div className="relative h-48 overflow-hidden">
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0f] to-[#151515] opacity-50 group-hover:opacity-30 transition-opacity duration-300"></div>
+                                <img
+                                  src={event.image}
+                                  alt={event.title}
+                                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                  style={{
+                                    objectPosition:
+                                      event.id === 8
+                                        ? "center 30%"
+                                        : "center center",
+                                  }}
+                                  onError={handleImageError}
+                                />
+                                <div className="absolute top-2 right-2">
+                                  <Badge
+                                    className={`
+                                  ${
+                                    event.urgency === "high"
+                                      ? "bg-red-500 animate-pulse"
+                                      : event.urgency === "medium"
+                                      ? "bg-orange-500"
+                                      : "bg-[#d4b96e]"
+                                  } 
+                                  text-white shadow-lg
+                                `}
+                                  >
+                                    {event.category === "基金释放"
+                                      ? t("events.fundRelease")
+                                      : event.category}
+                                  </Badge>
+                                </div>
+                                {event.urgency === "high" && (
+                                  <div className="absolute top-2 left-2">
+                                    <Badge className="bg-red-600 text-white shadow-lg flex items-center space-x-1">
+                                      <Zap className="h-3 w-3" />
+                                      <span>{t("vipEvents.urgent")}</span>
+                                    </Badge>
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="p-4">
+                                <h4 className="text-lg font-bold text-[#d4b96e] mb-2">
+                                  {event.title}
+                                </h4>
+                                <p className="text-sm text-[#f5efe0]/80 mb-4 line-clamp-6 leading-relaxed">
+                                  {event.description}
+                                </p>
+
+                                <div className="mb-4">
+                                  <div className="flex justify-between text-xs text-[#f5efe0]/60 mb-1">
+                                    <span>
+                                      {event.status === "fund_release"
+                                        ? t("events.releaseProgress")
+                                        : t("events.fundraisingProgress")}
+                                    </span>
+                                    <span className="font-medium text-[#d4b96e]">
+                                      {event.progress}%
+                                    </span>
+                                  </div>
+                                  <div className="h-2 bg-[#2a2f3c] rounded-full overflow-hidden">
+                                    <div
+                                      className={`h-full rounded-full transition-all duration-300 ${
+                                        event.urgency === "high"
+                                          ? "bg-gradient-to-r from-red-500 to-red-400"
+                                          : "bg-gradient-to-r from-[#d4b96e] to-[#b39339]"
+                                      }`}
+                                      style={{ width: `${event.progress}%` }}
+                                    ></div>
+                                  </div>
+                                  <div className="flex justify-between text-xs text-[#f5efe0]/60 mt-1">
+                                    {event.status === "fund_release" ? (
+                                      <>
+                                        <span>
+                                          {t("events.released")}:{" "}
+                                          {event.releasedAmount?.toLocaleString() ||
+                                            0}
+                                          <span className="text-xs ml-1">
+                                            USD
+                                          </span>
+                                        </span>
+                                        <span>
+                                          {t("events.totalScale")}:{" "}
+                                          {event.totalFundAmount?.toLocaleString() ||
+                                            0}
+                                          <span className="text-xs ml-1">
+                                            USD
+                                          </span>
+                                        </span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <span>
+                                          已筹集:{" "}
+                                          {event.currentAmount?.toLocaleString() ||
+                                            0}
+                                          <span className="text-xs ml-1">
+                                            USD
+                                          </span>
+                                        </span>
+                                        <span>
+                                          {t("events.target")}:{" "}
+                                          {event.targetAmount?.toLocaleString() ||
+                                            0}
+                                          <span className="text-xs ml-1">
+                                            USD
+                                          </span>
+                                        </span>
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center justify-between text-xs text-[#f5efe0]/60">
+                                  <div className="flex items-center space-x-2">
+                                    <Users className="h-4 w-4" />
+                                    <span>
+                                      {event.status === "fund_release"
+                                        ? event.id === 1
+                                          ? `${t(
+                                              "events.beneficiaryCount"
+                                            )}: 11,200`
+                                          : event.id === 2
+                                          ? `${t(
+                                              "events.beneficiaryCount"
+                                            )}: 8,950`
+                                          : `${t(
+                                              "events.beneficiaryCount"
+                                            )}: 1,680`
+                                        : `${
+                                            event.participants?.toLocaleString() ||
+                                            0
+                                          } ${t("events.participantsCount")}`}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center space-x-4">
+                                    <div className="flex items-center space-x-1">
+                                      <Heart className="h-4 w-4" />
+                                      <span>
+                                        {
+                                          getDynamicStats(
+                                            event.id,
+                                            event.likes,
+                                            event.views
+                                          ).likes
+                                        }
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center space-x-1">
+                                      <Eye className="h-4 w-4" />
+                                      <span>
+                                        {
+                                          getDynamicStats(
+                                            event.id,
+                                            event.likes,
+                                            event.views
+                                          ).views
+                                        }
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 已完成的项目 - 放在下面 */}
+              {ongoingEvents.filter((event) => event.status === "completed")
+                .length > 0 && (
+                <div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {ongoingEvents
+                      .filter((event) => event.status === "completed")
+                      .map((event) => (
+                        <Card
+                          key={event.id}
+                          className="bg-black border-[#d4b96e]/30 overflow-hidden hover:border-[#d4b96e]/50 transition-all duration-300 group relative"
+                        >
+                          {/* 移除已完成标记 */}
+                          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#d4b96e] to-[#b39339]"></div>
+
+                          <CardContent className="p-0">
+                            <div className="relative">
+                              <div className="relative h-48 overflow-hidden">
+                                {/* 已完成项目的全黑遮罩 */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0f] to-[#151515] opacity-50 group-hover:opacity-30 transition-opacity duration-300"></div>
+                                <img
+                                  src={event.image}
+                                  alt={event.title}
+                                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 grayscale-[30%] brightness-50"
+                                  onError={handleImageError}
+                                />
+                                <div className="absolute top-2 right-2">
+                                  <Badge className="bg-[#d4b96e] text-black shadow-lg">
+                                    {event.category === "基金释放"
+                                      ? t("events.fundRelease")
+                                      : event.category}
+                                  </Badge>
+                                </div>
+                              </div>
+
+                              <div className="p-4">
+                                <h4 className="text-lg font-bold text-[#d4b96e] mb-2">
+                                  {event.title}
+                                </h4>
+                                <p className="text-sm text-[#f5efe0]/80 mb-4 line-clamp-6 leading-relaxed">
+                                  {event.description}
+                                </p>
+
+                                <div className="mb-4">
+                                  <div className="flex justify-between text-xs text-[#f5efe0]/60 mb-1">
+                                    <span>
+                                      {t("events.fundraisingProgress")}
+                                    </span>
+                                    <span className="font-medium text-[#d4b96e]">
+                                      {event.progress}%
+                                    </span>
+                                  </div>
+                                  <div className="h-2 bg-[#2a2f3c] rounded-full overflow-hidden">
+                                    <div
+                                      className="h-full rounded-full bg-gradient-to-r from-[#d4b96e] to-[#b39339]"
+                                      style={{ width: `${event.progress}%` }}
+                                    ></div>
+                                  </div>
+                                  <div className="flex justify-between text-xs text-[#f5efe0]/60 mt-1">
+                                    <span>
+                                      总金额:{" "}
+                                      <span className="text-[#d4b96e]">
+                                        {event.id === 1
+                                          ? "1,500,000"
+                                          : event.id === 2
+                                          ? "1,200,000"
+                                          : "18,000"}
+                                        <span className="text-xs ml-1">
+                                          USD
+                                        </span>
+                                      </span>
+                                    </span>
+                                    <span>
+                                      {t("events.completionDate")}:{" "}
+                                      {event.id === 1
+                                        ? "2025-07-15"
+                                        : event.id === 2
+                                        ? "2025-06-30"
+                                        : "2025-07-25"}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center justify-between text-xs text-[#f5efe0]/60">
+                                  <div className="flex items-center space-x-2">
+                                    <Users className="h-4 w-4 text-[#f5efe0]/60" />
+                                    <span className="text-[#f5efe0]/60">
+                                      <span className="text-[#d4b96e]">
+                                        {event.id === 1
+                                          ? "85,000"
+                                          : event.id === 2
+                                          ? "12,000"
+                                          : "6,000"}
+                                      </span>
+                                      {t("events.participantsCount")}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center space-x-4">
+                                    <div className="flex items-center space-x-1">
+                                      <Heart className="h-4 w-4" />
+                                      <span>{event.likes}</span>
+                                    </div>
+                                    <div className="flex items-center space-x-1">
+                                      <Eye className="h-4 w-4" />
+                                      <span>{event.views}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {selectedCategory === "overseas" && (
+            <div id="overseas-section" className="space-y-6">
+              {/* 分类标题 */}
+              <div className="text-center">
+                <h3 className="text-lg font-bold text-[#d4b96e] mb-2">
+                  {t("overseas.title")}
+                </h3>
+                <p className="text-sm text-[#f5efe0]/70">
+                  {t("overseas.subtitle")}
+                </p>
+              </div>
+
+              {/* 海外务工国家列表 */}
+              <div className="space-y-4">
+                {[
+                  "uae",
+                  "saudi",
+                  "malaysia",
+                  "korea",
+                  "japan",
+                  "germany",
+                  "italy",
+                  "canada",
+                  "china",
+                  "australia",
+                ]
+                  .map((countryKey, index) => {
+                    // 直接从翻译中获取国家数据
+                    const countryData = (t as any)(
+                      `overseas.countries.${countryKey}`,
+                      { returnObjects: true }
+                    ) as {
+                      name: string;
+                      salary: string;
+                      hours: string;
+                      overtime: string;
+                      housing: string;
+                      religious: string;
+                    };
+
+                    const imageMap: { [key: string]: string } = {
+                      uae: "/images/overseas/阿联酋.png",
+                      saudi: "/images/overseas/沙特.png",
+                      malaysia: "/images/overseas/马来西亚.png",
+                      korea: "/images/overseas/韩国.png",
+                      japan: "/images/overseas/日本.png",
+                      germany: "/images/overseas/德国.png",
+                      italy: "/images/overseas/意大利.png",
+                      canada: "/images/overseas/加拿大.png",
+                      china: "/images/overseas/中国.png",
+                      australia: "/images/overseas/澳大利亚.png",
+                    };
+
+                    return {
+                      name: countryData.name,
+                      image: imageMap[countryKey],
+                      salary: countryData.salary,
+                      hours: countryData.hours,
+                      overtime: countryData.overtime,
+                      housing: countryData.housing,
+                      religious: countryData.religious,
+                    };
+                  })
+                  .map((country, index) => (
+                    <Card
+                      key={index}
+                      className="bg-gradient-to-br from-[#0a0a0f] to-[#151515] border-[#d4b96e]/20 overflow-hidden hover:border-[#d4b96e]/40 transition-all duration-300 group cursor-pointer"
+                    >
+                      <CardContent className="p-0 relative">
+                        {/* 图片作为背景决定卡片尺寸 */}
+                        <img
+                          src={country.image}
+                          alt={country.name}
+                          className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                          style={{
+                            maxWidth: "100%",
+                            height: "auto",
+                          }}
+                          onError={(e) => {
+                            e.currentTarget.src = "/placeholder.svg";
+                          }}
+                        />
+
+                        {/* 悬浮内容区域 */}
+                        <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="text-lg font-bold text-white">
+                              {country.name}
+                            </h4>
+                            <Badge className="bg-[#d4b96e] text-black">
+                              {t("overseas.available")}
                             </Badge>
                           </div>
-                          {event.urgency === "high" && (
-                            <div className="absolute top-2 left-2">
-                              <Badge className="bg-red-600 text-white shadow-lg flex items-center space-x-1">
-                                <Zap className="h-3 w-3" />
-                                <span>{t("vipEvents.urgent")}</span>
-                              </Badge>
-                            </div>
-                          )}
-                        </div>
 
-                        <div className="p-4">
-                          <h4 className="text-lg font-bold text-[#d4b96e] mb-2">
-                            {event.title}
-                          </h4>
-                          <p className="text-sm text-[#f5efe0]/80 mb-4 line-clamp-2">
-                            {event.description}
-                          </p>
+                          <div className="space-y-3 text-sm text-white/90 max-h-96 overflow-y-auto">
+                            {/* 待遇信息 */}
+                            <div className="bg-black/30 rounded-lg p-3 space-y-2">
+                              <div className="text-[#d4b96e] font-semibold mb-2">
+                                {t("overseas.salaryTreatment")}
+                              </div>
+                              <div className="text-xs space-y-1">
+                                <div>
+                                  <span className="text-[#d4b96e]">
+                                    {t("overseas.monthlySalary")}
+                                  </span>{" "}
+                                  {country.salary}
+                                </div>
+                                <div>
+                                  <span className="text-[#d4b96e]">
+                                    {t("overseas.workingHours")}
+                                  </span>{" "}
+                                  {country.hours}
+                                </div>
+                                <div>
+                                  <span className="text-[#d4b96e]">
+                                    {t("overseas.overtime")}
+                                  </span>{" "}
+                                  {country.overtime}
+                                </div>
+                              </div>
+                            </div>
 
-                          <div className="mb-4">
-                            <div className="flex justify-between text-xs text-[#f5efe0]/60 mb-1">
-                              <span>{t("vipEvents.fundraisingProgress")}</span>
-                              <span className="font-medium text-[#d4b96e]">
-                                {event.progress}%
-                              </span>
+                            {/* 住宿保险 */}
+                            <div className="bg-black/30 rounded-lg p-3 space-y-2">
+                              <div className="text-[#d4b96e] font-semibold mb-2">
+                                {t("overseas.housingInsurance")}
+                              </div>
+                              <div className="text-xs space-y-1">
+                                <div>{country.housing}</div>
+                              </div>
                             </div>
-                            <div className="h-2 bg-[#2a2f3c] rounded-full overflow-hidden">
-                              <div
-                                className={`h-full rounded-full transition-all duration-300 ${
-                                  event.urgency === "high"
-                                    ? "bg-gradient-to-r from-red-500 to-red-400"
-                                    : "bg-gradient-to-r from-[#d4b96e] to-[#b39339]"
-                                }`}
-                                style={{ width: `${event.progress}%` }}
-                              ></div>
-                            </div>
-                            <div className="flex justify-between text-xs text-[#f5efe0]/60 mt-1">
-                              <span>
-                                {t("vipEvents.raised")}:{" "}
-                                {event.currentAmount.toLocaleString()}
-                                <span className="text-xs ml-1">USD</span>
-                              </span>
-                              <span>
-                                {t("vipEvents.target")}:{" "}
-                                {event.targetAmount.toLocaleString()}
-                                <span className="text-xs ml-1">USD</span>
-                              </span>
+
+                            {/* 宗教友好 */}
+                            <div className="bg-black/30 rounded-lg p-3 space-y-2">
+                              <div className="text-[#d4b96e] font-semibold mb-2">
+                                {t("overseas.religiousEnvironment")}
+                              </div>
+                              <div className="text-xs">{country.religious}</div>
                             </div>
                           </div>
 
-                          <div className="flex items-center justify-between text-xs text-[#f5efe0]/60">
-                            <div className="flex items-center space-x-2">
-                              <Users className="h-4 w-4" />
-                              <span>
-                                {event.participants.toLocaleString()}{" "}
-                                {t("vipEvents.peopleParticipated")}
-                              </span>
-                            </div>
-                            <Button className="h-7 px-3 bg-gradient-to-r from-[#d4b96e] to-[#b39339] text-[#0a0a0f] hover:opacity-90 text-xs">
-                              {t("vipEvents.participateNow")}
-                            </Button>
-                          </div>
+                          <Button
+                            size="sm"
+                            className="bg-[#d4b96e] text-black hover:bg-[#b39339] text-xs px-3 py-1 mt-2"
+                            onClick={() => router.push("/customer-service")}
+                          >
+                            {t("overseas.apply")}
+                          </Button>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  ))}
               </div>
             </div>
           )}

@@ -19,6 +19,8 @@ export function VipBenefitsCard({ vipLevel, className }: VipBenefitsCardProps) {
     getVipLevelDonationAmount,
     getVipLevelTotalReturn,
     getVipLevelPeriod,
+    getVipLevelNextVoucher,
+    getVipLevelCurrentVoucher,
   } = useVipInfo();
 
   const { t } = useTranslation();
@@ -36,6 +38,7 @@ export function VipBenefitsCard({ vipLevel, className }: VipBenefitsCardProps) {
   const donationAmount = getVipLevelDonationAmount(displayLevel);
   const totalReturn = getVipLevelTotalReturn(displayLevel);
   const period = getVipLevelPeriod(displayLevel);
+  const voucherAmount = getVipLevelCurrentVoucher(displayLevel);
 
   return (
     <Card
@@ -80,6 +83,17 @@ export function VipBenefitsCard({ vipLevel, className }: VipBenefitsCardProps) {
               </div>
               <div className="flex flex-col p-2 bg-islamic-dark/30 rounded-lg">
                 <span className="text-xs text-islamic-cream/70">
+                  {t("donation.currentVoucher")}
+                </span>
+                <div className="flex items-baseline">
+                  {voucherAmount > 0 ? voucherAmount : "-"}
+                  {voucherAmount > 0 && (
+                    <span className="text-xs ml-1">USD</span>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col p-2 bg-islamic-dark/30 rounded-lg">
+                <span className="text-xs text-islamic-cream/70">
                   {t("donation.totalReturn")}
                 </span>
                 <div className="flex items-baseline">
@@ -87,7 +101,7 @@ export function VipBenefitsCard({ vipLevel, className }: VipBenefitsCardProps) {
                   <span className="text-xs ml-1">USD</span>
                 </div>
               </div>
-              <div className="flex flex-col p-2 bg-islamic-dark/30 rounded-lg col-span-2">
+              <div className="flex flex-col p-2 bg-islamic-dark/30 rounded-lg">
                 <span className="text-xs text-islamic-cream/70">
                   {t("donation.period")}
                 </span>

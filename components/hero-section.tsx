@@ -1,99 +1,322 @@
 "use client";
 
-import { useState } from "react";
-import { Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { FallbackImage } from "./fallback-image";
-import { PaymentDialog } from "./payment-dialog";
-import { useAuth } from "@/store/use-auth";
-import { useAuthContext } from "@/store/auth-context";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "@/lib/i18n";
 
-interface HeroSectionProps {
+interface DonationCardProps {
   title?: string;
-  description?: string;
+  subtitle?: string;
   buttonText?: string;
+  onDonateClick?: () => void;
+  // 保持原有 HeroSection 的接口兼容性
+  description?: string;
   onButtonClick?: () => void;
 }
 
 export function HeroSection({
   title,
-  description,
+  subtitle,
   buttonText,
+
+  onDonateClick,
+  // HeroSection 兼容性参数
+  description,
   onButtonClick,
-}: HeroSectionProps) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [paymentOpen, setPaymentOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
-  const { openLoginModal } = useAuthContext();
+}: DonationCardProps) {
   const { t } = useTranslation();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
-  // 使用翻译作为默认值
-  const displayTitle = title || t("hero.title");
-  const displayDescription = description || t("hero.description");
-  const displayButtonText = buttonText || t("hero.donateButton");
+  // 优化视频加载和播放
+  const optimizeVideo = useCallback(() => {
+    const video = videoRef.current;
+    if (video) {
+      // 设置视频缓冲优化
+      video.setAttribute("preload", "metadata");
+      video.setAttribute("webkit-playsinline", "true");
+      video.setAttribute("x5-playsinline", "true");
 
-  // 使用可靠的备用图片，避免404错误
-  const primaryImage =
-    "https://images.pexels.com/photos/6508083/pexels-photo-6508083.jpeg?auto=compress&cs=tinysrgb&w=1200";
-  const fallbackImage =
-    "https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=1200";
+      // 监听视频事件
+      const handleCanPlay = () => {
+        setVideoLoaded(true);
+        console.log("[Video] Ready to play smoothly");
+      };
 
-  const handleDonateClick = () => {
-    if (isAuthenticated) {
-      // 如果用户已登录，直接跳转到捐赠页面，不打开本地弹窗
-      if (onButtonClick) onButtonClick();
-    } else {
-      // 如果用户未登录，打开登录对话框，并传递目标路径
-      openLoginModal("/donation");
+      const handleLoadedData = () => {
+        // 视频数据加载完成，确保流畅播放
+        if (video.readyState >= 2) {
+          video.currentTime = 0;
+        }
+      };
+
+      video.addEventListener("canplay", handleCanPlay);
+      video.addEventListener("loadeddata", handleLoadedData);
+
+      return () => {
+        video.removeEventListener("canplay", handleCanPlay);
+        video.removeEventListener("loadeddata", handleLoadedData);
+      };
     }
+  }, []);
+
+  useEffect(() => {
+    const cleanup = optimizeVideo();
+    return cleanup;
+  }, [optimizeVideo]);
+
+  // 使用传入的描述或多语言翻译
+  const displaySubtitle = subtitle || description || t("home.fullDescription");
+
+  const displayTitle = title || t("home.title");
+  const displayButtonText = buttonText || t("home.donateButton");
+
+  // 处理点击事件，保持向后兼容
+  const handleClick = () => {
+    if (onDonateClick) onDonateClick();
+    if (onButtonClick) onButtonClick();
   };
 
   return (
-    <div className="relative w-screen h-[50vh] overflow-hidden -mt-6 left-[50%] right-[50%] -ml-[50vw] -mr-[50vw] mx-auto">
-      {/* Loading indicator */}
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-islamic-dark/50">
-          <div className="w-12 h-12 border-4 border-islamic-gold/30 border-t-islamic-gold rounded-full animate-spin"></div>
+    <div className="w-full max-w-6xl mx-auto -mt-4">
+      {/* 视频展示区域 */}
+      <div
+        style={{ paddingLeft: "1px", paddingRight: "1px", paddingTop: "3px" }}
+      >
+        <div className="w-full max-w-none">
+          <div className="bg-white/5 backdrop-blur-sm overflow-hidden rounded-lg">
+            <div className="w-full bg-black" style={{ height: "60px" }}></div>
+            <div className="aspect-video bg-black relative">
+              {/* 临时使用占位符，如果视频文件不存在 */}
+              <video
+                ref={videoRef}
+                src="/assets/ship111.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDAwMDAwIi8+PC9zdmc+"
+                className={`w-full h-full object-contain transition-opacity duration-500 ${
+                  videoLoaded ? "opacity-100" : "opacity-75"
+                }`}
+                style={{
+                  backgroundColor: "#000000",
+                  transform: "scale(1.45) translateY(5px) translateX(3px)",
+                  willChange: "transform",
+                }}
+                onLoadStart={() => {
+                  console.log("[Video] Loading started");
+                }}
+                onCanPlay={() => {
+                  console.log("[Video] Can play");
+                  setVideoLoaded(true);
+                }}
+                onWaiting={() => {
+                  console.log("[Video] Buffering...");
+                }}
+                onPlaying={() => {
+                  console.log("[Video] Playing smoothly");
+                }}
+                onError={(e) => {
+                  // 如果视频加载失败，隐藏视频元素并显示占位符
+                  const target = e.target as HTMLVideoElement;
+                  target.style.display = "none";
+                  // 创建占位符
+                  const parent = target.parentElement;
+                  if (parent && !parent.querySelector(".video-placeholder")) {
+                    const placeholder = document.createElement("div");
+                    placeholder.className =
+                      "video-placeholder absolute inset-0 bg-gradient-to-br from-islamic-dark via-islamic-medium to-islamic-dark flex items-center justify-center";
+                    placeholder.innerHTML =
+                      '<div class="text-islamic-gold text-lg">视频加载中...</div>';
+                    parent.appendChild(placeholder);
+                  }
+                }}
+              />
+
+              {/* 伊斯兰国家名称装饰 */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{ transform: "translateY(-50%)" }}
+              >
+                <div
+                  className="absolute text-white font-light"
+                  style={{
+                    fontSize: "13.5px",
+                    top: "8%",
+                    left: "5%",
+                    opacity: 0.3,
+                    color: "#d2ba82",
+                    transform: "rotate(-12deg)",
+                  }}
+                >
+                  Saudi Arabia
+                </div>
+                <div
+                  className="absolute text-white font-light"
+                  style={{
+                    fontSize: "13.5px",
+                    top: "80%",
+                    left: "3%",
+                    opacity: 0.25,
+                    color: "#d2ba82",
+                    transform: "rotate(15deg)",
+                  }}
+                >
+                  Turkey
+                </div>
+                <div
+                  className="absolute text-white font-light"
+                  style={{
+                    fontSize: "13.5px",
+                    top: "45%",
+                    left: "6%",
+                    opacity: 0.2,
+                    color: "#d2ba82",
+                    transform: "rotate(-8deg)",
+                  }}
+                >
+                  Indonesia
+                </div>
+                <div
+                  className="absolute text-white font-light"
+                  style={{
+                    fontSize: "13.5px",
+                    top: "65%",
+                    left: "4%",
+                    opacity: 0.3,
+                    color: "#d2ba82",
+                    transform: "rotate(18deg)",
+                  }}
+                >
+                  Pakistan
+                </div>
+                <div
+                  className="absolute text-white font-light"
+                  style={{
+                    fontSize: "13.5px",
+                    top: "12%",
+                    right: "4%",
+                    opacity: 0.4,
+                    color: "#d2ba82",
+                    transform: "rotate(10deg)",
+                  }}
+                >
+                  UAE
+                </div>
+                <div
+                  className="absolute text-white font-light"
+                  style={{
+                    fontSize: "13.5px",
+                    top: "35%",
+                    right: "6%",
+                    opacity: 0.28,
+                    color: "#d2ba82",
+                    transform: "rotate(-14deg)",
+                  }}
+                >
+                  Qatar
+                </div>
+                <div
+                  className="absolute text-white font-light"
+                  style={{
+                    fontSize: "13.5px",
+                    top: "55%",
+                    right: "3%",
+                    opacity: 0.35,
+                    color: "#d2ba82",
+                    transform: "rotate(22deg)",
+                  }}
+                >
+                  Malaysia
+                </div>
+                <div
+                  className="absolute text-white font-light"
+                  style={{
+                    fontSize: "13.5px",
+                    top: "75%",
+                    right: "5%",
+                    opacity: 0.32,
+                    color: "#d2ba82",
+                    transform: "rotate(-6deg)",
+                  }}
+                >
+                  Kuwait
+                </div>
+                <div
+                  className="absolute text-white font-light"
+                  style={{
+                    fontSize: "13.5px",
+                    top: "15%",
+                    left: "10%",
+                    opacity: 0.15,
+                    color: "#d2ba82",
+                    transform: "rotate(25deg)",
+                  }}
+                >
+                  Jordan
+                </div>
+                <div
+                  className="absolute text-white font-light"
+                  style={{
+                    fontSize: "13.5px",
+                    top: "40%",
+                    right: "10%",
+                    opacity: 0.18,
+                    color: "#d2ba82",
+                    transform: "rotate(-20deg)",
+                  }}
+                >
+                  Oman
+                </div>
+                <div
+                  className="absolute text-white font-light"
+                  style={{
+                    fontSize: "13.5px",
+                    bottom: "15%",
+                    left: "8%",
+                    opacity: 0.12,
+                    color: "#d2ba82",
+                    transform: "rotate(8deg)",
+                  }}
+                >
+                  Morocco
+                </div>
+                <div
+                  className="absolute text-white font-light"
+                  style={{
+                    fontSize: "13.5px",
+                    bottom: "25%",
+                    right: "9%",
+                    opacity: 0.16,
+                    color: "#d2ba82",
+                    transform: "rotate(-16deg)",
+                  }}
+                >
+                  Bahrain
+                </div>
+              </div>
+            </div>
+
+            {/* 下方内容区域 */}
+            <div className="bg-black flex flex-col justify-center items-center px-4 py-8 pt-16">
+              <p className="text-sm text-gray-300 text-center mb-6 max-w-lg leading-relaxed">
+                {displaySubtitle}
+              </p>
+              <button
+                className="px-6 py-3 rounded-lg font-semibold text-black hover:opacity-90 transition-opacity"
+                style={{ backgroundColor: "#d5b96e" }}
+                onClick={handleClick}
+              >
+                {displayButtonText}
+              </button>
+            </div>
+          </div>
         </div>
-      )}
-
-      {/* Background image */}
-      <div className="absolute inset-0">
-        <div className="relative w-full h-full">
-          <FallbackImage
-            src={primaryImage}
-            fallbackSrc={fallbackImage}
-            alt="Mosque"
-            fill
-            className="object-cover object-center"
-            priority
-            onLoad={() => setIsLoading(false)}
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-islamic-dark/40 via-islamic-dark/30 to-islamic-dark/70"></div>
       </div>
-
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 pt-6 text-center max-w-lg mx-auto w-full">
-        <h1 className="mb-4 text-4xl font-serif font-light tracking-wide text-white">
-          {displayTitle}
-        </h1>
-
-        <p className="max-w-md mb-6 text-base text-islamic-cream/90">
-          {displayDescription}
-        </p>
-
-        <Button
-          className="px-6 py-5 text-base bg-islamic-gold hover:bg-islamic-gold/90 text-islamic-dark"
-          onClick={handleDonateClick}
-        >
-          {displayButtonText}
-          <Heart className="w-4 h-4 ml-2" />
-        </Button>
-      </div>
-
-      <PaymentDialog open={paymentOpen} onOpenChange={setPaymentOpen} />
     </div>
   );
 }
+
+// 为了完全兼容，导出 DonationCard 别名
+export const DonationCard = HeroSection;

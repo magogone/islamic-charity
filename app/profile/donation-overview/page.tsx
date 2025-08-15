@@ -352,7 +352,7 @@ export default function DonationOverviewPage() {
                 {t("donationOverview.donationPeriod")}
               </span>
               <span className="text-sm font-medium text-islamic-cream">
-                {getVipLevelPeriod(donationData.vipLevel || 1)}
+                {getVipLevelPeriod(donationData.vipLevel || 0)}
                 {t("donationOverview.days")}
               </span>
             </div>
@@ -362,7 +362,7 @@ export default function DonationOverviewPage() {
                 {t("donationOverview.vipLevel")}
               </span>
               <span className="text-sm font-medium text-islamic-cream">
-                {getVipLevelName(donationData.vipLevel || 1)}
+                {getVipLevelName(donationData.vipLevel || 0)}
               </span>
             </div>
 

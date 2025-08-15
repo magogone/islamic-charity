@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   BarChart,
   Bar,
@@ -40,10 +40,15 @@ export function RewardPeriodChart({
     distributed: boolean;
   }>(null);
 
-  // 获取今天的日期字符串
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const todayStr = today.toISOString().split("T")[0];
+  // 获取今天的日期字符串 - 使用 useMemo 避免 hydration 问题
+  const { today, todayStr } = useMemo(() => {
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+    return {
+      today: todayDate,
+      todayStr: todayDate.toISOString().split("T")[0],
+    };
+  }, []);
 
   // 处理数据，计算差值
   const chartData = data.map((item) => {

@@ -77,7 +77,7 @@ function calculateDerivedValues(
   const range = defaultRanges[level];
 
   // 使用固定的总回报值，不再使用计算公式
-  const fixedTotalReturns = [0, 120, 366, 620, 1008, 1560]; // 索引0不使用，1-5对应等级1-5
+  const fixedTotalReturns = [0, 100, 366, 622, 1000, 1560]; // 索引0不使用，1-5对应等级1-5
   const totalReturn = fixedTotalReturns[level];
 
   return {

@@ -72,8 +72,8 @@ export interface DonationOverviewProps {
 
 // Default data to use when data prop is undefined or incomplete
 const defaultData = {
-  totalDonation: 100,
-  vipLevel: 1,
+  totalDonation: 0,
+  vipLevel: 0,
   dailyFunds: {
     current: 5,
     max: 10,
@@ -86,7 +86,7 @@ const defaultData = {
   currentRate: 1,
   totalAccumulated: 15,
   maxRate: 3,
-  totalExpectedReward: 120,
+  totalExpectedReward: 100,
   totalMaxReward: 180,
   withdrawnAmount: 50,
   withdrawableAmount: 30,
@@ -351,6 +351,7 @@ export function DonationOverview({
         onOpenChange={setPaymentOpen}
         currentVipLevel={safeData.vipLevel}
         nextLevelAmount={nextLevelAmount}
+        targetLevel={Math.min(safeData.vipLevel + 1, 5)}
       />
       <ReferralInfoDialog
         open={referralInfoOpen}

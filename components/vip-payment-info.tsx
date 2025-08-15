@@ -13,7 +13,7 @@ interface VipPaymentInfoProps {
 }
 
 export function VipPaymentInfo({ className }: VipPaymentInfoProps) {
-  const { getAllVipLevels } = useVipInfo();
+  const { getAllVipLevels, getVipLevelCurrentVoucher } = useVipInfo();
   const { t, isRTL } = useTranslation();
   const { state } = useStore();
   const vipLevels = getAllVipLevels();
@@ -64,8 +64,8 @@ export function VipPaymentInfo({ className }: VipPaymentInfoProps) {
             <div
               className={`grid ${
                 isRTL
-                  ? "grid-cols-[2fr_1.5fr_1.5fr] pr-12 gap-1 text-xs"
-                  : "grid-cols-3 gap-2 text-sm pl-8"
+                  ? "grid-cols-[1.2fr_1fr_1fr_1.3fr] pr-12 gap-1 text-xs"
+                  : "grid-cols-[1.2fr_1fr_1fr_1.3fr] gap-2 text-sm pl-8"
               }`}
             >
               <div className="font-medium text-[#d4b96e]">
@@ -73,6 +73,9 @@ export function VipPaymentInfo({ className }: VipPaymentInfoProps) {
               </div>
               <div className="font-medium text-[#d4b96e]">
                 {t("donation.fullPayment")}
+              </div>
+              <div className="font-medium text-[#d4b96e] whitespace-nowrap">
+                {t("donation.voucher")}
               </div>
               <div className="font-medium text-[#d4b96e]">
                 {t("donation.totalReturn")}
@@ -138,7 +141,17 @@ export function VipPaymentInfo({ className }: VipPaymentInfoProps) {
                     >
                       <div className="flex items-baseline">
                         {data.donationAmount}
-                        <span className="text-xs ml-1">USD</span>
+                        <span className="text-[0.625rem] ml-1">USD</span>
+                      </div>
+                    </div>
+                    <div
+                      className={`py-2 border-t border-[#2a2f3c]/30 whitespace-nowrap ${
+                        isCurrentLevel ? "text-[#d4b96e] font-semibold" : ""
+                      }`}
+                    >
+                      <div className="flex items-baseline">
+                        {getVipLevelCurrentVoucher(parseInt(level))}
+                        <span className="text-[0.625rem] ml-1">USD</span>
                       </div>
                     </div>
                     <div
@@ -148,7 +161,7 @@ export function VipPaymentInfo({ className }: VipPaymentInfoProps) {
                     >
                       <div className="flex items-baseline">
                         {data.totalReturn}
-                        <span className="text-xs ml-1">USD</span>
+                        <span className="text-[0.625rem] ml-1">USD</span>
                       </div>
                     </div>
                   </React.Fragment>
@@ -165,6 +178,7 @@ export function VipPaymentInfo({ className }: VipPaymentInfoProps) {
               </p>
               <p>{t("donation.upgradeNote")}</p>
               <p className="mt-2">{t("donation.upgradeExample")}</p>
+              <p className="mt-2">{t("donation.voucherRewardNote")}</p>
             </div>
           </div>
         </div>

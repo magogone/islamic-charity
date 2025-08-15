@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { BackgroundWrapper } from "@/components/background-wrapper";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -25,6 +26,7 @@ import { useAuth } from "@/store/use-auth";
 import { useTranslation } from "@/lib/i18n";
 
 export default function SharePage() {
+  const router = useRouter();
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState("qrcode");
@@ -104,7 +106,7 @@ export default function SharePage() {
         <div className="max-w-lg mx-auto">
           <div className="flex items-center">
             <button
-              onClick={() => window.history.back()}
+              onClick={() => router.back()}
               className="mr-3 text-[#d4b96e]"
             >
               <svg

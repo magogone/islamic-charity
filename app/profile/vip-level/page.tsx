@@ -4,7 +4,7 @@ export default function VipLevelPage() {
   // This data should be fetched from API for the user's VIP level information
   // This is sample data
   const vipData = {
-    vipLevel: 1,
+    vipLevel: 0,
     currentDailyFund: 1.2,
     maxDailyFund: 3,
     currentReferrals: 0,

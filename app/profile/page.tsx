@@ -10,6 +10,7 @@ import { useUser } from "@/store/use-user";
 import { useDonation } from "@/store/use-donation";
 import { useAuth } from "@/store/use-auth";
 import { useTeam } from "@/store/use-team";
+
 import { useToast } from "@/components/ui/toast";
 import { useTranslation } from "@/lib/i18n";
 import Link from "next/link";
@@ -21,6 +22,7 @@ export default function ProfilePage() {
   const { donationData, updateDonation } = useDonation();
   const { user, logout } = useAuth();
   const { teamData, refreshTeamInfo } = useTeam();
+
   const { success } = useToast();
   const { t } = useTranslation();
 

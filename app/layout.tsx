@@ -23,6 +23,17 @@ export const metadata = {
   title: "Barkat-e-Alliance Foundation - Islamic Charity",
   description: "Innovative Charity Model: Divine Mission",
   generator: "v0.dev",
+  other: {
+    // 预加载关键资源
+    link: [
+      {
+        rel: "preload",
+        href: "/assets/funnel-animation.gif",
+        as: "image",
+        type: "image/gif",
+      },
+    ],
+  },
 };
 
 export const viewport = {

@@ -85,7 +85,7 @@ export function DonationPlanCard({
           {title}
         </h3>
         {description && (
-          <p className="text-xs text-[#f5efe0]/70 mt-1 line-clamp-2">
+          <p className="text-xs text-[#f5efe0]/70 mt-1 line-clamp-6 leading-relaxed">
             {description}
           </p>
         )}

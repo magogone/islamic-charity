@@ -138,7 +138,7 @@ export function useVipInfo() {
    */
   const getVipLevelTotalReturn = (level: number): number => {
     const safeLevel = Math.min(Math.max(1, level), 5); // 确保等级在1-5之间
-    const defaultReturns = [0, 120, 366, 620, 1008, 1560]; // 索引0不使用，1-5对应等级1-5
+    const defaultReturns = [0, 100, 366, 622, 1000, 1560]; // 索引0不使用，1-5对应等级1-5
     return vipInfo.levels[safeLevel]?.totalReturn || defaultReturns[safeLevel];
   };
 
@@ -173,6 +173,89 @@ export function useVipInfo() {
     return vipInfo.levels || {};
   };
 
+  /**
+   * 获取指定VIP等级的原价
+   */
+  const getVipLevelOriginalPrice = useCallback(
+    (level: number): number => {
+      return vipInfo.levels[level]?.originalPrice || 0;
+    },
+    [vipInfo.levels]
+  );
+
+  /**
+   * 获取指定VIP等级的回馈券抵扣金额
+   */
+  const getVipLevelVoucherDiscount = useCallback(
+    (level: number): number => {
+      return vipInfo.levels[level]?.voucherDiscount || 0;
+    },
+    [vipInfo.levels]
+  );
+
+  /**
+   * 获取指定VIP等级升级后获得的下级回馈券金额
+   */
+  const getVipLevelNextVoucher = useCallback(
+    (level: number): number => {
+      return vipInfo.levels[level]?.nextLevelVoucher || 0;
+    },
+    [vipInfo.levels]
+  );
+
+  /**
+   * 获取指定VIP等级的当前回馈券金额
+   */
+  const getVipLevelCurrentVoucher = useCallback(
+    (level: number): number => {
+      if (level === 0) return 0; // 新用户没有回馈券
+      return vipInfo.levels[level]?.currentLevelVoucher || 0;
+    },
+    [vipInfo.levels]
+  );
+
+  /**
+   * 计算使用回馈券后的实际支付金额
+   */
+  const calculateActualPrice = useCallback(
+    (level: number, useVoucher: boolean = true): number => {
+      const originalPrice = getVipLevelOriginalPrice(level);
+      if (!useVoucher) return originalPrice;
+
+      const voucherDiscount = getVipLevelVoucherDiscount(level);
+      return Math.max(0, originalPrice - voucherDiscount);
+    },
+    [getVipLevelOriginalPrice, getVipLevelVoucherDiscount]
+  );
+
+  /**
+   * 获取VIP等级的完整价格信息
+   */
+  const getVipLevelPriceInfo = useCallback(
+    (level: number) => {
+      const originalPrice = getVipLevelOriginalPrice(level);
+      const voucherDiscount = getVipLevelVoucherDiscount(level);
+      const actualPrice = calculateActualPrice(level);
+      const nextLevelVoucher = getVipLevelNextVoucher(level);
+      const totalValue = originalPrice + (level > 1 ? voucherDiscount : 0); // V1没有前置回馈券
+
+      return {
+        originalPrice,
+        voucherDiscount,
+        actualPrice,
+        nextLevelVoucher,
+        totalValue,
+        canUseVoucher: voucherDiscount > 0,
+      };
+    },
+    [
+      getVipLevelOriginalPrice,
+      getVipLevelVoucherDiscount,
+      calculateActualPrice,
+      getVipLevelNextVoucher,
+    ]
+  );
+
   return {
     vipInfo,
     loadingVipInfo: loading,
@@ -182,6 +265,13 @@ export function useVipInfo() {
     getVipLevelRewardRates,
     getVipLevelByDonation,
     getAmountForNextLevel,
+    // 回馈券相关API
+    getVipLevelOriginalPrice,
+    getVipLevelVoucherDiscount,
+    getVipLevelNextVoucher,
+    getVipLevelCurrentVoucher,
+    calculateActualPrice,
+    getVipLevelPriceInfo,
     // 兼容旧API
     getDailyFundRangeForLevel,
     getRewardRatesForLevel,

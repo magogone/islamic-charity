@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Globe, Check } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { Globe, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useTranslation, languageNames, type Locale } from "@/lib/i18n"
+} from "@/components/ui/dropdown-menu";
+import { useTranslation, languageNames, type Locale } from "@/lib/i18n";
 
 export function LanguageSelector() {
-  const { locale, setLocale, locales } = useTranslation()
-  const [open, setOpen] = useState(false)
+  const { locale, setLocale, locales } = useTranslation();
+  const [open, setOpen] = useState(false);
 
   const handleLocaleChange = (newLocale: Locale) => {
-    setLocale(newLocale)
-    setOpen(false)
-  }
+    setLocale(newLocale);
+    setOpen(false);
+  };
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -26,13 +26,13 @@ export function LanguageSelector() {
         <Button
           variant="ghost"
           size="sm"
-          className="text-[#d4b96e] hover:bg-[#d4b96e]/10 border-none p-2 h-8 w-8"
+          className="text-[#d4b96e] hover:bg-[#d4b96e]/10 border-none p-3 h-12 w-12"
         >
-          <Globe className="h-4 w-4" />
+          <Globe className="h-7 w-7" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent 
-        align="end" 
+      <DropdownMenuContent
+        align="end"
         className="bg-[#131b29] border-[#d4b96e]/20 text-[#f5efe0]"
       >
         {locales.map((loc) => (
@@ -49,5 +49,5 @@ export function LanguageSelector() {
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-} 
+  );
+}

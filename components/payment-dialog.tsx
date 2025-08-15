@@ -1,7 +1,7 @@
 "use client";
 
 import { DialogFooter } from "@/components/ui/dialog";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -19,8 +19,16 @@ import {
   XCircle,
 } from "lucide-react";
 import { useVipInfo } from "@/store/use-vip-info";
+import { useVouchers } from "@/hooks/use-vouchers";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/components/ui/toast";
 import { useWallet } from "@/hooks/use-wallet";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
@@ -74,13 +82,17 @@ interface PaymentDialogProps {
   onOpenChange: (open: boolean) => void;
   currentVipLevel?: number;
   nextLevelAmount?: number;
+  skipVipPrompt?: boolean; // 新增：是否跳过VIP升级提示
+  targetLevel?: number; // 新增：目标等级，用于回馈券选择
 }
 
-export function PaymentDialog({
+const PaymentDialogComponent = function PaymentDialog({
   open,
   onOpenChange,
-  currentVipLevel = 1,
+  currentVipLevel = 0,
   nextLevelAmount,
+  skipVipPrompt = false,
+  targetLevel,
 }: PaymentDialogProps) {
   const [amount, setAmount] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -97,8 +109,17 @@ export function PaymentDialog({
   const [decimals, setDecimals] = useState<number>(6); // 默认 USDT 精度
   const [isSubmitting, setIsSubmitting] = useState(false); // 防止重复提交
   const [donationId, setDonationId] = useState<string | null>(null); // 存储API返回的捐赠ID
+  // 移除回馈券选择相关状态
   const isMounted = useIsMounted();
-  const { getVipLevelDonationAmount, getVipLevelName } = useVipInfo();
+  const { getVipLevelDonationAmount, getVipLevelName, getVipLevelNextVoucher } =
+    useVipInfo();
+  const {
+    useVoucher,
+    addVoucher,
+    createVoucher,
+    totalValue,
+    getTotalAvailableValue,
+  } = useVouchers();
   const { success, error, ToastContainer } = useToast();
   const { t } = useTranslation();
 
@@ -200,6 +221,7 @@ export function PaymentDialog({
       setTransactionHash(null);
       setIsSubmitting(false); // 重置提交状态
       setDonationId(null); // 重置捐赠ID
+      // 移除回馈券选择相关重置
     }
   }, [open]);
 
@@ -259,6 +281,28 @@ export function PaymentDialog({
               // 清除localStorage中的记录
               localStorage.removeItem(`pending_tx_${transactionHash}`);
 
+              // 移除回馈券使用逻辑
+
+              // 如果是VIP升级或20 USD活动，添加新的回馈券奖励
+              if (nextLevelVoucherAmount > 0) {
+                let voucherType: string | undefined;
+                if (skipVipPrompt) {
+                  // 20 USD先知诞辰活动回馈券
+                  voucherType = "PROPHET_BIRTHDAY";
+                } else if (targetLevel) {
+                  // VIP升级回馈券
+                  voucherType = `V${targetLevel + 1}`;
+                }
+
+                if (voucherType) {
+                  const newVoucher = createVoucher(
+                    voucherType as any,
+                    nextLevelVoucherAmount
+                  );
+                  addVoucher(newVoucher);
+                }
+              }
+
               // API调用成功后才设置完成状态
               setPaymentStep("complete");
               setIsComplete(true);
@@ -304,9 +348,27 @@ export function PaymentDialog({
   }, [isTransactionError, paymentStep]); // 移除error依赖
 
   // 获取下一级VIP的全额费用
-  const nextLevel = currentVipLevel < 5 ? currentVipLevel + 1 : 5;
+  const nextLevel =
+    targetLevel || (currentVipLevel < 5 ? currentVipLevel + 1 : 5);
   const suggestedAmount =
     nextLevelAmount || getVipLevelDonationAmount(nextLevel);
+
+  // 移除抵扣逻辑，回馈券仅作为奖励
+
+  // 计算价格相关信息
+  const actualPrice = targetLevel
+    ? getVipLevelDonationAmount(targetLevel)
+    : suggestedAmount;
+
+  // 获取回馈券金额 - 20 USD先知诞辰活动特殊处理
+  const nextLevelVoucherAmount = (() => {
+    if (skipVipPrompt) {
+      // 20 USD先知诞辰活动获得特殊回馈券
+      return 20; // 20 USD回馈券奖励
+    }
+    // 获取目标等级的回馈券（升级到目标等级后获得的回馈券）
+    return targetLevel ? getVipLevelNextVoucher(targetLevel) : 0;
+  })();
 
   // 验证输入是否为有效金额（最小100）
   const validateInput = (value: string) => {
@@ -323,6 +385,8 @@ export function PaymentDialog({
     setAmount(value);
   };
 
+  // 移除回馈券抵扣选择逻辑
+
   const handleDisconnect = () => {
     disconnectWallet();
   };
@@ -338,21 +402,29 @@ export function PaymentDialog({
       return;
     }
 
-    // 改进的金额验证
-    if (!amount) {
-      error(t("payment.invalidAmount"));
-      return;
-    }
-    
-    const amountNum = parseFloat(amount);
-    if (isNaN(amountNum) || amountNum <= 0) {
-      error(t("payment.invalidAmount"));
-      return;
-    }
-    
-    if (amountNum < 100) {
-      error(t("payment.minimumAmount"));
-      return;
+    // 改进的金额验证 - 先知诞辰活动跳过验证
+    let amountNum: number;
+
+    if (skipVipPrompt) {
+      // 先知诞辰活动固定金额
+      amountNum = 20;
+    } else {
+      // 普通会员捐款验证
+      if (!amount) {
+        error(t("payment.invalidAmount"));
+        return;
+      }
+
+      amountNum = parseFloat(amount);
+      if (isNaN(amountNum) || amountNum <= 0) {
+        error(t("payment.invalidAmount"));
+        return;
+      }
+
+      if (amountNum < 100) {
+        error(t("payment.minimumAmount"));
+        return;
+      }
     }
 
     if (!usdtAddress || !targetAddress) {
@@ -496,21 +568,58 @@ export function PaymentDialog({
                 <div className="relative mt-1">
                   <Input
                     id="amount"
-                    value={amount}
-                    onChange={handleInputChange}
-                    className="bg-islamic-dark border-islamic-gold/30 text-islamic-gold text-xl font-bold p-2 h-12"
-                    placeholder={t("payment.enterAmount")}
+                    value={skipVipPrompt ? "20" : amount}
+                    onChange={skipVipPrompt ? undefined : handleInputChange}
+                    readOnly={skipVipPrompt}
+                    className={`bg-islamic-dark border-islamic-gold/30 text-islamic-gold text-xl font-bold p-2 h-12 ${
+                      skipVipPrompt ? "cursor-not-allowed opacity-75" : ""
+                    }`}
+                    placeholder={skipVipPrompt ? "" : t("payment.enterAmount")}
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                     <span className="text-islamic-gold text-xs ml-1">USD</span>
                   </div>
                 </div>
-                <p className="text-xs text-islamic-cream/60 mt-2">
-                  {t("payment.suggestedAmount")
-                    .replace("{level}", getVipLevelName(nextLevel))
-                    .replace("{amount}", suggestedAmount.toString())}
-                </p>
+                {!skipVipPrompt && (
+                  <p className="text-xs text-islamic-cream/60 mt-2">
+                    {t("payment.suggestedAmount")
+                      .replace("{level}", getVipLevelName(nextLevel))
+                      .replace("{amount}", suggestedAmount.toString())}
+                  </p>
+                )}
               </div>
+
+              {/* 移除回馈券抵扣选择区域 */}
+
+              {/* 简化的支付信息 */}
+              {(targetLevel || skipVipPrompt) && (
+                <div className="p-4 bg-islamic-dark/50 rounded-lg border border-islamic-gold/30">
+                  <div className="space-y-3 text-sm">
+                    {/* 获得回馈券 */}
+                    {nextLevelVoucherAmount > 0 && (
+                      <div className="flex justify-between items-center">
+                        <div className="flex flex-col">
+                          <span className="text-[#d4b96e] text-xs">
+                            {t("donation.upgradeCompleteReward")}
+                          </span>
+                          <span className="text-[#d4b96e] font-medium">
+                            {skipVipPrompt
+                              ? `${t("vip.level1")}${t(
+                                  "donation.voucherSuffix"
+                                )}:`
+                              : `${getVipLevelName(
+                                  Math.min(currentVipLevel + 2, 5)
+                                )}${t("donation.voucherSuffix")}:`}
+                          </span>
+                        </div>
+                        <span className="text-[#d4b96e] font-medium">
+                          {nextLevelVoucherAmount} USD
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* 钱包连接区域 */}
               <div className="flex flex-col space-y-3 rounded-md border border-islamic-medium/50 p-4 bg-islamic-medium/30">
@@ -598,23 +707,30 @@ export function PaymentDialog({
                 )}
               </div>
 
-              {/* 添加捐赠说明 */}
-              <div className="flex items-start space-x-2 rounded-md border border-islamic-gold/20 p-3 bg-islamic-gold/10">
-                <Info className="h-5 w-5 text-islamic-gold mt-0.5 flex-shrink-0" />
-                <div className="text-xs text-islamic-cream/90">
-                  <p className="font-medium text-islamic-gold mb-1">
-                    {t("payment.paymentInformation")}
-                  </p>
-                  <p>{t("payment.fullAmountRequired")}</p>
+              {/* 添加捐赠说明 - 仅对会员显示 */}
+              {!skipVipPrompt && (
+                <div className="flex items-start space-x-2 rounded-md border border-islamic-gold/20 p-3 bg-islamic-gold/10">
+                  <Info className="h-5 w-5 text-islamic-gold mt-0.5 flex-shrink-0" />
+                  <div className="text-xs text-islamic-cream/90">
+                    <p className="font-medium text-islamic-gold mb-1">
+                      {t("payment.paymentInformation")}
+                    </p>
+                    <p>{t("payment.fullAmountRequired")}</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
             <DialogFooter>
               <Button
                 type="button"
                 className="bg-islamic-gold text-islamic-dark hover:bg-islamic-gold/90 w-full"
                 onClick={handlePayment}
-                disabled={!isConnected || !isNetworkSupported || isSubmitting || !validateInput(amount)}
+                disabled={
+                  !isConnected ||
+                  !isNetworkSupported ||
+                  isSubmitting ||
+                  (!skipVipPrompt && !validateInput(amount))
+                }
               >
                 {!isConnected
                   ? t("payment.connectWallet")
@@ -722,4 +838,7 @@ export function PaymentDialog({
       <ToastContainer />
     </Dialog>
   );
-}
+};
+
+// 使用 React.memo 优化性能，避免不必要的重新渲染
+export const PaymentDialog = memo(PaymentDialogComponent);

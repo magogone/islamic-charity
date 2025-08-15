@@ -19,14 +19,51 @@ interface MainLayoutProps {
   children: ReactNode;
   title?: string;
   currentPath: string;
+  showDonorCount?: boolean;
 }
 
-const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
+const MainLayout = ({
+  children,
+  title,
+  currentPath,
+  showDonorCount = false,
+}: MainLayoutProps) => {
   const { checkSession, isAuthenticated, user } = useAuth();
   const { ToastContainer } = useToast();
   const { t } = useTranslation();
   const router = useRouter();
   const { openLoginModal } = useAuthContext();
+
+  // 动态人数显示逻辑
+  const [donorCount, setDonorCount] = useState(50000);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    // 只在客户端生成随机数
+    setDonorCount(50000 + Math.floor(Math.random() * 10000));
+  }, []);
+
+  // 动态增加捐款人数 - 更随机的时间间隔和人数增加
+  useEffect(() => {
+    if (!showDonorCount) return;
+
+    const scheduleNextUpdate = () => {
+      // 随机时间间隔：3-15秒之间
+      const randomInterval = Math.floor(Math.random() * 12000) + 3000;
+      const timeout = setTimeout(() => {
+        // 随机增加人数：1-8人之间
+        const increment = Math.floor(Math.random() * 8) + 1;
+        setDonorCount((prev) => prev + increment);
+        scheduleNextUpdate();
+      }, randomInterval);
+      return timeout;
+    };
+
+    const firstTimeout = scheduleNextUpdate();
+    return () => clearTimeout(firstTimeout);
+  }, [showDonorCount]);
+
   const hasCheckedRef = useRef(false);
   const mainLayoutRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -89,7 +126,6 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.onwheel = originalWheelHandler;
-
       // 清理body样式
       document.body.style.minWidth = "";
       document.body.style.overflowX = "";
@@ -278,7 +314,7 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
       <div className="flex items-center gap-3">
         <button
           onClick={() => openLoginModal()}
-          className="px-3 py-1 text-islamic-gold hover:bg-islamic-gold/10 transition-colors text-sm rounded-md"
+          className="px-4 py-2.5 text-islamic-gold hover:bg-islamic-gold/10 transition-colors text-lg rounded-md ml-4"
         >
           {t("common.login")}
         </button>
@@ -295,8 +331,31 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
       {/* Header */}
       <header className="px-6 py-4 border-b border-islamic-medium/50 bg-islamic-dark/70 backdrop-blur-sm sticky top-0 z-20">
         <div className="flex items-center justify-between max-w-lg mx-auto">
-          <div className="flex items-center">
-            <h1 className="text-xl font-bold text-islamic-gold">{title}</h1>
+          <div className="flex flex-col">
+            <h1 className="text-lg font-bold text-islamic-gold">{title}</h1>
+            {showDonorCount && (
+              <div className="flex items-center space-x-2 mt-1">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-[#d5b96e]"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span className="text-[#d5b96e] font-semibold text-sm">
+                  {isClient ? donorCount.toLocaleString() : "50,000"}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Username or login button + Language Selector */}
@@ -363,7 +422,7 @@ const MainLayout = ({ children, title, currentPath }: MainLayoutProps) => {
               <span className="text-xs mt-1 vip-level-text">
                 {isAuthenticated && user?.vipLevel
                   ? t(`vip.level${user.vipLevel}`)
-                  : "等级"}
+                  : t("navigation.level")}
               </span>
             </button>
             <button
