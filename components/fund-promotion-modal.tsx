@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,13 +19,36 @@ export function FundPromotionModal({
   onPurchase,
 }: FundPromotionModalProps) {
   const { t } = useTranslation();
+  const modalRef = useRef<HTMLDivElement>(null);
   
   // 管理背景滚动锁定
   useEffect(() => {
     if (isOpen) {
-      // 锁定背景滚动
-      const originalStyle = window.getComputedStyle(document.body).overflow;
+      // 记录当前滚动位置
+      const scrollY = window.scrollY;
+      
+      // 锁定背景滚动 - 更全面的方法
+      const originalBodyStyle = document.body.style.overflow;
+      const originalHtmlStyle = document.documentElement.style.overflow;
+      const originalBodyPosition = document.body.style.position;
+      const originalBodyTop = document.body.style.top;
+      const originalBodyWidth = document.body.style.width;
+      
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      
+      // 添加全局触摸事件监听器来阻止背景滚动
+      const preventBackgroundScroll = (e: TouchEvent) => {
+        // 检查触摸是否在弹窗内容区域
+        if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+          e.preventDefault();
+        }
+      };
+      
+      document.addEventListener('touchmove', preventBackgroundScroll, { passive: false });
       
       // 预加载donation页面
       const link = document.createElement("link");
@@ -34,8 +57,17 @@ export function FundPromotionModal({
       document.head.appendChild(link);
 
       return () => {
-        // 恢复背景滚动
-        document.body.style.overflow = originalStyle;
+        // 恢复背景滚动和位置
+        document.body.style.overflow = originalBodyStyle;
+        document.documentElement.style.overflow = originalHtmlStyle;
+        document.body.style.position = originalBodyPosition;
+        document.body.style.top = originalBodyTop;
+        document.body.style.width = originalBodyWidth;
+        window.scrollTo(0, scrollY);
+        
+        // 移除触摸事件监听器
+        document.removeEventListener('touchmove', preventBackgroundScroll);
+        
         // 清理预加载链接
         if (document.head.contains(link)) {
           document.head.removeChild(link);
@@ -55,12 +87,15 @@ export function FundPromotionModal({
           onClose();
         }
       }}
+      onTouchMove={(e) => e.preventDefault()} // 完全阻止背景的触摸滚动
       style={{ touchAction: 'none' }} // 防止背景滚动
     >
       <div 
+        ref={modalRef}
         className="w-full max-w-sm mx-auto max-h-[90vh] overflow-y-auto rounded-lg"
         style={{ touchAction: 'pan-y' }} // 只允许垂直滚动
         onClick={(e) => e.stopPropagation()} // 防止事件冒泡到背景
+        onTouchMove={(e) => e.stopPropagation()} // 防止触摸事件冒泡到背景
       >
         <Card className="bg-gradient-to-br from-[#2d1b40] to-[#1a0f2e] border-[#d4b96e]/20 overflow-hidden shadow-xl">
           <CardContent className="p-0">
